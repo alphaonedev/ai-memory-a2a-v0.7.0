@@ -1,0 +1,5 @@
+suspending ai-memory on node-3 (SIGSTOP)
+  !! ssh timeout (15s): root@142.93.72.46 pgrep -f 'ai-memory serve' | xargs -r kill -STOP
+settle 2s for process-suspend observe
+writing 10 memories each from alice + bob during node-3 outage
+  !! ssh timeout (60s): root@142.93.72.46 curl -sS -X POST http://10.20.0.3:19077/api/v1/memories -H 'Content-Type: application/json' -H 'X-Agent-Id: ai:bob' -d '{"tier": "mid", "namespace": "scenario14-partition", "title": "p-bob-1", "content": "pb-1-a578dca5bf3048b7b8e159917ffbf5d4", "priority": 5, "confidence": 1.0, "source": "api", "metadata": {"agent_id": "ai:bob", "scenario": "14"}}'

@@ -1,0 +1,26 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 17.7,
+  "m1_id": "1c46495a-6e1e-4789-b03e-a706129b88a9",
+  "pass": false,
+  "peer_view": {
+    "node_1": "va-830ee0b5eefb4b9f9c01795edf5dbd6d",
+    "node_2": "(none)",
+    "node_3": "(none)",
+    "node_4": "(none)"
+  },
+  "reason": "split-brain: peers disagree \u2014 {'node-1': 'va-830ee0b5eefb4b9f9c01795edf5dbd6d', 'node-2': '(none)', 'node-3': '(none)', 'node-4': '(none)'}",
+  "reasons": [
+    "split-brain: peers disagree \u2014 {'node-1': 'va-830ee0b5eefb4b9f9c01795edf5dbd6d', 'node-2': '(none)', 'node-3': '(none)', 'node-4': '(none)'}"
+  ],
+  "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+  "root_cause_rationale": "split-brain check: peers disagree because writes don't replicate",
+  "scenario": "13",
+  "skipped": false,
+  "submitted": {
+    "v0": "v0-9e3bd5091ac14d83bf0d42068b9dd8df",
+    "vA_alice": "va-830ee0b5eefb4b9f9c01795edf5dbd6d",
+    "vB_bob": "vb-84499e7423b2446a8633a0ea6270db44"
+  },
+  "tls_mode": "off"
+}

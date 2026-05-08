@@ -1,0 +1,9 @@
+{
+  "elapsed_sec": 109.9,
+  "harness_error": true,
+  "pass": false,
+  "reason": "no JSON report on stdout (rc=-15); stderr tail: ries -H 'Content-Type: application/json' -H 'X-Agent-Id: ai:bob' -d '{\"tier\": \"mid\", \"namespace\": \"scenario14-partition\", \"title\": \"p-bob-1\", \"content\": \"pb-1-a578dca5bf3048b7b8e159917ffbf5d4\", \"priority\": 5, \"confidence\": 1.0, \"source\": \"api\", \"metadata\": {\"agent_id\": \"ai:bob\", \"scenario\": \"14\"}}'\n",
+  "root_cause": "F4 \u2014 S14 SIGSTOPs hermes (NODE3==NODE2 alias) and was killed before SIGCONT",
+  "scenario": "14",
+  "skipped": false
+}

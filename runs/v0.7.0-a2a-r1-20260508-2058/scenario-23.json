@@ -1,0 +1,8 @@
+{
+  "elapsed_sec": 0,
+  "infrastructure_blocked": true,
+  "pass": null,
+  "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+  "scenario": "23",
+  "skipped": true
+}

@@ -1,0 +1,28 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 31.7,
+  "expected_per_agent": 30,
+  "pass": false,
+  "per_agent": {
+    "ai:alice": {
+      "count": 0,
+      "wrong_agent_id": 0
+    },
+    "ai:bob": {
+      "count": 30,
+      "wrong_agent_id": 0
+    },
+    "ai:charlie": {
+      "count": 30,
+      "wrong_agent_id": 0
+    }
+  },
+  "reason": "ai:alice: node-4 saw 0 rows, expected 30",
+  "reasons": [
+    "ai:alice: node-4 saw 0 rows, expected 30"
+  ],
+  "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+  "scenario": "4",
+  "skipped": false,
+  "tls_mode": "off"
+}

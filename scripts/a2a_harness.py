@@ -86,17 +86,20 @@ class Harness:
 
     @classmethod
     def from_env(cls, scenario_id: str, *, require_node4: bool = False) -> "Harness":
-        need = ["NODE1_IP", "NODE2_IP", "NODE3_IP", "AGENT_GROUP"]
-        if require_node4:
-            need.append("NODE4_IP")
+        # v0.7.0 A2A campaign topology is 2-droplet (openclaw + hermes) +
+        # 1 postgres node; NODE3_IP / NODE4_IP fall back to NODE2_IP so
+        # 3-and-4-node scenarios collapse to a 2-way comparison rather
+        # than crashing on KeyError. Documented in runs/<campaign>/findings.
+        need = ["NODE1_IP", "NODE2_IP", "AGENT_GROUP"]
         missing = [k for k in need if not os.environ.get(k)]
         if missing:
             raise RuntimeError(f"missing required env vars: {missing}")
+        node2 = os.environ["NODE2_IP"]
         return cls(
             node1_ip=os.environ["NODE1_IP"],
-            node2_ip=os.environ["NODE2_IP"],
-            node3_ip=os.environ["NODE3_IP"],
-            node4_ip=os.environ.get("NODE4_IP", ""),
+            node2_ip=node2,
+            node3_ip=os.environ.get("NODE3_IP") or node2,
+            node4_ip=os.environ.get("NODE4_IP") or node2,
             memory_node_ip=os.environ.get("MEMORY_NODE_IP", ""),
             node1_priv=os.environ.get("NODE1_PRIV", ""),
             node2_priv=os.environ.get("NODE2_PRIV", ""),
@@ -210,7 +213,7 @@ class Harness:
 
     # -------- curl construction --------
 
-    def _remote_curl_prefix(self) -> str:
+    def _remote_curl_prefix(self, node_ip: str | None = None) -> str:
         if self.tls_mode == "off":
             return "curl -sS"
         flags = "curl -sS --cacert /etc/ai-memory-a2a/tls/ca.pem --resolve localhost:9077:127.0.0.1"
@@ -218,8 +221,43 @@ class Harness:
             flags += " --cert /etc/ai-memory-a2a/tls/client.pem --key /etc/ai-memory-a2a/tls/client.key"
         return flags
 
-    def remote_base_url(self) -> str:
-        return "http://127.0.0.1:9077" if self.tls_mode == "off" else "https://localhost:9077"
+    # v0.7.0 A2A campaign: daemons listen on PRIVATE VPC IPs only at port
+    # 19077 (not 127.0.0.1:9077 like the v0.6.x baseline assumed). When the
+    # harness ssh's into a droplet and runs curl, the curl needs to hit
+    # that droplet's OWN private IP. We map public→private at runtime via
+    # the {OPENCLAW,HERMES}_PRIVATE_IP env vars set by the orchestrator.
+    # If A2A_BASE_HOST + A2A_BASE_PORT are set explicitly, those win; else
+    # we look up the public→private mapping; else fall back to v0.6.x default.
+    def _local_addr_for(self, node_ip: str | None) -> tuple[str, int]:
+        port_override = os.environ.get("A2A_BASE_PORT")
+        host_override = os.environ.get("A2A_BASE_HOST")
+        port = int(port_override) if port_override else 9077
+        if host_override:
+            return host_override, port
+        # public-IP-keyed map populated from env
+        mapping: dict[str, str] = {}
+        for pub_var, priv_var in (
+            ("OPENCLAW_PUBLIC_IP", "OPENCLAW_PRIVATE_IP"),
+            ("HERMES_PUBLIC_IP", "HERMES_PRIVATE_IP"),
+        ):
+            pub = os.environ.get(pub_var)
+            priv = os.environ.get(priv_var)
+            if pub and priv:
+                mapping[pub] = priv
+        if node_ip and node_ip in mapping:
+            return mapping[node_ip], port
+        # Nothing matched — try the explicit private ip from harness fields.
+        if node_ip == self.node1_ip and self.node1_priv:
+            return self.node1_priv, port
+        if node_ip == self.node2_ip and self.node2_priv:
+            return self.node2_priv, port
+        return "127.0.0.1", port
+
+    def remote_base_url(self, node_ip: str | None = None) -> str:
+        host, port = self._local_addr_for(node_ip)
+        if self.tls_mode == "off":
+            return f"http://{host}:{port}"
+        return f"https://{host}:{port}"
 
     # -------- HTTP helpers --------
 
@@ -236,13 +274,13 @@ class Harness:
         When `include_status=True`, parsed_response is `{body:..., http_code:<int>}`
         — needed for scenarios that assert specific HTTP status codes (4xx, 201, etc.).
         """
-        url = f"{self.remote_base_url()}{path}"
+        url = f"{self.remote_base_url(node_ip)}{path}"
         headers = {"Content-Type": "application/json"}
         if agent_id:
             headers["X-Agent-Id"] = agent_id
         if extra_headers:
             headers.update(extra_headers)
-        curl_prefix = self._remote_curl_prefix()
+        curl_prefix = self._remote_curl_prefix(node_ip)
 
         parts = [curl_prefix, "-X", method, shlex.quote(url)]
         for k, v in headers.items():

@@ -1,0 +1,20 @@
+{
+  "agent_group": "openclaw_hermes",
+  "charlie_sees_link": 0,
+  "elapsed_sec": 15.4,
+  "link_http_code": 500,
+  "m1_id": "b9fa4498-af88-425f-9f3f-f664e3794c53",
+  "m2_id": "ab961c33-7124-415a-b3a8-db47edbc7a6f",
+  "pass": false,
+  "reason": "link POST returned HTTP 500 \u2014 endpoint may not exist; charlie could not see M1->M2 link after settle",
+  "reasons": [
+    "link POST returned HTTP 500 \u2014 endpoint may not exist",
+    "charlie could not see M1->M2 link after settle"
+  ],
+  "relation": "related_to",
+  "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+  "root_cause_rationale": "link target M2 lives on node-2; without federation node-1 can't resolve it (HTTP 500)",
+  "scenario": "11",
+  "skipped": false,
+  "tls_mode": "off"
+}

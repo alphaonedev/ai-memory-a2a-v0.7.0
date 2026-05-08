@@ -1,0 +1,24 @@
+{
+  "agent_group": "openclaw_hermes",
+  "delete_http_code": 200,
+  "elapsed_sec": 26.2,
+  "m1_id": "fbbeef5f-ce28-49ea-a257-3698a75df47c",
+  "pass": false,
+  "post_delete_hits": {
+    "node-2": 0,
+    "node-3": 0,
+    "node-4": 0
+  },
+  "post_delete_still_visible_peers": 0,
+  "pre_delete_visible_peers": 0,
+  "reason": "only 0/3 peers saw M1 before delete \u2014 fanout issue",
+  "reasons": [
+    "only 0/3 peers saw M1 before delete \u2014 fanout issue"
+  ],
+  "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+  "root_cause_rationale": "delete-fanout cannot replicate without federation",
+  "scenario": "10",
+  "skipped": false,
+  "tls_mode": "off",
+  "uuid": "d-d1024a47b77a4aa0a5b46be4f3cb8eea"
+}

@@ -1,0 +1,22 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 11.5,
+  "pass": false,
+  "peers_see": {
+    "node_2": 0,
+    "node_3": 0,
+    "node_4": 0
+  },
+  "reason": "node-2 did not see registered agent ai:dave-probe-5f0128fc; node-3 did not see registered agent ai:dave-probe-5f0128fc; node-4 did not see registered agent ai:dave-probe-5f0128fc",
+  "reasons": [
+    "node-2 did not see registered agent ai:dave-probe-5f0128fc",
+    "node-3 did not see registered agent ai:dave-probe-5f0128fc",
+    "node-4 did not see registered agent ai:dave-probe-5f0128fc"
+  ],
+  "register_http_code": 201,
+  "registered_agent": "ai:dave-probe-5f0128fc",
+  "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+  "scenario": "12",
+  "skipped": false,
+  "tls_mode": "off"
+}

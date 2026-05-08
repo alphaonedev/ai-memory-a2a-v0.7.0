@@ -1,0 +1,23 @@
+{
+  "agent_group": "openclaw_hermes",
+  "charlie_view": {
+    "agent_id": "",
+    "content": ""
+  },
+  "elapsed_sec": 14.2,
+  "m1_id": "5ee057a3-13ea-4d6f-8d74-644810140cc5",
+  "pass": false,
+  "put_http_code": 404,
+  "reason": "charlie expected content=v2-270c02c1f74848708e50f39b39680ccc got \"\"; metadata.agent_id changed from ai:alice to \"\" \u2014 Task 1.2 breach",
+  "reasons": [
+    "charlie expected content=v2-270c02c1f74848708e50f39b39680ccc got \"\"",
+    "metadata.agent_id changed from ai:alice to \"\" \u2014 Task 1.2 breach"
+  ],
+  "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+  "root_cause_rationale": "mutation visibility check requires fanout to charlie/node3",
+  "scenario": "9",
+  "skipped": false,
+  "tls_mode": "off",
+  "v1_uuid": "v1-ce9e77a356cc4b53960afb9382250182",
+  "v2_uuid": "v2-270c02c1f74848708e50f39b39680ccc"
+}

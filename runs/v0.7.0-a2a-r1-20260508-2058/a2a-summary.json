@@ -1,0 +1,703 @@
+{
+  "audit_chain_length": null,
+  "campaign_id": "v0.7.0-a2a-r1-20260508-2058",
+  "failed": 11,
+  "failures_by_root_cause": {
+    "F1 \u2014 federation NOT enabled on running daemons": [
+      "10",
+      "11",
+      "12",
+      "13",
+      "1b",
+      "2",
+      "4",
+      "5",
+      "6",
+      "9"
+    ],
+    "F4 \u2014 S14 SIGSTOPs hermes (NODE3==NODE2 alias) and was killed before SIGCONT": [
+      "14"
+    ]
+  },
+  "finished_utc": "2026-05-08T21:11:08+00:00",
+  "overall_pass": false,
+  "passed": 1,
+  "round": "Round 1",
+  "scenarios": [
+    {
+      "elapsed_sec": 28.2,
+      "pass": null,
+      "reason": "MCP-stdio path absent on v0.7.0-alpha droplets (drive_agent.sh not installed) \u2014 see runs/<campaign>/findings/F3.md",
+      "reclassified": "MCP-only-skip",
+      "root_cause": null,
+      "scenario": "1",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 26.2,
+      "pass": false,
+      "reason": "only 0/3 peers saw M1 before delete \u2014 fanout issue",
+      "reclassified": null,
+      "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+      "scenario": "10",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 15.4,
+      "pass": false,
+      "reason": "link POST returned HTTP 500 \u2014 endpoint may not exist; charlie could not see M1->M2 link after settle",
+      "reclassified": null,
+      "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+      "scenario": "11",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 11.5,
+      "pass": false,
+      "reason": "node-2 did not see registered agent ai:dave-probe-5f0128fc; node-3 did not see registered agent ai:dave-probe-5f0128fc; node-4 did not see registered agent ai:dave-probe-5f0128fc",
+      "reclassified": null,
+      "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+      "scenario": "12",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 17.7,
+      "pass": false,
+      "reason": "split-brain: peers disagree \u2014 {'node-1': 'va-830ee0b5eefb4b9f9c01795edf5dbd6d', 'node-2': '(none)', 'node-3': '(none)', 'node-4': '(none)'}",
+      "reclassified": null,
+      "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+      "scenario": "13",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 109.9,
+      "pass": false,
+      "reason": "no JSON report on stdout (rc=-15); stderr tail: ries -H 'Content-Type: application/json' -H 'X-Agent-Id: ai:bob' -d '{\"tier\": \"mid\", \"namespace\": \"scenario14-partition\", \"title\": \"p-bob-1\", \"content\": \"pb-1-a578dca5bf3048b7b8e159917ffbf5d4\", \"priority\": 5, \"confidence\": 1.0, \"source\": \"api\", \"metadata\": {\"agent_id\": \"ai:bob\", \"scenario\": \"14\"}}'\n",
+      "reclassified": null,
+      "root_cause": "F4 \u2014 S14 SIGSTOPs hermes (NODE3==NODE2 alias) and was killed before SIGCONT",
+      "scenario": "14",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 1.5,
+      "pass": true,
+      "reason": "",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "15",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "16",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "17",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "18",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 27.9,
+      "pass": false,
+      "reason": "ai:alice sees 0 < 20 via serve HTTP; ai:bob sees 10 < 20 via serve HTTP; ai:charlie sees 10 < 20 via serve HTTP; cross-cluster identity check failed at node-4",
+      "reclassified": null,
+      "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+      "scenario": "1b",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 17.6,
+      "pass": false,
+      "reason": "ai:bob did not see handoff from ai:alice after 8s settle; ai:alice did not see ack from ai:bob after 8s settle",
+      "reclassified": null,
+      "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+      "scenario": "2",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "20",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "21",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "22",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "23",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "24",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "25",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "26",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "27",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "28",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "29",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "30",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "31",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "32",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "33",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "34",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "35",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "36",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "37",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "38",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "39",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 31.7,
+      "pass": false,
+      "reason": "ai:alice: node-4 saw 0 rows, expected 30",
+      "reclassified": null,
+      "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+      "scenario": "4",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "40",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "41",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "42",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "43",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "44",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "45",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "46",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "47",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "48",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "49",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 22.8,
+      "pass": false,
+      "reason": "consolidated_from_agents missing ai:alice; consolidated_from_agents missing ai:bob; consolidated_from_agents missing ai:charlie",
+      "reclassified": null,
+      "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+      "scenario": "5",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "50",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "51",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "52",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "53",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "54",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "55",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "56",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "57",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "58",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "59",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 11.2,
+      "pass": false,
+      "reason": "response did not include both memories; response did not include a contradicts relation",
+      "reclassified": null,
+      "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+      "scenario": "6",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "60",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "61",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "62",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "63",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "64",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "65",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "66",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "67",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "68",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "69",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "70",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "71",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "72",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "73",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "74",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "75",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "pass": null,
+      "reason": "infrastructure blocked by F4 \u2014 hermes daemon SIGSTOPped by S14 and not resumable in current sandbox",
+      "reclassified": null,
+      "root_cause": null,
+      "scenario": "76",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 14.2,
+      "pass": false,
+      "reason": "charlie expected content=v2-270c02c1f74848708e50f39b39680ccc got \"\"; metadata.agent_id changed from ai:alice to \"\" \u2014 Task 1.2 breach",
+      "reclassified": null,
+      "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+      "scenario": "9",
+      "skipped": false
+    }
+  ],
+  "scenarios_executed": 13,
+  "scenarios_infrastructure_blocked": 60,
+  "skipped": 61,
+  "started_utc": "2026-05-08T21:02:36+00:00",
+  "status": "PARTIAL \u2014 sweep halted at S15/73 due to F4 (hermes SIGSTOPped by S14, sandbox blocked SIGCONT)",
+  "subject_under_test": "ai-memory v0.7.0 (round-2-fixes @ dfb184f)",
+  "topology": {
+    "agent_group": "openclaw_hermes",
+    "hermes": "142.93.72.46 (10.20.0.3)",
+    "openclaw": "104.236.52.203 (10.20.0.2)",
+    "postgres": "68.183.157.68 (10.20.0.4)",
+    "tls_mode": "off"
+  },
+  "total": 73,
+  "verdict": "NOT GREEN",
+  "verdict_text": "Round 1 NOT GREEN \u2014 investigate the failures before Round 2",
+  "wall_seconds": null,
+  "wall_seconds_executed": 335.8
+}

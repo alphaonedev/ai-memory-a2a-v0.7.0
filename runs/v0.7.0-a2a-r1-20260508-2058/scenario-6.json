@@ -1,0 +1,21 @@
+{
+  "agent_group": "openclaw_hermes",
+  "alice_id": "47134bc6-191d-44b9-94a1-e61ce4a5c18e",
+  "bob_id": "ac5985c1-c67d-4233-aad3-c4a5bfc5f73e",
+  "charlie_sees_both_memories": false,
+  "charlie_sees_contradicts_link": false,
+  "detect_http_code": 200,
+  "elapsed_sec": 11.2,
+  "pass": false,
+  "reason": "response did not include both memories; response did not include a contradicts relation",
+  "reasons": [
+    "response did not include both memories",
+    "response did not include a contradicts relation"
+  ],
+  "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+  "root_cause_rationale": "contradiction detection requires both memories visible cluster-wide",
+  "scenario": "6",
+  "skipped": false,
+  "tls_mode": "off",
+  "topic": "sky-color-e8966835"
+}

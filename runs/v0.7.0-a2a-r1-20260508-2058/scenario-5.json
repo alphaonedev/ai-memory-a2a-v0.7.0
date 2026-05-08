@@ -1,0 +1,19 @@
+{
+  "agent_group": "openclaw_hermes",
+  "consolidate_http_code": 201,
+  "consolidated_from_agents": [],
+  "consolidated_id": "3adc44b9-4683-4a23-b76a-c52848c45899",
+  "elapsed_sec": 22.8,
+  "pass": false,
+  "reason": "consolidated_from_agents missing ai:alice; consolidated_from_agents missing ai:bob; consolidated_from_agents missing ai:charlie",
+  "reasons": [
+    "consolidated_from_agents missing ai:alice",
+    "consolidated_from_agents missing ai:bob",
+    "consolidated_from_agents missing ai:charlie"
+  ],
+  "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+  "root_cause_rationale": "consolidate aggregates across agents \u2014 without federation, only node-1 contributes",
+  "scenario": "5",
+  "skipped": false,
+  "tls_mode": "off"
+}

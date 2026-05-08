@@ -1,0 +1,42 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 28.2,
+  "expected_per_reader": 20,
+  "pass": null,
+  "per_agent": {
+    "ai:alice": {
+      "recall": 0
+    },
+    "ai:bob": {
+      "recall": 0
+    },
+    "ai:charlie": {
+      "recall": 0
+    }
+  },
+  "per_namespace_node4": {
+    "scenario1-ai:alice": {
+      "count": 0,
+      "wrong_agent_id": 0
+    },
+    "scenario1-ai:bob": {
+      "count": 0,
+      "wrong_agent_id": 0
+    },
+    "scenario1-ai:charlie": {
+      "count": 0,
+      "wrong_agent_id": 0
+    }
+  },
+  "reason": "MCP-stdio path absent on v0.7.0-alpha droplets (drive_agent.sh not installed) \u2014 see runs/<campaign>/findings/F3.md",
+  "reasons": [
+    "ai:alice recalled 0 < 20 via MCP",
+    "ai:bob recalled 0 < 20 via MCP",
+    "ai:charlie recalled 0 < 20 via MCP",
+    "cross-cluster identity check failed \u2014 see per_ns"
+  ],
+  "reclassified": "MCP-only-skip",
+  "scenario": "1",
+  "skipped": true,
+  "tls_mode": "off"
+}

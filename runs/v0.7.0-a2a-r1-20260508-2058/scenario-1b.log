@@ -1,0 +1,13 @@
+phase A: each agent POSTs 10 memories to local serve
+  ai:alice on 104.236.52.203
+  ai:bob on 142.93.72.46
+  ai:charlie on 142.93.72.46
+settle 15s for W=2/N=4 convergence
+phase B: count rows in other two namespaces via local serve HTTP
+  ai:alice sees 0 rows from the other two namespaces
+  ai:bob sees 10 rows from the other two namespaces
+  ai:charlie sees 10 rows from the other two namespaces
+phase C: cross-cluster identity check on node-4
+  ns=scenario1b-ai:alice count=0 wrong_agent_id=0
+  ns=scenario1b-ai:bob count=10 wrong_agent_id=0
+  ns=scenario1b-ai:charlie count=10 wrong_agent_id=0

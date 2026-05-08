@@ -1,0 +1,10 @@
+alice writes M1 content=v0-9e3bd5091ac14d83bf0d42068b9dd8df on node-1
+  M1 id=1c46495a-6e1e-4789-b03e-a706129b88a9
+settle 5s for initial replication
+alice + bob issue concurrent PUTs (vA=va-830ee0b5eefb4b9f9c01795edf5dbd6d from alice, vB=vb-84499e7423b2446a8633a0ea6270db44 from bob)
+  concurrent PUT results: [(0, {'body': {'access_count': 0, 'confidence': 1.0, 'content': 'va-830ee0b5eefb4b9f9c01795edf5dbd6d', 'created_at': '2026-05-08T21:06:03.757152609+00:00', 'expires_at': '2026-05-15T21:06:03.757152609+00:00', 'id': '1c46495a-6e1e-4789-b03e-a706129b88a9', 'metadata': {'agent_id': 'ai:alice', 'scenario': '13'}, 'namespace': 'scenario13-contention', 'priority': 5, 'source': 'api', 'tags': [], 'tier': 'mid', 'title': 'm1', 'updated_at': '2026-05-08T21:06:09.094504438+00:00'}, 'http_code': 200}), (0, {'body': {'error': 'not found'}, 'http_code': 404})]
+settle 10s for quorum convergence
+  node-1 sees content=va-830ee0b5eefb4b9f9c01795edf5dbd6d
+  node-2 sees content=(none)
+  node-3 sees content=(none)
+  node-4 sees content=(none)

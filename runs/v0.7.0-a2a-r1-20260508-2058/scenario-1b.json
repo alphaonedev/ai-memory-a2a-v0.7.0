@@ -1,0 +1,43 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 27.9,
+  "expected_per_reader": 20,
+  "pass": false,
+  "path": "serve-http",
+  "per_agent": {
+    "ai:alice": {
+      "recall": 0
+    },
+    "ai:bob": {
+      "recall": 10
+    },
+    "ai:charlie": {
+      "recall": 10
+    }
+  },
+  "per_namespace_node4": {
+    "scenario1b-ai:alice": {
+      "count": 0,
+      "wrong_agent_id": 0
+    },
+    "scenario1b-ai:bob": {
+      "count": 10,
+      "wrong_agent_id": 0
+    },
+    "scenario1b-ai:charlie": {
+      "count": 10,
+      "wrong_agent_id": 0
+    }
+  },
+  "reason": "ai:alice sees 0 < 20 via serve HTTP; ai:bob sees 10 < 20 via serve HTTP; ai:charlie sees 10 < 20 via serve HTTP; cross-cluster identity check failed at node-4",
+  "reasons": [
+    "ai:alice sees 0 < 20 via serve HTTP",
+    "ai:bob sees 10 < 20 via serve HTTP",
+    "ai:charlie sees 10 < 20 via serve HTTP",
+    "cross-cluster identity check failed at node-4"
+  ],
+  "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+  "scenario": "1b",
+  "skipped": false,
+  "tls_mode": "off"
+}

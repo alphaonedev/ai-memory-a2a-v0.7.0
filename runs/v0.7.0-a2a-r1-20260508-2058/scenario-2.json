@@ -1,0 +1,25 @@
+{
+  "ack_uuid": "a-5c6fe45f2b0448eea22d7d604a5f02fc",
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 17.6,
+  "handoff_uuid": "h-45155a8860644192b91761c1ee8fe780",
+  "pass": false,
+  "path": "serve-http",
+  "per_agent": {
+    "ai:alice": {
+      "sees_ack": 0
+    },
+    "ai:bob": {
+      "sees_handoff": 0
+    }
+  },
+  "reason": "ai:bob did not see handoff from ai:alice after 8s settle; ai:alice did not see ack from ai:bob after 8s settle",
+  "reasons": [
+    "ai:bob did not see handoff from ai:alice after 8s settle",
+    "ai:alice did not see ack from ai:bob after 8s settle"
+  ],
+  "root_cause": "F1 \u2014 federation NOT enabled on running daemons",
+  "scenario": "2",
+  "skipped": false,
+  "tls_mode": "off"
+}
