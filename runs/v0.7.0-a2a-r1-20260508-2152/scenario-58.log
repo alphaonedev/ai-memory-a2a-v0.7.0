@@ -1,0 +1,5 @@
+phase A: openclaw -> memory_notify ai:hermes
+  notify rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `target_agent_id` at line 1 column 222', 'http_code': 422}
+settle 6s for notify fanout
+phase B: hermes -> memory_inbox
+  inbox entries=0 matched=0

@@ -1,0 +1,1 @@
+skipped — autonomous/smart tier not available on node-1 — tier='semantic' models={'cross_encoder': 'none', 'embedding': 'sentence-transformers/all-MiniLM-L6-v2', 'embedding_dim': 384, 'llm': 'none'}

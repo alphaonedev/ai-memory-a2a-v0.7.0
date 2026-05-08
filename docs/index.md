@@ -1,7 +1,7 @@
 # v0.7.0 A2A campaign
 
-Latest run: **v0.7.0-a2a-r1-20260508-2058**
+Latest run: **v0.7.0-a2a-r1-20260508-2152**
 
-- scenarios passed: 1/73
+- scenarios passed: 28/73
 - overall_pass: `False`
-- generated: 2026-05-08T21:11:14+00:00
+- generated: 2026-05-08T22:11:34+00:00

@@ -1,0 +1,6 @@
+phase A: openclaw sets policy on parent=s60-parent-67bc3e (inherit=true, write=owner)
+  set_standard rc=0 resp={'body': None, 'http_code': 404}
+phase B: openclaw writes to deep child s60-parent-67bc3e/sub/deep (expect 201)
+phase C: hermes writes to deep child s60-parent-67bc3e/sub/deep (expect 403)
+phase D: flip parent inherit=false; hermes deep-child write expects 201
+settle 3s for policy propagate

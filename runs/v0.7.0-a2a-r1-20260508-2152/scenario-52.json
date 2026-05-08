@@ -1,0 +1,21 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 2.4,
+  "pass": false,
+  "per_agent": {
+    "hermes_side": {
+      "err": "link create failed rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `source_id` at line 1 column 120', 'http_code': 422}"
+    },
+    "openclaw_side": {
+      "err": "link create failed rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `source_id` at line 1 column 120', 'http_code': 422}"
+    }
+  },
+  "reason": "openclaw_side: link create failed rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `source_id` at line 1 column 120', 'http_code': 422}; hermes_side: link create failed rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `source_id` at line 1 column 120', 'http_code': 422}",
+  "reasons": [
+    "openclaw_side: link create failed rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `source_id` at line 1 column 120', 'http_code': 422}",
+    "hermes_side: link create failed rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `source_id` at line 1 column 120', 'http_code': 422}"
+  ],
+  "scenario": "52",
+  "skipped": false,
+  "tls_mode": "off"
+}

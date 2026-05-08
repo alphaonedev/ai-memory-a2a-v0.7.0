@@ -1,0 +1,4 @@
+phase A: link openclaw→hermes signed by openclaw daemon
+  {'err': "link create failed rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `source_id` at line 1 column 120', 'http_code': 422}"}
+phase B: link hermes→openclaw signed by hermes daemon
+  {'err': "link create failed rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `source_id` at line 1 column 120', 'http_code': 422}"}

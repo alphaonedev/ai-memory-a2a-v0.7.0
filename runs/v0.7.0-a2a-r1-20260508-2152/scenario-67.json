@@ -1,0 +1,51 @@
+{
+  "agent_group": "openclaw_hermes",
+  "correlation_id": "dlg-24e31de1d2874e1f9a0fa793eb37f69e",
+  "elapsed_sec": 16.1,
+  "m_id": "83647044-590a-4e24-9db9-dc2a13e11100",
+  "pass": false,
+  "reason": "turn 0: q reasoning empty; turn 0: a reasoning empty; turn 0: a_id missing; turn 1: q reasoning empty; turn 1: a reasoning empty; turn 1: a_id missing; turn 2: q reasoning empty; turn 2: a reasoning empty; turn 2: a_id missing",
+  "reasons": [
+    "turn 0: q reasoning empty",
+    "turn 0: a reasoning empty",
+    "turn 0: a_id missing",
+    "turn 1: q reasoning empty",
+    "turn 1: a reasoning empty",
+    "turn 1: a_id missing",
+    "turn 2: q reasoning empty",
+    "turn 2: a reasoning empty",
+    "turn 2: a_id missing"
+  ],
+  "scenario": "67",
+  "skipped": false,
+  "tls_mode": "off",
+  "turns": [
+    {
+      "a": "",
+      "a_id": null,
+      "a_reasoning_chars": 0,
+      "q": "",
+      "q_reasoning_chars": 0,
+      "ts_ns": 1778277911688080000,
+      "turn": 0
+    },
+    {
+      "a": "",
+      "a_id": null,
+      "a_reasoning_chars": 0,
+      "q": "",
+      "q_reasoning_chars": 0,
+      "ts_ns": 1778277916690250000,
+      "turn": 1
+    },
+    {
+      "a": "",
+      "a_id": null,
+      "a_reasoning_chars": 0,
+      "q": "",
+      "q_reasoning_chars": 0,
+      "ts_ns": 1778277921623984000,
+      "turn": 2
+    }
+  ]
+}

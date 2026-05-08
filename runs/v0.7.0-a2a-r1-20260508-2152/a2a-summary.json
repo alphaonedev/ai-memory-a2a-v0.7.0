@@ -1,0 +1,610 @@
+{
+  "campaign_id": "v0.7.0-a2a-r1-20260508-2152",
+  "campaign_scope": "v0.7.0 A2A 2-agent (openclaw + hermes)",
+  "failed": 34,
+  "finished_utc": "2026-05-08T22:08:53+00:00",
+  "in_scope_failed": 34,
+  "in_scope_passed": 28,
+  "in_scope_total": 68,
+  "overall_pass": false,
+  "passed": 28,
+  "round": "Round 1",
+  "scenarios": [
+    {
+      "elapsed_sec": 0,
+      "in_scope": false,
+      "pass": null,
+      "reason": "drive_agent.sh / MCP-stdio path is not installed on v0.7.0-alpha droplets; no HTTP equivalent of S1 (the HTTP analog is S1b which IS in scope)",
+      "scenario": "1",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 29.7,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "1b",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 17.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "2",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 32.8,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "4",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 23.4,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "5",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 11.4,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "6",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 14.3,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "9",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 26.3,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "10",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 15.2,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "11",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 11.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "12",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 17.7,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "13",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "in_scope": false,
+      "pass": null,
+      "reason": "S14 SIGSTOPs NODE3 daemon and SIGCONTs it; with NODE3==NODE2 alias this freezes hermes mid-test (proven in failed Round 1) \u2014 requires real third daemon",
+      "scenario": "14",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.8,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "15",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 14.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "16",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 22.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "17",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 4.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "18",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.0,
+      "in_scope": true,
+      "pass": null,
+      "reason": "scenario 20 only runs under tls_mode=mtls (actual: off)",
+      "scenario": "20",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.0,
+      "in_scope": true,
+      "pass": null,
+      "reason": "scenario 21 only runs under tls_mode=mtls (actual: off)",
+      "scenario": "21",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 5.4,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "22",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 2.8,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "23",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 5.6,
+      "in_scope": true,
+      "pass": false,
+      "reason": "sync_push returned unexpected HTTP 000",
+      "scenario": "24",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "in_scope": false,
+      "pass": null,
+      "reason": "S25 ssh-shifts NODE3 system clock by +300s; with NODE3==NODE2 this destructively skews hermes (corrupts federation timestamps) \u2014 requires real third node",
+      "scenario": "25",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.1,
+      "in_scope": true,
+      "pass": null,
+      "reason": "scenario 26 only runs under agent_group=mixed (actual: openclaw_hermes)",
+      "scenario": "26",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "in_scope": false,
+      "pass": null,
+      "reason": "S27 invokes drive_agent.sh against the openclaw legacy MCP path; not installed at v0.7.0-alpha",
+      "scenario": "27",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 9.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "28",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 17.4,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "29",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 1.8,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "30",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 23.8,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "31",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 7.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "32",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 17.3,
+      "in_scope": true,
+      "pass": false,
+      "reason": "subscribe returned HTTP 400; bob's subscription list did not include the subscribed namespace",
+      "scenario": "33",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 14.2,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "34",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 10.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "35",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 7.4,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "36",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 7.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "37",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 14.2,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "38",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "in_scope": false,
+      "pass": null,
+      "reason": "S39 SIGSTOPs NODE3 daemon for delta-since test; with NODE3==NODE2 this freezes hermes \u2014 requires real third daemon",
+      "scenario": "39",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 22.1,
+      "in_scope": true,
+      "pass": false,
+      "reason": "bulk returned HTTP 000; node-2 saw 0/500 bulk rows after fanout; node-3 saw 0/500 bulk rows after fanout; node-4 saw 0/500 bulk rows after fanout",
+      "scenario": "40",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 11.1,
+      "in_scope": true,
+      "pass": false,
+      "reason": "node-1: no memory-related counters visible at T0; node-2: no memory-related counters visible at T0; node-3: no memory-related counters visible at T0",
+      "scenario": "41",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 14.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "42",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 1.2,
+      "in_scope": true,
+      "pass": false,
+      "reason": "node-1 schema_version='3' (expected \"2\"); node-2 schema_version='3' (expected \"2\"); node-3 schema_version='3' (expected \"2\"); node-4 schema_version='3' (expected \"2\")",
+      "scenario": "43",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 21.5,
+      "in_scope": true,
+      "pass": false,
+      "reason": "could not locate scenario44-bc8d4c/alphaone in taxonomy response; root node missing subtree_count field \u2014 v0.6.3 should expose it",
+      "scenario": "44",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 15.7,
+      "in_scope": true,
+      "pass": false,
+      "reason": "kg_invalidate returned HTTP 400; as_of=past missing edges; expected all 3 targets, got 0; as_of=now expected 2 edges, got 0",
+      "scenario": "45",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 13.4,
+      "in_scope": true,
+      "pass": false,
+      "reason": "expected >=3 events (2 adds + 1 invalidate), got 0; no edge_added event in timeline; no edge_invalidated event in timeline",
+      "scenario": "46",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 6.3,
+      "in_scope": true,
+      "pass": false,
+      "reason": "by-alias('a1-project') HTTP 404; by-alias('alphaone-proj') HTTP 404; by-alias('alpha1-proj') HTTP 404; by-alias('ao-project') HTTP 404",
+      "scenario": "47",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 6.8,
+      "in_scope": true,
+      "pass": false,
+      "reason": "check_duplicate returned HTTP 422; check_duplicate returned 0 matches for a near-identical input; original memory (9d800644-f120-4ccf-9198-87684e22516e) absent from matches; match did not carry a similarity score field",
+      "scenario": "48",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 36.9,
+      "in_scope": true,
+      "pass": false,
+      "reason": "access: access_count not incremented; promote: HTTP 404; promote: tier=None, expected 'long'; expire: HTTP 404; archive: M1 not visible in /api/v1/archive listing; restore: HTTP 404; purge: HTTP 404",
+      "scenario": "49",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.4,
+      "in_scope": true,
+      "pass": null,
+      "reason": "sqlcipher feature not advertised in /api/v1/capabilities \u2014 daemon was not built with --features sqlcipher",
+      "scenario": "50",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.4,
+      "in_scope": true,
+      "pass": null,
+      "reason": "autonomous/smart tier not available on node-1 \u2014 tier='semantic' models={'cross_encoder': 'none', 'embedding': 'sentence-transformers/all-MiniLM-L6-v2', 'embedding_dim': 384, 'llm': 'none'}",
+      "scenario": "51",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 2.4,
+      "in_scope": true,
+      "pass": false,
+      "reason": "openclaw_side: link create failed rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `source_id` at line 1 column 120', 'http_code': 422}; hermes_side: link create failed rc=0 resp={'body': 'Failed to deserialize the JSON body into the target type: missing field `source_id` at line 1 column 120', 'http_code': 422}",
+      "scenario": "52",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 1.6,
+      "in_scope": true,
+      "pass": false,
+      "reason": "intruder got 201 (expected 403); decision_counts.enforce delta=0 (expected >=1)",
+      "scenario": "53",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.5,
+      "in_scope": true,
+      "pass": false,
+      "reason": "second generate without --force succeeded (expected non-zero); second generate stderr did not mention --force",
+      "scenario": "54",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 7.6,
+      "in_scope": true,
+      "pass": false,
+      "reason": "openclaw 0/13 (need >=12); hermes 0/13 (need >=12)",
+      "scenario": "55",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 1.4,
+      "in_scope": true,
+      "pass": false,
+      "reason": "openclaw: tool count default=8 verbose=8 (need 51/51); hermes: tool count default=8 verbose=8 (need 51/51)",
+      "scenario": "56",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 19.7,
+      "in_scope": true,
+      "pass": false,
+      "reason": "openclaw verify rc=2; hermes verify rc=2; post-restart openclaw verify rc=2; post-restart hermes verify rc=2",
+      "scenario": "57",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 6.6,
+      "in_scope": true,
+      "pass": false,
+      "reason": "notify rc/code={'body': 'Failed to deserialize the JSON body into the target type: missing field `target_agent_id` at line 1 column 222', 'http_code': 422}; hermes did not see notify with marker=s58-9f1974079dd04d0c862ad60446439268",
+      "scenario": "58",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 29.3,
+      "in_scope": true,
+      "pass": false,
+      "reason": "webhook never fired for evt-1; DLQ empty after 5xx (entries=0)",
+      "scenario": "59",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 4.8,
+      "in_scope": true,
+      "pass": false,
+      "reason": "hermes deep (inherit=true) got 201 (expected 403)",
+      "scenario": "60",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 48.8,
+      "in_scope": true,
+      "pass": false,
+      "reason": "openclaw successes=1 (expected >=700 before throttle); openclaw quota.used=0 (expected >=700)",
+      "scenario": "61",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 75.1,
+      "in_scope": true,
+      "pass": false,
+      "reason": "seed for 'photosynthesis' not in top-10; seed for 'relativity' not in top-10; seed for 'kafka' not in top-10",
+      "scenario": "62",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 7.0,
+      "in_scope": true,
+      "pass": false,
+      "reason": "consolidate returned non-dict: Failed to deserialize the JSON body into the target type: missing field `ids` at line 1 column 51; store ids missing: id1=None id2=cfe6333a-2473-4451-ba81-7dbcd0da8d81; consolidated_from_agents missing one side: set()",
+      "scenario": "63",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.6,
+      "in_scope": true,
+      "pass": false,
+      "reason": "openclaw v1 families=[] (expected 8); hermes v2 families=[] (expected 8)",
+      "scenario": "64",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 1.7,
+      "in_scope": true,
+      "pass": false,
+      "reason": "only stored 0/5 entities",
+      "scenario": "65",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.4,
+      "in_scope": true,
+      "pass": false,
+      "reason": "store failed",
+      "scenario": "66",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 16.1,
+      "in_scope": true,
+      "pass": false,
+      "reason": "turn 0: q reasoning empty; turn 0: a reasoning empty; turn 0: a_id missing; turn 1: q reasoning empty; turn 1: a reasoning empty; turn 1: a_id missing; turn 2: q reasoning empty; turn 2: a reasoning empty; turn 2: a_id missing",
+      "scenario": "67",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 4.1,
+      "in_scope": true,
+      "pass": false,
+      "reason": "store failed; Grok returned no reasoning trace; recall did not surface metadata.reasoning",
+      "scenario": "68",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 180.0,
+      "in_scope": true,
+      "pass": false,
+      "reason": "scenario exceeded 180s timeout",
+      "scenario": "69",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 4.6,
+      "in_scope": true,
+      "pass": false,
+      "reason": "seed wrote 0/1000; forward landed -1 in pg (expected 1000); pg row count after rerun = -1 (expected 1000); reverse landed 0 in sqlite (expected 1000)",
+      "scenario": "70",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 5.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "71",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 3.4,
+      "in_scope": true,
+      "pass": false,
+      "reason": "only seeded 0/10 entities",
+      "scenario": "72",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 1.2,
+      "in_scope": true,
+      "pass": null,
+      "reason": "cargo not installed on runner droplet \u2014 install rustup or run S73 from a host with cargo. (See docs/coverage.md Postgres+AGE section for the SKIP-condition policy.)",
+      "scenario": "73",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 2.0,
+      "in_scope": true,
+      "pass": false,
+      "reason": "baseline store() failed rc=2 (adapter may be broken); link() error without UnsupportedCapability marker: ai-memory: loaded config from /root/.config/ai-memory/config.toml\nerror: unrecognized subcommand 'probe-capability'\n\n  tip: a similar subcommand exists: 'recall'\n\nUsage: ai-memory [OPTIONS] <COMMAND>\n\nFor more information, try '--help'.\n__RC__=2\n; register_agent() error without UnsupportedCapability: ai-memory: loaded config from /root/.config/ai-memory/config.toml\nerror: unrecognized subcommand 'probe-capability'\n\n  tip: a similar subcommand exists: 'recall'\n\nUsage: ai-memory [OPTIONS] <COMMAND>\n\nFor more information, try '--help'.\n__RC__=2\n",
+      "scenario": "74",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.7,
+      "in_scope": true,
+      "pass": false,
+      "reason": "pg schema_version=-1 (expected 15 for v0.7.0-alpha); sqlite schema_version=-1 (expected 28 for v0.7.0); missing migration set [] != expected [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]",
+      "scenario": "75",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 10.3,
+      "in_scope": true,
+      "pass": false,
+      "reason": "AGE not >= 1.3x faster than CTE at depth=5: ratio=0.96 (cte_p95=83.1ms age_p95=86.9ms)",
+      "scenario": "76",
+      "skipped": false
+    }
+  ],
+  "skipped": 11,
+  "started_utc": "2026-05-08T21:52:42+00:00",
+  "subject_under_test": "ai-memory v0.7.0 (round-2-fixes @ dfb184f)",
+  "topology": {
+    "agent_group": "openclaw_hermes",
+    "hermes": "142.93.72.46 (10.20.0.3)",
+    "openclaw": "104.236.52.203 (10.20.0.2)",
+    "postgres": "68.183.157.68 (10.20.0.4)",
+    "tls_mode": "off"
+  },
+  "total": 73,
+  "wall_seconds": 971.3
+}

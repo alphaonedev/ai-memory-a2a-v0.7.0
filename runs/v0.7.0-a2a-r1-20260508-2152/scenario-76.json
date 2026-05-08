@@ -1,0 +1,23 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 10.3,
+  "pass": false,
+  "per_agent": {
+    "postgres": {
+      "age_med_ms": 78.17,
+      "age_p95_ms": 86.94,
+      "cte_med_ms": 71.57,
+      "cte_p95_ms": 83.09,
+      "depth": 5,
+      "ratio_cte_over_age": 0.956,
+      "runs": 10
+    }
+  },
+  "reason": "AGE not >= 1.3x faster than CTE at depth=5: ratio=0.96 (cte_p95=83.1ms age_p95=86.9ms)",
+  "reasons": [
+    "AGE not >= 1.3x faster than CTE at depth=5: ratio=0.96 (cte_p95=83.1ms age_p95=86.9ms)"
+  ],
+  "scenario": "76",
+  "skipped": false,
+  "tls_mode": "off"
+}

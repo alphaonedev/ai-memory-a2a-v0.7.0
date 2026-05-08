@@ -1,0 +1,26 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 4.6,
+  "pass": false,
+  "per_agent": {
+    "openclaw": {
+      "fwd_pg_count": -1,
+      "rerun_errors": 0,
+      "rerun_inserted": 0,
+      "return_hash": "e3b0c44298fc1c14",
+      "rev_sqlite_count": 0,
+      "seed_hash": "e3b0c44298fc1c14",
+      "seeded": 0
+    }
+  },
+  "reason": "seed wrote 0/1000; forward landed -1 in pg (expected 1000); pg row count after rerun = -1 (expected 1000); reverse landed 0 in sqlite (expected 1000)",
+  "reasons": [
+    "seed wrote 0/1000",
+    "forward landed -1 in pg (expected 1000)",
+    "pg row count after rerun = -1 (expected 1000)",
+    "reverse landed 0 in sqlite (expected 1000)"
+  ],
+  "scenario": "70",
+  "skipped": false,
+  "tls_mode": "off"
+}

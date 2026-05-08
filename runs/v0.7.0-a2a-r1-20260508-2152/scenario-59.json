@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "correlation_id": "corr-f58bc6eaaa8e4f6c9678be069148b03c",
+  "dlq_count": 0,
+  "elapsed_sec": 29.3,
+  "events_received": 0,
+  "namespace": "s59-c33d0b",
+  "pass": false,
+  "reason": "webhook never fired for evt-1; DLQ empty after 5xx (entries=0)",
+  "reasons": [
+    "webhook never fired for evt-1",
+    "DLQ empty after 5xx (entries=0)"
+  ],
+  "scenario": "59",
+  "skipped": false,
+  "tls_mode": "off"
+}

@@ -1,0 +1,55 @@
+{
+  "agent_group": "openclaw_hermes",
+  "audit": {
+    "access": {
+      "access_count": 0
+    },
+    "archive": {
+      "http_code": 200,
+      "in_archive_listing": false
+    },
+    "consolidate": {
+      "consolidated_id": "af4680fe-1f45-47ef-afd7-493b665edbc2",
+      "http_code": 201,
+      "sibling_count": 3
+    },
+    "expire": {
+      "http_code": 404,
+      "marker_set": false,
+      "still_visible": true
+    },
+    "promote": {
+      "http_code": 404,
+      "tier_after": null
+    },
+    "purge": {
+      "http_code": 404,
+      "still_in_archive": false
+    },
+    "restore": {
+      "active_after_restore": true,
+      "http_code": 404
+    },
+    "store": {
+      "exists": true,
+      "tier": "mid"
+    }
+  },
+  "elapsed_sec": 36.9,
+  "m1_id": "7df9d9c5-3a1e-4d9b-9740-dbedfebcf7ea",
+  "namespace": "scenario49-lifecycle-b2f3b6",
+  "pass": false,
+  "reason": "access: access_count not incremented; promote: HTTP 404; promote: tier=None, expected 'long'; expire: HTTP 404; archive: M1 not visible in /api/v1/archive listing; restore: HTTP 404; purge: HTTP 404",
+  "reasons": [
+    "access: access_count not incremented",
+    "promote: HTTP 404",
+    "promote: tier=None, expected 'long'",
+    "expire: HTTP 404",
+    "archive: M1 not visible in /api/v1/archive listing",
+    "restore: HTTP 404",
+    "purge: HTTP 404"
+  ],
+  "scenario": "49",
+  "skipped": false,
+  "tls_mode": "off"
+}

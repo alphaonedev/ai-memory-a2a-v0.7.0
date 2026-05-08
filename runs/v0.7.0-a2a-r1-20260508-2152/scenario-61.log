@@ -1,0 +1,4 @@
+phase A: openclaw issues 1000 stores (burn quota)
+  openclaw 201s=1 429s=0
+phase B: hermes single store (must succeed — quota is per-agent)
+phase C: memory_quota_status per agent

@@ -1,0 +1,20 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 0.5,
+  "pass": false,
+  "rc": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "reason": "second generate without --force succeeded (expected non-zero); second generate stderr did not mention --force",
+  "reasons": [
+    "second generate without --force succeeded (expected non-zero)",
+    "second generate stderr did not mention --force"
+  ],
+  "scenario": "54",
+  "second_invocation_msg": "ai-memory: loaded config from /root/.config/ai-memory/config.toml\ngenerated keypair for host:a2a-v07-openclaw-nyc3-1:pid-34082-443b6de6\n  key_dir = /tmp/s54-keys-4d967aca\n  pub_b64 = xumHAC-FLOdGyqxad",
+  "skipped": false,
+  "tls_mode": "off"
+}

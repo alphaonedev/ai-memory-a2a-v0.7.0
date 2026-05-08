@@ -1,0 +1,12 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 3.4,
+  "pass": false,
+  "reason": "only seeded 0/10 entities",
+  "reasons": [
+    "seed failed"
+  ],
+  "scenario": "72",
+  "skipped": false,
+  "tls_mode": "off"
+}

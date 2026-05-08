@@ -1,0 +1,20 @@
+{
+  "agent_group": "openclaw_hermes",
+  "check_http_code": 422,
+  "elapsed_sec": 6.8,
+  "match_count": 0,
+  "original_id": "9d800644-f120-4ccf-9198-87684e22516e",
+  "original_in_matches": false,
+  "pass": false,
+  "reason": "check_duplicate returned HTTP 422; check_duplicate returned 0 matches for a near-identical input; original memory (9d800644-f120-4ccf-9198-87684e22516e) absent from matches; match did not carry a similarity score field",
+  "reasons": [
+    "check_duplicate returned HTTP 422",
+    "check_duplicate returned 0 matches for a near-identical input",
+    "original memory (9d800644-f120-4ccf-9198-87684e22516e) absent from matches",
+    "match did not carry a similarity score field"
+  ],
+  "scenario": "48",
+  "similarity_score": null,
+  "skipped": false,
+  "tls_mode": "off"
+}

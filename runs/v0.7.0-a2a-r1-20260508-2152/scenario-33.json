@@ -1,0 +1,21 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 17.3,
+  "m1_delivered": 1,
+  "namespace": "scenario33-pubsub-22dbc0",
+  "ns_in_subs_after": false,
+  "ns_in_subs_before": false,
+  "pass": false,
+  "reason": "subscribe returned HTTP 400; bob's subscription list did not include the subscribed namespace",
+  "reasons": [
+    "subscribe returned HTTP 400",
+    "bob's subscription list did not include the subscribed namespace"
+  ],
+  "scenario": "33",
+  "skipped": false,
+  "subscribe_http_code": 400,
+  "subscriptions_after_count": 0,
+  "subscriptions_before_count": 0,
+  "tls_mode": "off",
+  "unsubscribe_http_code": 200
+}

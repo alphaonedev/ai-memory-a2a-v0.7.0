@@ -1,0 +1,46 @@
+{
+  "agent_group": "openclaw_hermes",
+  "alias_resolutions": {
+    "a1-project": {
+      "entity_id": "",
+      "http_code": 404
+    },
+    "alpha1-proj": {
+      "entity_id": "",
+      "http_code": 404
+    },
+    "alphaone-proj": {
+      "entity_id": "",
+      "http_code": 404
+    },
+    "ao-project": {
+      "entity_id": "",
+      "http_code": 404
+    }
+  },
+  "aliases_on_entity": [
+    "AlphaOne-Project-f2c073",
+    "a1-project",
+    "alphaone-proj",
+    "alpha1-proj",
+    "ao-project"
+  ],
+  "canonical": "AlphaOne-Project-f2c073",
+  "elapsed_sec": 6.3,
+  "first_entity_id": "6b613be1-3178-4bbf-a04f-675dcca84074",
+  "first_register_http_code": 201,
+  "namespace": "scenario47-ent-f2c073",
+  "pass": false,
+  "reason": "by-alias('a1-project') HTTP 404; by-alias('alphaone-proj') HTTP 404; by-alias('alpha1-proj') HTTP 404; by-alias('ao-project') HTTP 404",
+  "reasons": [
+    "by-alias('a1-project') HTTP 404",
+    "by-alias('alphaone-proj') HTTP 404",
+    "by-alias('alpha1-proj') HTTP 404",
+    "by-alias('ao-project') HTTP 404"
+  ],
+  "scenario": "47",
+  "second_entity_id": "6b613be1-3178-4bbf-a04f-675dcca84074",
+  "second_register_http_code": 200,
+  "skipped": false,
+  "tls_mode": "off"
+}

@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 4.1,
+  "memory_id": null,
+  "orig_reasoning_chars": 0,
+  "pass": false,
+  "reason": "store failed; Grok returned no reasoning trace; recall did not surface metadata.reasoning",
+  "reasons": [
+    "store failed",
+    "Grok returned no reasoning trace",
+    "recall did not surface metadata.reasoning"
+  ],
+  "recalled_reasoning_chars": 0,
+  "scenario": "68",
+  "skipped": false,
+  "tls_mode": "off"
+}

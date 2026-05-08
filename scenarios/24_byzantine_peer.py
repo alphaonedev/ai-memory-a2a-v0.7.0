@@ -40,7 +40,11 @@ def main() -> None:
     ns = "scenario24-byzantine"
     marker = new_uuid("bz-")
     scheme = "http" if h.tls_mode == "off" else "https"
-    peer_url = f"{scheme}://{node3_priv}:9077"
+    # v0.7.0 A2A: daemons listen on port 19077, not the v0.6.x default 9077.
+    # Honour A2A_BASE_PORT (set by run_round.sh) so the byzantine sync_push
+    # actually reaches the receiver.
+    peer_port = int(os.environ.get("A2A_BASE_PORT") or 9077)
+    peer_url = f"{scheme}://{node3_priv}:{peer_port}"
 
     # Craft the sync_push payload.
     payload = {

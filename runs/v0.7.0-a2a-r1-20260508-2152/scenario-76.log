@@ -1,0 +1,26 @@
+phase A: drop+create aimemory_perf, schema-init, AGE on
+  seeding 1000 entities + 5000 edges (layered)
+phase B: 10 timed find_paths(depth=5) with AGE on
+  age run 1/10: 73.8 ms
+  age run 2/10: 88.6 ms
+  age run 3/10: 73.8 ms
+  age run 4/10: 71.7 ms
+  age run 5/10: 69.5 ms
+  age run 6/10: 85.4 ms
+  age run 7/10: 85.0 ms
+  age run 8/10: 71.8 ms
+  age run 9/10: 82.6 ms
+  age run 10/10: 86.9 ms
+phase C: DROP EXTENSION age, 10 timed runs against CTE
+  cte run 1/10: 73.0 ms
+  cte run 2/10: 72.3 ms
+  cte run 3/10: 67.5 ms
+  cte run 4/10: 83.1 ms
+  cte run 5/10: 70.9 ms
+  cte run 6/10: 70.7 ms
+  cte run 7/10: 74.8 ms
+  cte run 8/10: 83.9 ms
+  cte run 9/10: 66.9 ms
+  cte run 10/10: 67.5 ms
+phase D: restore AGE
+summary: age p95=86.9ms  cte p95=83.1ms  ratio=0.96x

@@ -1,0 +1,16 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 6.6,
+  "inbox_size": 0,
+  "marker": "s58-9f1974079dd04d0c862ad60446439268",
+  "matched": 0,
+  "pass": false,
+  "reason": "notify rc/code={'body': 'Failed to deserialize the JSON body into the target type: missing field `target_agent_id` at line 1 column 222', 'http_code': 422}; hermes did not see notify with marker=s58-9f1974079dd04d0c862ad60446439268",
+  "reasons": [
+    "notify rc/code={'body': 'Failed to deserialize the JSON body into the target type: missing field `target_agent_id` at line 1 column 222', 'http_code': 422}",
+    "hermes did not see notify with marker=s58-9f1974079dd04d0c862ad60446439268"
+  ],
+  "scenario": "58",
+  "skipped": false,
+  "tls_mode": "off"
+}

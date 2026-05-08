@@ -1,0 +1,27 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 1.4,
+  "pass": false,
+  "per_agent": {
+    "hermes": {
+      "default_bytes": 2077,
+      "default_tools": 8,
+      "verbose_bytes": 3660,
+      "verbose_tools": 8
+    },
+    "openclaw": {
+      "default_bytes": 2077,
+      "default_tools": 8,
+      "verbose_bytes": 3660,
+      "verbose_tools": 8
+    }
+  },
+  "reason": "openclaw: tool count default=8 verbose=8 (need 51/51); hermes: tool count default=8 verbose=8 (need 51/51)",
+  "reasons": [
+    "openclaw: tool count default=8 verbose=8 (need 51/51)",
+    "hermes: tool count default=8 verbose=8 (need 51/51)"
+  ],
+  "scenario": "56",
+  "skipped": false,
+  "tls_mode": "off"
+}

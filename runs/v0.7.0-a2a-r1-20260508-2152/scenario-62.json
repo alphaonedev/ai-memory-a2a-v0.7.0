@@ -1,0 +1,32 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 75.1,
+  "namespace": "s62-bfe98e",
+  "pass": false,
+  "reason": "seed for 'photosynthesis' not in top-10; seed for 'relativity' not in top-10; seed for 'kafka' not in top-10",
+  "reasons": [
+    "seed for 'photosynthesis' not in top-10",
+    "seed for 'relativity' not in top-10",
+    "seed for 'kafka' not in top-10"
+  ],
+  "recalls": {
+    "kafka": {
+      "rank_of_seed": 0,
+      "rc": 0,
+      "top_k": 0
+    },
+    "photosynthesis": {
+      "rank_of_seed": 0,
+      "rc": 0,
+      "top_k": 0
+    },
+    "relativity": {
+      "rank_of_seed": 0,
+      "rc": 0,
+      "top_k": 0
+    }
+  },
+  "scenario": "62",
+  "skipped": false,
+  "tls_mode": "off"
+}

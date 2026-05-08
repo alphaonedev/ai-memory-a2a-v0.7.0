@@ -1,0 +1,15 @@
+{
+  "agent_group": "openclaw_hermes",
+  "archive_http_code": 200,
+  "bob_sees_archived": true,
+  "elapsed_sec": 17.4,
+  "m1_id": "a2419709-3409-4a85-a654-409abd19b229",
+  "node4_active_rows": 1,
+  "pass": true,
+  "reasons": [],
+  "restore_http_code": 200,
+  "scenario": "29",
+  "skipped": false,
+  "stats_shape_ok": true,
+  "tls_mode": "off"
+}

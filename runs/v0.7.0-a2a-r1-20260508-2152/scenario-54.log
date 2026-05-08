@@ -1,0 +1,32 @@
+==1==
+generated keypair for host:a2a-v07-openclaw-nyc3-1:pid-34077-e3d6a55e
+  key_dir = /tmp/s54-keys-4d967aca
+  pub_b64 = -207__RGFO_KE4cKQgvCCkM6zOSCeL1jybGmLwUFDGw
+==1rc==0
+==2==
+ai-memory: loaded config from /root/.config/ai-memory/config.toml
+generated keypair for host:a2a-v07-openclaw-nyc3-1:pid-34082-443b6de6
+  key_dir = /tmp/s54-keys-4d967aca
+  pub_b64 = xumHAC-FLOdGyqxadEphKxS0uR5_Sp5cAuS6uonMEEw
+==2rc==0
+==3==
+ai-memory: loaded config from /root/.config/ai-memory/config.toml
+generated keypair for host:a2a-v07-openclaw-nyc3-1:pid-34087-66d65693
+  key_dir = /tmp/s54-keys-4d967aca
+  pub_b64 = 2TjNACBYobJOR4utHjFdnZs4YDGT3TbZ6CVtJf3SFCw
+==3rc==0
+==4==
+ai-memory: loaded config from /root/.config/ai-memory/config.toml
+generated keypair for host:a2a-v07-openclaw-nyc3-1:pid-34092-71669a94
+  key_dir = /tmp/s54-keys-4d967aca
+  pub_b64 = n-jzO5hr7ng2a2WTvPIHky3W9W0LU9e2sA04EPdT8kc
+==4rc==0
+host:a2a-v07-openclaw-nyc3-1:pid-34077-e3d6a55e.priv
+host:a2a-v07-openclaw-nyc3-1:pid-34077-e3d6a55e.pub
+host:a2a-v07-openclaw-nyc3-1:pid-34082-443b6de6.priv
+host:a2a-v07-openclaw-nyc3-1:pid-34082-443b6de6.pub
+host:a2a-v07-openclaw-nyc3-1:pid-34087-66d65693.priv
+host:a2a-v07-openclaw-nyc3-1:pid-34087-66d65693.pub
+host:a2a-v07-openclaw-nyc3-1:pid-34092-71669a94.priv
+host:a2a-v07-openclaw-nyc3-1:pid-34092-71669a94.pub
+

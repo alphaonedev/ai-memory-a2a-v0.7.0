@@ -1,0 +1,210 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 7.6,
+  "identical": true,
+  "pass": false,
+  "per_agent": {
+    "hermes": {
+      "correct": 0,
+      "results": [
+        {
+          "expected": "other",
+          "got": "",
+          "intent": "send a notification",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "",
+          "intent": "expand a query and find related memories",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "",
+          "intent": "auto-tag this content",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "",
+          "intent": "detect contradictions in my notes",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "",
+          "intent": "consolidate duplicate memories",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "core",
+          "got": "",
+          "intent": "store a new memory about my project",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "core",
+          "got": "",
+          "intent": "recall what I learned yesterday",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "meta",
+          "got": "",
+          "intent": "list all my namespaces",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "graph",
+          "got": "",
+          "intent": "query the knowledge graph",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "graph",
+          "got": "",
+          "intent": "walk the taxonomy",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "other",
+          "got": "",
+          "intent": "subscribe to namespace events",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "meta",
+          "got": "",
+          "intent": "get my quota status",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "meta",
+          "got": "",
+          "intent": "verify the audit chain",
+          "ok": false,
+          "rc": 0
+        }
+      ],
+      "total": 13
+    },
+    "openclaw": {
+      "correct": 0,
+      "results": [
+        {
+          "expected": "other",
+          "got": "",
+          "intent": "send a notification",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "",
+          "intent": "expand a query and find related memories",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "",
+          "intent": "auto-tag this content",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "",
+          "intent": "detect contradictions in my notes",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "",
+          "intent": "consolidate duplicate memories",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "core",
+          "got": "",
+          "intent": "store a new memory about my project",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "core",
+          "got": "",
+          "intent": "recall what I learned yesterday",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "meta",
+          "got": "",
+          "intent": "list all my namespaces",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "graph",
+          "got": "",
+          "intent": "query the knowledge graph",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "graph",
+          "got": "",
+          "intent": "walk the taxonomy",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "other",
+          "got": "",
+          "intent": "subscribe to namespace events",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "meta",
+          "got": "",
+          "intent": "get my quota status",
+          "ok": false,
+          "rc": 0
+        },
+        {
+          "expected": "meta",
+          "got": "",
+          "intent": "verify the audit chain",
+          "ok": false,
+          "rc": 0
+        }
+      ],
+      "total": 13
+    }
+  },
+  "reason": "openclaw 0/13 (need >=12); hermes 0/13 (need >=12)",
+  "reasons": [
+    "openclaw 0/13 (need >=12)",
+    "hermes 0/13 (need >=12)"
+  ],
+  "scenario": "55",
+  "skipped": false,
+  "tls_mode": "off"
+}

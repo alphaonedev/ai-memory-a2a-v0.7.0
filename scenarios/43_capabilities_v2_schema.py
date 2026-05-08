@@ -86,9 +86,16 @@ def main() -> None:
             passed = False
             reasons.append(f"{name} did not return a capabilities document")
             continue
-        if g["schema_version"] != "2":
+        # v0.7.0 bumps schema_version to "3"; v0.6.3 was "2". Accept any
+        # value >= 2, since the goal is "v2 surface or newer with all
+        # v2 blocks present".
+        try:
+            sv_int = int(g["schema_version"]) if g["schema_version"] is not None else 0
+        except (TypeError, ValueError):
+            sv_int = 0
+        if sv_int < 2:
             passed = False
-            reasons.append(f"{name} schema_version={g['schema_version']!r} (expected \"2\")")
+            reasons.append(f"{name} schema_version={g['schema_version']!r} (expected >= 2)")
         if g["missing_v2"]:
             passed = False
             reasons.append(f"{name} missing v2 blocks: {g['missing_v2']}")

@@ -1,0 +1,18 @@
+{
+  "agent_group": "openclaw_hermes",
+  "approve_http_code": 200,
+  "charlie_sees": {
+    "approved": 1,
+    "rejected": 0
+  },
+  "elapsed_sec": 14.2,
+  "namespace": "scenario34-pending-0f7b2a",
+  "pass": true,
+  "pending_queue_count": 2,
+  "reasons": [],
+  "reject_http_code": 200,
+  "scenario": "34",
+  "set_standard_http_code": 201,
+  "skipped": false,
+  "tls_mode": "off"
+}

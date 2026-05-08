@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "consolidated_from_agents": [],
+  "elapsed_sec": 7.0,
+  "id1": null,
+  "id2": "cfe6333a-2473-4451-ba81-7dbcd0da8d81",
+  "pass": false,
+  "reason": "consolidate returned non-dict: Failed to deserialize the JSON body into the target type: missing field `ids` at line 1 column 51; store ids missing: id1=None id2=cfe6333a-2473-4451-ba81-7dbcd0da8d81; consolidated_from_agents missing one side: set()",
+  "reasons": [
+    "consolidate returned non-dict: Failed to deserialize the JSON body into the target type: missing field `ids` at line 1 column 51",
+    "store ids missing: id1=None id2=cfe6333a-2473-4451-ba81-7dbcd0da8d81",
+    "consolidated_from_agents missing one side: set()"
+  ],
+  "scenario": "63",
+  "skipped": false,
+  "tls_mode": "off"
+}

@@ -1,0 +1,13 @@
+alice writes 4 memories
+settle 6s for pre-gc replication
+alice forgets 2 via /api/v1/forget
+  forget returned HTTP 400
+settle 5s for forget propagation
+bob triggers /api/v1/gc on node-2
+  gc returned HTTP 200
+settle 8s for post-gc settle
+verify remaining 2 markers are still readable on every peer
+  node-1 sees 2/2 live markers
+  node-2 sees 2/2 live markers
+  node-3 sees 2/2 live markers
+  node-4 sees 2/2 live markers

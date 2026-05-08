@@ -1,0 +1,23 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 2.0,
+  "pass": false,
+  "per_agent": {
+    "openclaw": {
+      "link_rc": 2,
+      "link_tail": "ai-memory: loaded config from /root/.config/ai-memory/config.toml\nerror: unrecognized subcommand 'probe-capability'\n\n  tip: a similar subcommand exists: 'recall'\n\nUsage: ai-memory [OPTIONS] <COMMAND>\n\nFor more information, try '--help'.\n__RC__=2\n",
+      "register_agent_rc": 2,
+      "register_tail": "ai-memory: loaded config from /root/.config/ai-memory/config.toml\nerror: unrecognized subcommand 'probe-capability'\n\n  tip: a similar subcommand exists: 'recall'\n\nUsage: ai-memory [OPTIONS] <COMMAND>\n\nFor more information, try '--help'.\n__RC__=2\n",
+      "store_rc": 2
+    }
+  },
+  "reason": "baseline store() failed rc=2 (adapter may be broken); link() error without UnsupportedCapability marker: ai-memory: loaded config from /root/.config/ai-memory/config.toml\nerror: unrecognized subcommand 'probe-capability'\n\n  tip: a similar subcommand exists: 'recall'\n\nUsage: ai-memory [OPTIONS] <COMMAND>\n\nFor more information, try '--help'.\n__RC__=2\n; register_agent() error without UnsupportedCapability: ai-memory: loaded config from /root/.config/ai-memory/config.toml\nerror: unrecognized subcommand 'probe-capability'\n\n  tip: a similar subcommand exists: 'recall'\n\nUsage: ai-memory [OPTIONS] <COMMAND>\n\nFor more information, try '--help'.\n__RC__=2\n",
+  "reasons": [
+    "baseline store() failed rc=2 (adapter may be broken)",
+    "link() error without UnsupportedCapability marker: ai-memory: loaded config from /root/.config/ai-memory/config.toml\nerror: unrecognized subcommand 'probe-capability'\n\n  tip: a similar subcommand exists: 'recall'\n\nUsage: ai-memory [OPTIONS] <COMMAND>\n\nFor more information, try '--help'.\n__RC__=2\n",
+    "register_agent() error without UnsupportedCapability: ai-memory: loaded config from /root/.config/ai-memory/config.toml\nerror: unrecognized subcommand 'probe-capability'\n\n  tip: a similar subcommand exists: 'recall'\n\nUsage: ai-memory [OPTIONS] <COMMAND>\n\nFor more information, try '--help'.\n__RC__=2\n"
+  ],
+  "scenario": "74",
+  "skipped": false,
+  "tls_mode": "off"
+}

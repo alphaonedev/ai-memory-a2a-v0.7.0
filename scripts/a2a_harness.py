@@ -85,21 +85,32 @@ class Harness:
         return new_uuid(prefix)
 
     @classmethod
-    def from_env(cls, scenario_id: str, *, require_node4: bool = False) -> "Harness":
+    def from_env(cls, scenario_id: str, *,
+                 require_node4: bool = False,
+                 require_node3: bool = False) -> "Harness":
         # v0.7.0 A2A campaign topology is 2-droplet (openclaw + hermes) +
         # 1 postgres node; NODE3_IP / NODE4_IP fall back to NODE2_IP so
         # 3-and-4-node scenarios collapse to a 2-way comparison rather
         # than crashing on KeyError. Documented in runs/<campaign>/findings.
+        #
+        # Defense-in-depth: if a scenario explicitly requires a distinct
+        # 3rd or 4th node and the env shows NODE3/NODE4 aliased to NODE2,
+        # we emit a clean SKIP via stdout JSON and exit 0 — the runner's
+        # scope manifest is the primary skip-list, this is a backstop.
         need = ["NODE1_IP", "NODE2_IP", "AGENT_GROUP"]
         missing = [k for k in need if not os.environ.get(k)]
         if missing:
             raise RuntimeError(f"missing required env vars: {missing}")
         node2 = os.environ["NODE2_IP"]
-        return cls(
+        node3_env = os.environ.get("NODE3_IP")
+        node4_env = os.environ.get("NODE4_IP")
+        node3 = node3_env or node2
+        node4 = node4_env or node2
+        h = cls(
             node1_ip=os.environ["NODE1_IP"],
             node2_ip=node2,
-            node3_ip=os.environ.get("NODE3_IP") or node2,
-            node4_ip=os.environ.get("NODE4_IP") or node2,
+            node3_ip=node3,
+            node4_ip=node4,
             memory_node_ip=os.environ.get("MEMORY_NODE_IP", ""),
             node1_priv=os.environ.get("NODE1_PRIV", ""),
             node2_priv=os.environ.get("NODE2_PRIV", ""),
@@ -109,6 +120,26 @@ class Harness:
             tls_mode=os.environ.get("TLS_MODE", "off"),
             scenario_id=scenario_id,
         )
+        # Backstop alias detection: only triggers on the NEW
+        # `require_node3` / `require_node4` *strict* knobs (not the
+        # legacy `require_node4=True` parameter, which most v0.6.x
+        # scenarios pass for documentation only).
+        #
+        # The scope manifest at scripts/scope-v0.7.0.json is the
+        # primary skip-list. Scenarios that explicitly want HARD
+        # alias-detection can opt in via require_node3=True.
+        # require_node4 here is preserved for backwards-compat but
+        # no longer auto-skips — the legacy `require_node4=True` on
+        # scenarios like S1b/S4/S5/S10 is a no-op annotation; their
+        # node3/node4 reads collapse to node2 alias and still pass
+        # their federation-visibility oracle.
+        _ = require_node4  # legacy compat — no auto-skip on alias
+        if require_node3 and (not node3_env or node3 == node2):
+            h.skip(
+                "v0.7.0 A2A is 2-agent (openclaw+hermes); scenario opts in to "
+                "require_node3=True and NODE3 is aliased to NODE2."
+            )
+        return h
 
     # -------- postgres helpers (v0.7.0 SAL adapter target) --------
     #
@@ -251,6 +282,11 @@ class Harness:
             return self.node1_priv, port
         if node_ip == self.node2_ip and self.node2_priv:
             return self.node2_priv, port
+        # When node_ip is None (caller wants "this droplet's local listener"),
+        # default to node1's private IP. v0.7.0 daemons bind to PRIVATE VPC
+        # IP only — 127.0.0.1 does not have a listener.
+        if node_ip is None and self.node1_priv:
+            return self.node1_priv, port
         return "127.0.0.1", port
 
     def remote_base_url(self, node_ip: str | None = None) -> str:

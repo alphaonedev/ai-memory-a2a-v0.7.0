@@ -1,0 +1,19 @@
+{
+  "agent_group": "openclaw_hermes",
+  "chronological": true,
+  "elapsed_sec": 13.4,
+  "event_count": 0,
+  "m0_id": "7b277203-e8e0-41d0-a25e-57d5fafb560d",
+  "pass": false,
+  "reason": "expected >=3 events (2 adds + 1 invalidate), got 0; no edge_added event in timeline; no edge_invalidated event in timeline",
+  "reasons": [
+    "expected >=3 events (2 adds + 1 invalidate), got 0",
+    "no edge_added event in timeline",
+    "no edge_invalidated event in timeline"
+  ],
+  "scenario": "46",
+  "skipped": false,
+  "timeline_http_code": 200,
+  "tls_mode": "off",
+  "types": []
+}

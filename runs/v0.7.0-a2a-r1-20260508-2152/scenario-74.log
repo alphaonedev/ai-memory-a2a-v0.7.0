@@ -1,0 +1,7 @@
+setup: drop+create disposable aimemory_s74 db
+phase A: probe capability surface — first establish baseline (store)
+  store rc=2
+phase B: link() — expect UnsupportedCapability(LINKS)
+  link rc=2
+phase C: register_agent() — expect UnsupportedCapability(AGENT_REGISTRATION)
+  register rc=2

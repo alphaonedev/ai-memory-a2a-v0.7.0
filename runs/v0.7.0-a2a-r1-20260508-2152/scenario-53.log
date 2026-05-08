@@ -1,0 +1,4 @@
+phase A: owner (ai:openclaw@nyc3:droplet-1) sets governance.write=owner on scenario53-0fb18e97
+  set_standard -> rc=0 resp={'body': None, 'http_code': 404}
+phase B: owner writes to scenario53-0fb18e97 (expect 201)
+phase C: intruder (ai:hermes@nyc3:droplet-2) writes to scenario53-0fb18e97 (expect 403)

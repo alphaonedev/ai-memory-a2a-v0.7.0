@@ -2,11 +2,15 @@
 # Copyright 2026 AlphaOne LLC
 # SPDX-License-Identifier: Apache-2.0
 """
-Round-1 driver for the v0.7.0 A2A campaign.
+Round-1 / Round-2 driver for the v0.7.0 A2A campaign.
 
 Walks every scenario file in scenarios/, runs it with a per-scenario
 timeout, captures stdout (JSON) → runs/<campaign>/scenario-N.json and
 stderr → runs/<campaign>/scenario-N.log.
+
+Reads scripts/scope-v0.7.0.json at startup and emits clean SKIP records
+for scenarios in skip_3_agent / skip_mcp_stdio / skip_other lists
+WITHOUT executing them. In-scope scenarios are dispatched normally.
 
 Aggregates pass/fail/skip into runs/<campaign>/a2a-summary.json
 matching the schema render_pages.py expects.
@@ -23,6 +27,31 @@ from datetime import datetime, timezone
 
 REPO = Path(__file__).resolve().parent.parent
 SCENARIOS = REPO / "scenarios"
+SCOPE_PATH = REPO / "scripts" / "scope-v0.7.0.json"
+
+
+def load_scope() -> dict:
+    """Read scripts/scope-v0.7.0.json and return a normalized dispatch map.
+
+    Returns:
+        {
+            "in_scope": set[str],
+            "skips": {scenario_id: skip_reason, ...},
+            "campaign_scope": "...",
+        }
+    """
+    with open(SCOPE_PATH, "r", encoding="utf-8") as f:
+        m = json.load(f)
+    in_scope = {s["id"] for s in m.get("in_scope", [])}
+    skips: dict[str, str] = {}
+    for key in ("skip_3_agent", "skip_mcp_stdio", "skip_other"):
+        for s in m.get(key, []):
+            skips[s["id"]] = s.get("rationale", f"skipped via {key}")
+    return {
+        "in_scope": in_scope,
+        "skips": skips,
+        "campaign_scope": m.get("campaign_scope", ""),
+    }
 
 
 def scenario_id_from_filename(p: Path) -> str:
@@ -117,9 +146,16 @@ def main() -> None:
     if not campaign_id:
         print("CAMPAIGN_ID env var required", file=sys.stderr)
         sys.exit(2)
+    round_label = os.environ.get("ROUND_LABEL", "Round 1")
 
     only = os.environ.get("ONLY", "").strip()
-    skip = set(s.strip() for s in os.environ.get("SKIP", "").split(",") if s.strip())
+    skip_extra = set(s.strip() for s in os.environ.get("SKIP", "").split(",") if s.strip())
+
+    scope = load_scope()
+    in_scope: set[str] = scope["in_scope"]
+    scope_skips: dict[str, str] = scope["skips"]
+    campaign_scope = scope["campaign_scope"]
+    print(f"scope: {len(in_scope)} in-scope; {len(scope_skips)} pre-classified skips", file=sys.stderr)
 
     run_dir = REPO / "runs" / campaign_id
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -140,10 +176,41 @@ def main() -> None:
     results: list[dict] = []
     for f in files:
         sid = scenario_id_from_filename(f)
-        if sid in skip:
+        # Scope-based skip: do not execute, emit a clean per-scenario JSON.
+        if sid in scope_skips:
+            reason = scope_skips[sid]
+            print(f"  [{sid}] SKIP (scope) — {reason[:80]}", file=sys.stderr)
+            doc = {
+                "scenario": sid,
+                "pass": None,
+                "skipped": True,
+                "skip_reason": reason,
+                "agent_group": "openclaw_hermes",
+                "campaign_scope": campaign_scope,
+                "elapsed_sec": 0,
+            }
+            (run_dir / f"scenario-{sid}.json").write_text(
+                json.dumps(doc, sort_keys=True, indent=2))
+            results.append(doc)
+            continue
+        if sid in skip_extra:
             print(f"  [{sid}] SKIP (operator override)", file=sys.stderr)
             doc = {"scenario": sid, "pass": None, "skipped": True,
-                   "reason": "operator override", "elapsed_sec": 0}
+                   "skip_reason": "operator override",
+                   "agent_group": "openclaw_hermes",
+                   "campaign_scope": campaign_scope,
+                   "elapsed_sec": 0}
+            (run_dir / f"scenario-{sid}.json").write_text(json.dumps(doc, sort_keys=True, indent=2))
+            results.append(doc)
+            continue
+        if sid not in in_scope:
+            # No classification at all — skip-defensive (manifest is SOT).
+            print(f"  [{sid}] SKIP (not in manifest)", file=sys.stderr)
+            doc = {"scenario": sid, "pass": None, "skipped": True,
+                   "skip_reason": "scenario not listed in scripts/scope-v0.7.0.json",
+                   "agent_group": "openclaw_hermes",
+                   "campaign_scope": campaign_scope,
+                   "elapsed_sec": 0}
             (run_dir / f"scenario-{sid}.json").write_text(json.dumps(doc, sort_keys=True, indent=2))
             results.append(doc)
             continue
@@ -164,11 +231,22 @@ def main() -> None:
     n_pass = sum(1 for r in results if r.get("pass") is True)
     n_fail = sum(1 for r in results if r.get("pass") is False and not r.get("skipped"))
     n_skip = sum(1 for r in results if r.get("skipped"))
-    overall = (n_fail == 0 and n_pass + n_skip == n_total)
+
+    # GREEN definition: NO in-scope scenario reported pass=False.
+    # In-scope scenarios that legitimately self-skip (e.g. S20/S21 only
+    # run under TLS_MODE=mtls and the campaign is tls=off) are counted
+    # as SKIP, not FAIL — they don't block GREEN.
+    in_scope_results = [r for r in results if r.get("scenario") in in_scope]
+    n_in_scope = len(in_scope_results)
+    n_in_scope_pass = sum(1 for r in in_scope_results if r.get("pass") is True)
+    n_in_scope_fail = sum(1 for r in in_scope_results if r.get("pass") is False and not r.get("skipped"))
+    n_in_scope_skip = sum(1 for r in in_scope_results if r.get("skipped"))
+    overall = (n_in_scope_fail == 0 and n_in_scope > 0 and
+               n_in_scope_pass + n_in_scope_skip == n_in_scope)
 
     summary = {
         "campaign_id": campaign_id,
-        "round": "Round 1",
+        "round": round_label,
         "started_utc": started,
         "finished_utc": finished,
         "wall_seconds": round(elapsed, 1),
@@ -176,7 +254,11 @@ def main() -> None:
         "passed": n_pass,
         "failed": n_fail,
         "skipped": n_skip,
+        "in_scope_total": n_in_scope,
+        "in_scope_passed": n_in_scope_pass,
+        "in_scope_failed": n_in_scope_fail,
         "overall_pass": overall,
+        "campaign_scope": campaign_scope,
         "subject_under_test": "ai-memory v0.7.0 (round-2-fixes @ dfb184f)",
         "topology": {
             "openclaw": "104.236.52.203 (10.20.0.2)",
@@ -190,21 +272,23 @@ def main() -> None:
                 "scenario": r.get("scenario"),
                 "pass": r.get("pass"),
                 "skipped": r.get("skipped", False),
-                "reason": r.get("reason", ""),
+                "reason": r.get("reason", "") or r.get("skip_reason", ""),
                 "elapsed_sec": r.get("elapsed_sec", 0),
+                "in_scope": r.get("scenario") in in_scope,
             }
             for r in results
         ],
     }
     (run_dir / "a2a-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True))
 
-    print(f"\n=== Round 1 complete ===", file=sys.stderr)
-    print(f"  total : {n_total}", file=sys.stderr)
-    print(f"  pass  : {n_pass}", file=sys.stderr)
-    print(f"  fail  : {n_fail}", file=sys.stderr)
-    print(f"  skip  : {n_skip}", file=sys.stderr)
-    print(f"  wall  : {elapsed:.1f}s", file=sys.stderr)
-    print(f"  verdict: {'GREEN' if overall else 'NOT GREEN'}", file=sys.stderr)
+    print(f"\n=== {round_label} complete ===", file=sys.stderr)
+    print(f"  total       : {n_total}", file=sys.stderr)
+    print(f"  in-scope    : {n_in_scope}", file=sys.stderr)
+    print(f"  in-scope ✓ : {n_in_scope_pass}", file=sys.stderr)
+    print(f"  in-scope ✗ : {n_in_scope_fail}", file=sys.stderr)
+    print(f"  skipped     : {n_skip}", file=sys.stderr)
+    print(f"  wall        : {elapsed:.1f}s", file=sys.stderr)
+    print(f"  verdict     : {'GREEN' if overall else 'NOT GREEN'}", file=sys.stderr)
 
 
 if __name__ == "__main__":

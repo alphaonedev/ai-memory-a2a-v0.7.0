@@ -1,0 +1,9 @@
+phase A: drop+create aimemory_s70 on postgres-node, seed sqlite
+  seeded 0/1000 into /tmp/s70-seed-8bfb03.sqlite
+  seed content sha256=e3b0c44298fc1c14...
+phase B: forward migrate sqlite → postgres
+  forward migrate report={} pg_count=-1
+phase C: idempotent rerun
+  rerun report={} pg_count=-1
+phase D: reverse migrate postgres → fresh sqlite
+  reverse migrate report={} sqlite_count=0

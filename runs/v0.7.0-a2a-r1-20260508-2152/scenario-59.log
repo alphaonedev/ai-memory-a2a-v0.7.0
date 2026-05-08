@@ -1,0 +1,7 @@
+phase A: start webhook receiver on openclaw
+phase B: subscribe -> http://10.20.0.2:28590/hook
+  subscribe -> rc=0 resp={'body': None, 'http_code': 404}
+phase C: hermes writes to ns; expect webhook event
+settle 5s for webhook fire
+phase D: switch receiver to 500, write again, verify DLQ
+settle 20s for retry ladder + DLQ promotion

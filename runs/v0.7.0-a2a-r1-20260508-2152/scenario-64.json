@@ -1,0 +1,23 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 0.6,
+  "pass": false,
+  "per_agent": {
+    "hermes_v2": {
+      "families": [],
+      "schema_version": "3"
+    },
+    "openclaw_v1": {
+      "families": [],
+      "schema_version": "3"
+    }
+  },
+  "reason": "openclaw v1 families=[] (expected 8); hermes v2 families=[] (expected 8)",
+  "reasons": [
+    "openclaw v1 families=[] (expected 8)",
+    "hermes v2 families=[] (expected 8)"
+  ],
+  "scenario": "64",
+  "skipped": false,
+  "tls_mode": "off"
+}

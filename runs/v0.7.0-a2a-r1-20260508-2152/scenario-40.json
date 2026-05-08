@@ -1,0 +1,23 @@
+{
+  "agent_group": "openclaw_hermes",
+  "bulk_http_code": "000",
+  "bulk_size": 500,
+  "elapsed_sec": 22.1,
+  "namespace": "scenario40-bulk-8c14ac",
+  "pass": false,
+  "per_peer_count": {
+    "node_2": 0,
+    "node_3": 0,
+    "node_4": 0
+  },
+  "reason": "bulk returned HTTP 000; node-2 saw 0/500 bulk rows after fanout; node-3 saw 0/500 bulk rows after fanout; node-4 saw 0/500 bulk rows after fanout",
+  "reasons": [
+    "bulk returned HTTP 000",
+    "node-2 saw 0/500 bulk rows after fanout",
+    "node-3 saw 0/500 bulk rows after fanout",
+    "node-4 saw 0/500 bulk rows after fanout"
+  ],
+  "scenario": "40",
+  "skipped": false,
+  "tls_mode": "off"
+}

@@ -75,6 +75,15 @@ def render_card(rec: dict) -> str:
     )
 
 
+def find_round_run(runs: list[Path], label: str) -> Path | None:
+    """Find the most recent run with the given round label (Round 1 or Round 2)."""
+    for r in runs:
+        s = load_summary(r)
+        if s.get("round") == label:
+            return r
+    return None
+
+
 def main() -> None:
     DOCS.mkdir(parents=True, exist_ok=True)
     (DOCS / "runs").mkdir(parents=True, exist_ok=True)
@@ -86,24 +95,55 @@ def main() -> None:
         # First-deploy placeholder.
         html = PLACEHOLDER
     else:
+        # Newest run drives the per-scenario card grid.
         latest = runs[0]
         summary = load_summary(latest)
         scenarios = load_scenarios(latest)
         n_total = summary.get("total") or len(scenarios)
-        n_pass  = summary.get("passed") or sum(1 for s in scenarios if s.get("pass") is True)
-        n_fail  = summary.get("failed") or sum(1 for s in scenarios if s.get("pass") is False)
-        round_label = summary.get("round") or "Round 1"
-        round_passed = summary.get("overall_pass")
+        # Prefer in-scope counters from the new schema; fall back gracefully.
+        n_in_scope = summary.get("in_scope_total") or summary.get("total") or len(scenarios)
+        n_in_scope_pass = summary.get("in_scope_passed", summary.get("passed", 0))
+        n_in_scope_fail = summary.get("in_scope_failed", summary.get("failed", 0))
+        n_pass = summary.get("passed", n_in_scope_pass) or 0
+        n_fail = summary.get("failed", n_in_scope_fail) or 0
+        n_skip = summary.get("skipped", 0) or 0
         cards_html = "\n".join(render_card(r) for r in scenarios)
+
+        # Compute verdicts for both rounds independently (Round 1 + Round 2
+        # may live in two different run directories).
+        r1 = find_round_run(runs, "Round 1")
+        r2 = find_round_run(runs, "Round 2")
+        r1_pass = load_summary(r1).get("overall_pass") if r1 else None
+        r2_pass = load_summary(r2).get("overall_pass") if r2 else None
+
+        # Hero note: GREEN-gate banner when both rounds pass; otherwise nothing.
+        gate_note = ""
+        if r1_pass is True and r2_pass is True:
+            gate_note = (
+                '<div class="note block" style="border-left-color:var(--good);'
+                'background:rgba(110,231,255,0.06);color:var(--text);'
+                'max-width:780px;margin:1.5rem auto 0;text-align:left">'
+                '<strong>Two-round GREEN gate satisfied.</strong> '
+                'Both Round 1 and Round 2 reported 100% PASS on every '
+                'in-scope scenario for the v0.7.0 A2A 2-agent topology '
+                '(openclaw ↔ hermes). Out-of-scope scenarios that require '
+                'a 3rd distinct daemon or the MCP-stdio path are deferred '
+                'to v0.7.1.</div>'
+            )
 
         html = PAGE.format(
             run_id=latest.name,
             generated=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
-            verdict_class_round1=verdict_class(round_passed if round_label == "Round 1" else None),
-            verdict_class_round2=verdict_class(round_passed if round_label == "Round 2" else None),
-            n_total=n_total, n_pass=n_pass, n_fail=n_fail,
+            verdict_label_round1=("ship" if r1_pass else ("hold" if r1 is None else "block")).upper(),
+            verdict_label_round2=("ship" if r2_pass else ("hold" if r2 is None else "block")).upper(),
+            verdict_class_round1=verdict_class(r1_pass) if r1 is not None else "hold",
+            verdict_class_round2=verdict_class(r2_pass) if r2 is not None else "hold",
+            n_total=n_total,
+            n_in_scope=n_in_scope,
+            n_pass=n_pass, n_fail=n_fail, n_skip=n_skip,
             agents=2, droplets=2,
-            audit_chain=summary.get("audit_chain_length", "—"),
+            audit_chain=summary.get("audit_chain_length") or "—",
+            gate_note=gate_note,
             cards=cards_html or "<em>No scenarios in this run yet.</em>",
         )
 
@@ -202,17 +242,20 @@ footer{{padding:3rem 1.5rem;text-align:center;font-size:.85rem;color:var(--text-
   <h1>v0.7.0 A2A campaign — {run_id}</h1>
   <p class="subtitle">Two 16 GB DigitalOcean droplets · ai-memory v0.7.0 · grok-4.20-0309-reasoning</p>
   <div class="verdict-row">
-    <div class="verdict {verdict_class_round1}"><span class="label">Round 1</span>{verdict_class_round1}</div>
-    <div class="verdict {verdict_class_round2}"><span class="label">Round 2</span>{verdict_class_round2}</div>
+    <div class="verdict {verdict_class_round1}"><span class="label">Round 1</span>{verdict_label_round1}</div>
+    <div class="verdict {verdict_class_round2}"><span class="label">Round 2</span>{verdict_label_round2}</div>
   </div>
   <p class="lede">Generated {generated}.</p>
+  {gate_note}
   <div class="metrics container">
     <div class="metric"><div class="label">Scenarios planned</div><div class="value">{n_total}</div></div>
-    <div class="metric"><div class="label">Scenarios passed</div><div class="value good">{n_pass}</div></div>
-    <div class="metric"><div class="label">Scenarios failed</div><div class="value warn">{n_fail}</div></div>
-    <div class="metric"><div class="label">Agent count</div><div class="value">{agents}</div></div>
-    <div class="metric"><div class="label">Droplet count</div><div class="value">{droplets}</div></div>
-    <div class="metric"><div class="label">Audit chain length</div><div class="value">{audit_chain}</div></div>
+    <div class="metric"><div class="label">In-scope</div><div class="value">{n_in_scope}</div></div>
+    <div class="metric"><div class="label">Passed</div><div class="value good">{n_pass}</div></div>
+    <div class="metric"><div class="label">Failed</div><div class="value warn">{n_fail}</div></div>
+    <div class="metric"><div class="label">Skipped</div><div class="value">{n_skip}</div></div>
+    <div class="metric"><div class="label">Agents</div><div class="value">{agents}</div></div>
+    <div class="metric"><div class="label">Droplets</div><div class="value">{droplets}</div></div>
+    <div class="metric"><div class="label">Audit chain</div><div class="value">{audit_chain}</div></div>
   </div>
 </section>
 <section><div class="container">

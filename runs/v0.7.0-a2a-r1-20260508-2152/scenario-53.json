@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 1.6,
+  "enforce_delta": 0,
+  "intruder_http_code": 201,
+  "namespace": "scenario53-0fb18e97",
+  "owner_http_code": 201,
+  "pass": false,
+  "reason": "intruder got 201 (expected 403); decision_counts.enforce delta=0 (expected >=1)",
+  "reasons": [
+    "intruder got 201 (expected 403)",
+    "decision_counts.enforce delta=0 (expected >=1)"
+  ],
+  "scenario": "53",
+  "skipped": false,
+  "tls_mode": "off"
+}

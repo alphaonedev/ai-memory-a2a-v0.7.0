@@ -1,0 +1,7 @@
+constructing 500-row bulk payload
+staging bulk payload on node-1 /tmp, then POST /api/v1/memories/bulk
+  bulk POST returned HTTP 000
+settle 20s for bulk fanout across 3 peers + aggregator
+  node-2 count=0 (expected 500)
+  node-3 count=0 (expected 500)
+  node-4 count=0 (expected 500)

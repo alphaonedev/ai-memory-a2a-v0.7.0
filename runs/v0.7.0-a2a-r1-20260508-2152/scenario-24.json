@@ -1,0 +1,15 @@
+{
+  "agent_group": "openclaw_hermes",
+  "byzantine_marker": "bz-6a6180de49ce4eb0903d152b2d8350b7",
+  "elapsed_sec": 5.6,
+  "pass": false,
+  "reason": "sync_push returned unexpected HTTP 000",
+  "reasons": [
+    "sync_push returned unexpected HTTP 000"
+  ],
+  "scenario": "24",
+  "skipped": false,
+  "stored_metadata_agent_id": "ABSENT",
+  "sync_push_http_code": "000",
+  "tls_mode": "off"
+}

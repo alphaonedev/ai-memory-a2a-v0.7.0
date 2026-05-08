@@ -1,0 +1,8 @@
+{
+  "elapsed_sec": 180.0,
+  "harness_error": "timeout",
+  "pass": false,
+  "reason": "scenario exceeded 180s timeout",
+  "scenario": "69",
+  "skipped": false
+}

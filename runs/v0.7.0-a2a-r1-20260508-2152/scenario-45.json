@@ -1,0 +1,27 @@
+{
+  "agent_group": "openclaw_hermes",
+  "as_of_now": "2026-05-08T22:00:32Z",
+  "as_of_past": "2026-05-08T21:00:23Z",
+  "elapsed_sec": 15.7,
+  "invalidate_http_code": 400,
+  "m0_id": "9b2ccbe5-fdce-4bea-91a9-33702c4472be",
+  "now_edges": 0,
+  "now_query_http_code": 200,
+  "pass": false,
+  "past_edges": 0,
+  "past_query_http_code": 200,
+  "reason": "kg_invalidate returned HTTP 400; as_of=past missing edges; expected all 3 targets, got 0; as_of=now expected 2 edges, got 0",
+  "reasons": [
+    "kg_invalidate returned HTTP 400",
+    "as_of=past missing edges; expected all 3 targets, got 0",
+    "as_of=now expected 2 edges, got 0"
+  ],
+  "scenario": "45",
+  "skipped": false,
+  "target_ids": [
+    "4be7c7e2-d54c-42c5-8908-712d02495aac",
+    "0706d26b-f014-436e-8fb5-a857bf20baa0",
+    "a1ce6f5a-5d08-487d-9e41-c911a5317b47"
+  ],
+  "tls_mode": "off"
+}

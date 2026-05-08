@@ -1,0 +1,32 @@
+{
+  "activity_namespace": "scenario41-activity-508aaf",
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 11.1,
+  "pass": false,
+  "per_peer": {
+    "node_1": {
+      "counters_t0": 0,
+      "counters_t1": 0,
+      "regressed_keys": 0
+    },
+    "node_2": {
+      "counters_t0": 0,
+      "counters_t1": 0,
+      "regressed_keys": 0
+    },
+    "node_3": {
+      "counters_t0": 0,
+      "counters_t1": 0,
+      "regressed_keys": 0
+    }
+  },
+  "reason": "node-1: no memory-related counters visible at T0; node-2: no memory-related counters visible at T0; node-3: no memory-related counters visible at T0",
+  "reasons": [
+    "node-1: no memory-related counters visible at T0",
+    "node-2: no memory-related counters visible at T0",
+    "node-3: no memory-related counters visible at T0"
+  ],
+  "scenario": "41",
+  "skipped": false,
+  "tls_mode": "off"
+}

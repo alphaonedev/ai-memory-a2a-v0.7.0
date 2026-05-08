@@ -1,0 +1,14 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 9.0,
+  "pass": true,
+  "peer_hits": {
+    "node_2": 1,
+    "node_3": 1
+  },
+  "reasons": [],
+  "scenario": "28",
+  "skipped": false,
+  "tls_mode": "off",
+  "token": "kwsearch8e79e713c9"
+}

@@ -32,7 +32,7 @@ def _scrape(h: Harness, ip: str) -> tuple[int, str]:
     curl = h._remote_curl_prefix()
     cmd = (
         f"{curl} -o /tmp/s41-metrics.txt -w '%{{http_code}}' "
-        f"{shlex.quote(f'{h.remote_base_url()}/api/v1/metrics')}"
+        f"{shlex.quote(f'{h.remote_base_url(ip)}/api/v1/metrics')}"
     )
     r = h.ssh_exec(ip, cmd, timeout=30)
     code = (r.stdout or "0").strip() or "0"
