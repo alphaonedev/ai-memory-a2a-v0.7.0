@@ -1,0 +1,90 @@
+<!--
+  Copyright 2026 AlphaOne LLC
+  SPDX-License-Identifier: Apache-2.0
+  Initial scaffold landing page. Replaced on first run by scripts/render_pages.py.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ai-memory · v0.7.0 A2A campaign · awaiting Round 1</title>
+<meta name="description" content="ai-memory v0.7.0 A2A campaign — two-round consecutive 100% GREEN gate. openclaw ↔ hermes via Grok 4.2 reasoning. Two 16 GB DigitalOcean droplets, mTLS on port 19077, audit chain enabled.">
+<style>
+:root{--bg:#000;--bg-card:#111;--bg-elev:#161616;--bg-code:#1a1a1a;--border:#262626;--border-hl:#3d3d3d;--text:#fff;--text-muted:#999;--text-dim:#666;--p1:#6ee7ff;--p2:#ffb86b;--p3:#c8a2ff;--good:#6ee7ff;--bad:#ff6b9d;--gold:#ffd700;--font-mono:'SF Mono','Cascadia Code','Fira Code',Consolas,monospace;--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;--max-w:1200px}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--text);text-decoration:none}a:hover{color:var(--p1)}
+code{font-family:var(--font-mono);font-size:.85rem;background:var(--bg-code);padding:.1em .35em;border-radius:4px;color:var(--p1)}
+.container{max-width:var(--max-w);margin:0 auto;padding:0 1.5rem}
+.hero{padding:4rem 1.5rem 2.5rem;text-align:center;background:radial-gradient(ellipse at center,rgba(110,231,255,0.08),transparent 60%);border-bottom:1px solid var(--border)}
+.hero .eyebrow{margin-bottom:.85rem}
+.hero h1{font-size:clamp(2rem,4.5vw,3.25rem);margin-bottom:.85rem;letter-spacing:-0.02em;line-height:1.1}
+.hero .subtitle{font-family:var(--font-mono);color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem}
+.hero .verdict{display:inline-block;font-family:var(--font-mono);font-size:.95rem;letter-spacing:.08em;text-transform:uppercase;padding:.5em 1.1em;border-radius:6px;margin-bottom:1rem;font-weight:700}
+.hero .verdict.ship{color:var(--good);background:rgba(110,231,255,0.12);border:1px solid rgba(110,231,255,0.4)}
+.hero .verdict.hold{color:var(--p2);background:rgba(255,184,107,0.15);border:1px solid rgba(255,184,107,0.5)}
+.hero .verdict.block{color:var(--bad);background:rgba(255,107,157,0.12);border:1px solid rgba(255,107,157,0.45)}
+.hero .verdict-row{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-bottom:1rem}
+.hero .verdict .label{font-size:.65rem;display:block;letter-spacing:.12em;color:var(--text-dim);margin-bottom:.15rem;font-weight:500}
+.hero p.lede{color:var(--text-muted);max-width:780px;margin:1rem auto 0;font-size:1rem}
+.eyebrow{display:inline-block;font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem;padding:.2rem .6rem;border:1px solid var(--border-hl);border-radius:999px}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:2rem}
+.metric{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem;text-align:left}
+.metric .label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:.4rem}
+.metric .value{font-family:var(--font-mono);font-size:1.4rem;font-weight:700;color:var(--text)}
+.metric .value.good{color:var(--good)}
+.metric .value.warn{color:var(--p2)}
+.metric .sub{font-size:.78rem;color:var(--text-muted);margin-top:.3rem}
+section{padding:3rem 0;border-bottom:1px solid var(--border)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.85rem;margin-top:1.5rem}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.15rem 1.25rem}
+.card .head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;margin-bottom:.55rem}
+.card .id{font-family:var(--font-mono);font-weight:700;color:var(--p1);font-size:.95rem}
+.card .sev{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:.2em .55em;border-radius:4px}
+.card .sev.closed{color:var(--good);background:rgba(110,231,255,0.12)}
+.card .sev.p2{color:var(--bad);background:rgba(255,107,157,0.12)}
+.card .sev.p3{color:var(--text-dim);background:rgba(102,102,102,0.15)}
+.note.block{background:var(--bg-elev);border-left:3px solid var(--bad);padding:.85rem 1.1rem;border-radius:0 6px 6px 0;font-size:.88rem;color:var(--text-muted);margin:1rem 0}
+.links-row{display:flex;gap:.85rem;flex-wrap:wrap;font-family:var(--font-mono);font-size:.82rem;margin-top:1rem}
+.links-row a{padding:.5rem .95rem;border:1px solid var(--border-hl);border-radius:6px;color:var(--text-muted)}
+footer{padding:3rem 1.5rem;text-align:center;font-size:.85rem;color:var(--text-dim);border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<section class="hero">
+  <span class="eyebrow">v0.7.0 A2A · 2-round consecutive 100% GREEN gate · openclaw ↔ hermes via Grok 4.2</span>
+  <h1>v0.7.0 A2A campaign — scaffold ready, awaiting Round 1</h1>
+  <p class="subtitle">Two 16 GB DigitalOcean droplets · ai-memory v0.7.0 · grok-4.20-0309-reasoning · audit chain on</p>
+  <div class="verdict-row">
+    <div class="verdict hold"><span class="label">Round 1</span>pending</div>
+    <div class="verdict hold"><span class="label">Round 2</span>pending</div>
+  </div>
+  <p class="lede">Two consecutive 100% GREEN rounds gate the v0.7.0 A2A surface. Round 1 dispatches via <code>.github/workflows/two-rounds.yml</code>; Round 2 auto-dispatches once Round 1 lands GREEN. After both rounds pass, <code>soak.yml</code> activates a 4-hour cron mirroring <code>ai-memory-ship-gate</code>.</p>
+  <div class="metrics container">
+    <div class="metric"><div class="label">Scenarios planned</div><div class="value">~67</div><div class="sub">S1–S51 regression + S52–S69 net-new</div></div>
+    <div class="metric"><div class="label">Scenarios passed</div><div class="value">—</div><div class="sub">populated after first run</div></div>
+    <div class="metric"><div class="label">Agent count</div><div class="value">2</div><div class="sub">openclaw + hermes</div></div>
+    <div class="metric"><div class="label">Droplet count</div><div class="value">2</div><div class="sub">s-4vcpu-16gb-amd · nyc3</div></div>
+    <div class="metric"><div class="label">Audit chain length</div><div class="value">—</div><div class="sub">populated after first run</div></div>
+  </div>
+</section>
+<section>
+  <div class="container">
+    <span class="eyebrow">Per-scenario evidence</span>
+    <h2 style="font-family:var(--font-mono);font-size:1.4rem;margin-bottom:.75rem">Scenario grid</h2>
+    <div class="note block"><strong>Awaiting first run.</strong> The renderer (<code>scripts/render_pages.py</code>) populates per-scenario cards from <code>runs/&lt;campaign-id&gt;/scenario-*.json</code> after each round.</div>
+    <div class="cards"></div>
+    <div class="links-row">
+      <a href="./methodology.html">Methodology</a>
+      <a href="./coverage.html">Coverage matrix</a>
+      <a href="./reproducing.html">Reproducing</a>
+      <a href="./security.html">Security</a>
+      <a href="./soak.html">Soak (gated)</a>
+      <a href="https://github.com/alphaonedev/ai-memory-a2a-v0.7.0">GitHub</a>
+    </div>
+  </div>
+</section>
+<footer>Copyright &copy; 2026 AlphaOne LLC. Apache-2.0.</footer>
+</body>
+</html>

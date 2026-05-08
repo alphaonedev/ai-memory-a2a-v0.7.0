@@ -1,0 +1,35 @@
+{
+  "__schema__": "Per-campaign narrative + bug-to-fix lineage. Authored by AI NHI (Claude Opus 4.7). Each entry carries depth for three audiences: non-technical users, C-level decision makers, and subject-matter experts. Passing runs get the same analytical rigor as failing runs — a green badge without analysis is just a claim.",
+  "__links__": {
+    "ai_memory_mcp": "https://github.com/alphaonedev/ai-memory-mcp",
+    "a2a_v07": "https://github.com/alphaonedev/ai-memory-a2a-v0.7.0",
+    "ai2ai_gate": "https://github.com/alphaonedev/ai-memory-ai2ai-gate",
+    "ship_gate": "https://github.com/alphaonedev/ai-memory-ship-gate",
+    "test_hub_release": "https://alphaonedev.github.io/ai-memory-test-hub/releases/v0.7.0/"
+  },
+  "__audience_framing__": {
+    "non_technical": "Plain language analogies. What the run means for someone who relies on the software but doesn't read code. Focus on trust, reliability, what evidence backs what claim.",
+    "c_level": "Risk, cost, compliance, audit, velocity. What business outcome does this run buy down or expose? What decision should leadership make based on it? What's the ROI framing?",
+    "sme": "Specific invariants proven or violated, file paths, commits, methodology, the physics of why the test measured what it measured. No hand-waving; citations."
+  },
+  "<campaign-id-placeholder>": {
+    "headline": "<one-line verdict>",
+    "verdict": "<full sentence — what this run does and does not prove>",
+    "what_it_tested": "<scenarios run, topology, drivers>",
+    "what_it_proved": "<the invariants the assertions held>",
+    "for_non_technical": "<plain-language analogy + trust framing>",
+    "for_c_level": "<risk / cost / velocity framing>",
+    "for_sme": "<file paths, commits, the physics of the measurement>",
+    "bugs": [
+      {
+        "title": "<one-liner>",
+        "impact": "<what breaks, who notices, blast radius>",
+        "root_cause": "<why it broke; cite source>",
+        "fixed_in": [
+          { "label": "ai-memory commit <sha>", "url": "https://github.com/alphaonedev/ai-memory-mcp/commit/<sha>" }
+        ]
+      }
+    ],
+    "next_run_change": "<what changes between this run and the next, if anything>"
+  }
+}

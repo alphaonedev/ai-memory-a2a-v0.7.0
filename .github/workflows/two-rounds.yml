@@ -1,0 +1,125 @@
+name: A2A v0.7.0 — two-round 100% GREEN gate
+
+# Dispatches Round 1, waits, dispatches Round 2 (only if Round 1 was GREEN).
+# Both rounds run on the SAME ai-memory binary SHA. Job exits non-zero unless
+# BOTH rounds land at 100% PASS.
+#
+# Each round is a child invocation of campaign.yml.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ai_memory_git_ref:
+        description: "ai-memory-mcp git ref to certify."
+        required: true
+        default: "v0.7.0"
+      campaign_prefix:
+        description: "Campaign-id prefix. Round 1 = <prefix>-r1, Round 2 = <prefix>-r2."
+        required: true
+        default: "v0.7.0-cert"
+      tls_mode:
+        description: "Transport mode for ai-memory A2A."
+        required: false
+        default: "mtls"
+        type: choice
+        options:
+          - "off"
+          - tls
+          - mtls
+
+permissions:
+  contents: read
+  actions: write
+  pages: read
+
+concurrency:
+  group: a2a-v07-two-rounds
+  cancel-in-progress: false
+
+jobs:
+  round1:
+    name: "Round 1 — dispatch campaign.yml + wait"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    outputs:
+      passed: ${{ steps.round1_check.outputs.passed }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Dispatch + watch Round 1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          CID="${{ github.event.inputs.campaign_prefix }}-r1"
+          gh workflow run campaign.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref "${{ github.ref_name }}" \
+            -f ai_memory_git_ref="${{ github.event.inputs.ai_memory_git_ref }}" \
+            -f campaign_id="$CID" \
+            -f round_label="Round 1" \
+            -f tls_mode="${{ github.event.inputs.tls_mode }}"
+          echo "::notice::dispatched campaign.yml for $CID"
+          # Poll for the run we just kicked off.
+          sleep 12
+          run_id=$(gh run list --workflow=campaign.yml --limit 5 \
+            --json databaseId,headBranch,status,displayTitle \
+            --jq '.[] | select(.status=="in_progress" or .status=="queued") | .databaseId' | head -1)
+          echo "round1 run_id=$run_id"
+          gh run watch "$run_id" --exit-status
+
+      - name: Verify Round 1 summary
+        id: round1_check
+        run: |
+          set -euo pipefail
+          # Pull the freshly-pushed runs/<cid>/a2a-summary.json from main.
+          git fetch origin main
+          git checkout origin/main -- runs/ || true
+          CID="${{ github.event.inputs.campaign_prefix }}-r1"
+          F="runs/$CID/a2a-summary.json"
+          if [ ! -f "$F" ]; then
+            echo "::error::missing $F"; exit 1
+          fi
+          ok=$(jq -r '.overall_pass' "$F")
+          echo "round1.overall_pass=$ok"
+          [ "$ok" = "true" ]
+          echo "passed=true" >> "$GITHUB_OUTPUT"
+
+  round2:
+    name: "Round 2 — only if Round 1 was 100% GREEN"
+    needs: round1
+    if: ${{ needs.round1.outputs.passed == 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v5
+      - name: Dispatch + watch Round 2
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          CID="${{ github.event.inputs.campaign_prefix }}-r2"
+          gh workflow run campaign.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref "${{ github.ref_name }}" \
+            -f ai_memory_git_ref="${{ github.event.inputs.ai_memory_git_ref }}" \
+            -f campaign_id="$CID" \
+            -f round_label="Round 2" \
+            -f tls_mode="${{ github.event.inputs.tls_mode }}"
+          sleep 12
+          run_id=$(gh run list --workflow=campaign.yml --limit 5 \
+            --json databaseId,status \
+            --jq '.[] | select(.status=="in_progress" or .status=="queued") | .databaseId' | head -1)
+          echo "round2 run_id=$run_id"
+          gh run watch "$run_id" --exit-status
+
+      - name: Verify Round 2 summary
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout origin/main -- runs/ || true
+          CID="${{ github.event.inputs.campaign_prefix }}-r2"
+          F="runs/$CID/a2a-summary.json"
+          ok=$(jq -r '.overall_pass' "$F")
+          echo "round2.overall_pass=$ok"
+          [ "$ok" = "true" ]
+          echo "::notice::v0.7.0 A2A — TWO consecutive 100% GREEN rounds. CERT GATE ACHIEVED."

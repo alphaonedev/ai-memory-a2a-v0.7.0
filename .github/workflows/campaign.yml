@@ -1,0 +1,243 @@
+name: A2A v0.7.0 campaign (single round)
+
+# One dispatch = one campaign round (Round 1 OR Round 2 OR ad-hoc).
+# Provisions the two-droplet topology, runs every scenario in the manifest,
+# tears down. Round verdict = all-pass.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ai_memory_git_ref:
+        description: "ai-memory-mcp git ref. Default v0.7.0 (>= dfb184f)."
+        required: true
+        default: "v0.7.0"
+      campaign_id:
+        description: "Campaign id. Suggested: v0.7.0-r<N>"
+        required: true
+        default: "v0.7.0-r1"
+      round_label:
+        description: "Round 1 / Round 2 / Round 3+"
+        required: true
+        default: "Round 1"
+      scenarios:
+        description: "Space-separated scenario ids. Empty = full manifest."
+        required: false
+        default: ""
+      tls_mode:
+        description: "Transport mode for ai-memory A2A. mtls is the v0.7.0 default."
+        required: false
+        default: "mtls"
+        type: choice
+        options:
+          - "off"
+          - tls
+          - mtls
+      region:
+        description: "DigitalOcean region"
+        required: false
+        default: "nyc3"
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: a2a-v07-campaign
+  cancel-in-progress: false
+
+jobs:
+  campaign:
+    name: "A2A v0.7.0 — provision + run scenarios"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    env:
+      DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      DIGITALOCEAN_SSH_KEY_FINGERPRINT: ${{ secrets.DIGITALOCEAN_SSH_KEY_FINGERPRINT }}
+      TF_VAR_do_token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      TF_VAR_ssh_key_fingerprint: ${{ secrets.DIGITALOCEAN_SSH_KEY_FINGERPRINT }}
+      TF_VAR_campaign_id: ${{ github.event.inputs.campaign_id }}
+      TF_VAR_region: ${{ github.event.inputs.region }}
+      CAMPAIGN_ID: ${{ github.event.inputs.campaign_id }}
+      ROUND_LABEL: ${{ github.event.inputs.round_label }}
+      AI_MEMORY_GIT_REF: ${{ github.event.inputs.ai_memory_git_ref }}
+      AGENT_GROUP: mixed
+      TLS_MODE: ${{ github.event.inputs.tls_mode }}
+      A2A_PORT: "19077"
+      AI_MEMORY_AUDIT_DIR: "/var/log/ai-memory/audit/"
+      XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
+      XAI_MODEL: ${{ vars.XAI_MODEL || 'grok-4.20-0309-reasoning' }}
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          echo "${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Checkout ai-memory-mcp at ref
+        uses: actions/checkout@v5
+        with:
+          repository: alphaonedev/ai-memory-mcp
+          ref: ${{ github.event.inputs.ai_memory_git_ref }}
+          path: ai-memory-mcp
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.88"
+
+      - name: Cargo cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: ai-memory-mcp
+
+      - name: Build ai-memory binary
+        working-directory: ai-memory-mcp
+        run: |
+          cargo build --release --features sal
+          ls -la target/release/ai-memory
+          target/release/ai-memory --version
+
+      - name: Terraform init + apply
+        working-directory: terraform
+        run: |
+          terraform init
+          terraform apply -auto-approve \
+            -var "do_token=$DIGITALOCEAN_TOKEN" \
+            -var "ssh_key_fingerprint=$DIGITALOCEAN_SSH_KEY_FINGERPRINT" \
+            -var "campaign_id=$CAMPAIGN_ID" \
+            -var "region=${{ github.event.inputs.region }}"
+          terraform output -json > /tmp/tf.json
+
+      - name: Wait for SSH
+        run: |
+          OPENCLAW_PUB=$(jq -r '.openclaw_node.value.public' /tmp/tf.json)
+          HERMES_PUB=$(jq   -r '.hermes_node.value.public'   /tmp/tf.json)
+          for ip in "$OPENCLAW_PUB" "$HERMES_PUB"; do
+            for i in {1..30}; do
+              if ssh -o StrictHostKeyChecking=no -o ConnectTimeout=5 root@$ip true; then
+                echo "$ip up"; break
+              fi
+              sleep 5
+            done
+          done
+
+      - name: Bootstrap droplets
+        env:
+          AI_MEMORY_BINARY_PATH: ${{ github.workspace }}/ai-memory-mcp/target/release/ai-memory
+        run: |
+          OPENCLAW_PUB=$(jq -r '.openclaw_node.value.public' /tmp/tf.json)
+          OPENCLAW_PRIV=$(jq -r '.openclaw_node.value.private' /tmp/tf.json)
+          HERMES_PUB=$(jq   -r '.hermes_node.value.public'   /tmp/tf.json)
+          HERMES_PRIV=$(jq  -r '.hermes_node.value.private'  /tmp/tf.json)
+          ./scripts/boot_openclaw.sh "$OPENCLAW_PUB" "$HERMES_PRIV"
+          ./scripts/boot_hermes.sh   "$HERMES_PUB"   "$OPENCLAW_PRIV"
+          # Export for subsequent steps
+          {
+            echo "NODE1_IP=$OPENCLAW_PUB"
+            echo "NODE1_PRIV=$OPENCLAW_PRIV"
+            echo "NODE2_IP=$HERMES_PUB"
+            echo "NODE2_PRIV=$HERMES_PRIV"
+            # Legacy 4-node harness fields — point spare slots at openclaw.
+            echo "NODE3_IP=$OPENCLAW_PUB"
+            echo "NODE3_PRIV=$OPENCLAW_PRIV"
+            echo "NODE4_IP=$HERMES_PUB"
+            echo "NODE4_PRIV=$HERMES_PRIV"
+          } >> "$GITHUB_ENV"
+
+      - name: Compute scenario manifest
+        id: manifest
+        run: |
+          if [ -n "${{ github.event.inputs.scenarios }}" ]; then
+            echo "ids=${{ github.event.inputs.scenarios }}" >> "$GITHUB_OUTPUT"
+          else
+            ids=$(ls scenarios/*.py | sed 's|scenarios/||;s|_.*\.py$||' | sort -V | tr '\n' ' ')
+            echo "ids=$ids" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run scenarios
+        run: |
+          set -u
+          mkdir -p "runs/$CAMPAIGN_ID"
+          IDS="${{ steps.manifest.outputs.ids }}"
+          total=0; passed=0; failed=0; skipped=0
+          for id in $IDS; do
+            f=$(ls scenarios/${id}_*.py 2>/dev/null | head -1 || true)
+            [ -n "$f" ] || { echo "::warning::no file for scenario $id"; continue; }
+            total=$((total+1))
+            echo "::group::scenario $id ($(basename $f))"
+            out_json="runs/$CAMPAIGN_ID/scenario-${id}.json"
+            if timeout 360 python3 "$f" > "$out_json" 2> "runs/$CAMPAIGN_ID/scenario-${id}.log"; then
+              v=$(jq -r '.pass' "$out_json" 2>/dev/null || echo "null")
+              s=$(jq -r '.skipped' "$out_json" 2>/dev/null || echo "false")
+              if [ "$s" = "true" ]; then
+                skipped=$((skipped+1))
+                echo "::notice::S$id SKIPPED"
+              elif [ "$v" = "true" ]; then
+                passed=$((passed+1))
+                echo "S$id PASS"
+              else
+                failed=$((failed+1))
+                echo "::error::S$id FAIL"
+                cat "$out_json" || true
+              fi
+            else
+              failed=$((failed+1))
+              echo "::error::S$id CRASHED"
+              cat "runs/$CAMPAIGN_ID/scenario-${id}.log" || true
+            fi
+            echo "::endgroup::"
+          done
+          # Aggregate
+          jq -n \
+            --arg cid "$CAMPAIGN_ID" --arg round "$ROUND_LABEL" \
+            --arg ref "$AI_MEMORY_GIT_REF" \
+            --arg started "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+            --argjson total "$total" --argjson passed "$passed" \
+            --argjson failed "$failed" --argjson skipped "$skipped" \
+            '{campaign_id:$cid, round:$round, ai_memory_git_ref:$ref,
+              total:$total, passed:$passed, failed:$failed, skipped:$skipped,
+              overall_pass: ($failed == 0 and $skipped == 0 and $passed == $total),
+              completed_at: $started}' \
+            > "runs/$CAMPAIGN_ID/a2a-summary.json"
+          cat "runs/$CAMPAIGN_ID/a2a-summary.json"
+          # Fail the workflow if not all-green
+          [ "$failed" -eq 0 ] && [ "$skipped" -eq 0 ] && [ "$passed" -eq "$total" ]
+
+      - name: Verify audit chain on both nodes
+        if: always()
+        run: |
+          ./scripts/verify_audit_chain.sh "$NODE1_IP" || true
+          ./scripts/verify_audit_chain.sh "$NODE2_IP" || true
+
+      - name: Render Pages snapshot
+        if: always()
+        run: |
+          python3 scripts/render_pages.py || true
+
+      - name: Commit run evidence
+        if: always()
+        run: |
+          git config user.name  "a2a-v07-bot"
+          git config user.email "a2a-v07-bot@users.noreply.github.com"
+          git add "runs/$CAMPAIGN_ID" docs/index.html docs/index.md docs/runs/ || true
+          git diff --cached --quiet || git commit -m "campaign: ${CAMPAIGN_ID} (${ROUND_LABEL})"
+          for attempt in 1 2 3 4 5; do
+            git push origin HEAD:main && break
+            git fetch origin main && git rebase origin/main || { git rebase --abort; break; }
+            sleep $((attempt * 2))
+          done
+
+      - name: Terraform destroy
+        if: always()
+        working-directory: terraform
+        run: |
+          terraform destroy -auto-approve \
+            -var "do_token=$DIGITALOCEAN_TOKEN" \
+            -var "ssh_key_fingerprint=$DIGITALOCEAN_SSH_KEY_FINGERPRINT" \
+            -var "campaign_id=$CAMPAIGN_ID" \
+            -var "region=${{ github.event.inputs.region }}" || true

@@ -1,0 +1,45 @@
+#cloud-config
+# Copyright 2026 AlphaOne LLC
+# SPDX-License-Identifier: Apache-2.0
+#
+# Minimal cloud-init. The orchestrator (or boot_openclaw.sh / boot_hermes.sh)
+# scp's the ai-memory binary + drives the agent runtime install over SSH; this
+# only seeds the OS deps + a defense-in-depth dead-man switch.
+
+package_update: true
+
+packages:
+  - curl
+  - jq
+  - sqlite3
+  - iptables
+  - ufw
+  - python3
+  - python3-pip
+  - openssl
+  - ca-certificates
+
+write_files:
+  - path: /etc/systemd/system/dead-man.timer
+    content: |
+      [Unit]
+      Description=Dead-man-switch — destroys this droplet ${dead_man_switch_hours}h after boot if not extended.
+      [Timer]
+      OnBootSec=${dead_man_switch_hours}h
+      Unit=dead-man.service
+      [Install]
+      WantedBy=timers.target
+  - path: /etc/systemd/system/dead-man.service
+    content: |
+      [Unit]
+      Description=Dead-man-switch action: shutdown -P +0
+      [Service]
+      Type=oneshot
+      ExecStart=/sbin/shutdown -P +0 "campaign ${campaign_id} dead-man-switch tripped"
+
+runcmd:
+  - systemctl daemon-reload
+  - systemctl enable --now dead-man.timer
+  - mkdir -p /var/log/ai-memory/audit/
+  - mkdir -p /etc/ai-memory-a2a/tls/
+  - echo "campaign_id=${campaign_id}" > /etc/ai-memory-a2a/campaign

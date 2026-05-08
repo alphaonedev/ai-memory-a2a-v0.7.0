@@ -1,0 +1,56 @@
+# Copyright 2026 AlphaOne LLC
+# SPDX-License-Identifier: Apache-2.0
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Rust (orchestrator may stage a binary here)
+target/
+Cargo.lock
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+.terraform.lock.hcl
+crash.log
+crash.*.log
+
+# Secrets / local env
+.env
+.env.local
+*.pem
+*.key
+!docs/**/*.key  # keep doc-only fixtures explicit
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+.idea/
+.vscode/
+*.swp
+*~
+
+# mkdocs build output
+site/
+
+# Per-run evidence is checked-in selectively by the campaign workflow;
+# everything else under runs/ is gitignored.
+runs/*
+!runs/README.md
+!runs/.gitkeep

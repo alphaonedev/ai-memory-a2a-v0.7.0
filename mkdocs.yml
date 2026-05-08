@@ -1,0 +1,46 @@
+site_name: ai-memory A2A v0.7.0 gate
+site_description: >-
+  Two-round 100% GREEN A2A regression + net-new test campaign for
+  ai-memory v0.7.0. Two 16 GB DigitalOcean droplets running openclaw
+  and hermes against the v0.7.0 daemon, driven by Grok 4.2 reasoning
+  via xAI. Evidence published per-run.
+site_url: https://alphaonedev.github.io/ai-memory-a2a-v0.7.0/
+repo_url: https://github.com/alphaonedev/ai-memory-a2a-v0.7.0
+repo_name: alphaonedev/ai-memory-a2a-v0.7.0
+copyright: "Copyright &copy; 2026 AlphaOne LLC. Apache-2.0."
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.instant
+    - navigation.sections
+    - navigation.indexes
+    - toc.integrate
+    - content.code.copy
+    - content.code.annotate
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+
+nav:
+  - Home: index.md
+  - Methodology: methodology.md
+  - Coverage matrix: coverage.md
+  - Reproducing: reproducing.md
+  - Security: security.md
+  - Soak (gated): soak.md
+  - Campaign runs: runs/
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true

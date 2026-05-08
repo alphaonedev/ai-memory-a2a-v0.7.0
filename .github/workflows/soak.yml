@@ -1,0 +1,104 @@
+name: A2A v0.7.0 soak (4-hour cron · gated)
+
+# Dispatches campaign.yml on a 4-hour cron for 14 days.
+#
+# *** GATED *** — disabled by default. Activate by manually dispatching with
+# run_number=1 AFTER two consecutive 100% GREEN rounds land via two-rounds.yml.
+# The first dispatch writes .soak-state and the cron picks it up from there.
+#
+# Schedule:
+#   */4h × 14 days = ~84 soak runs per release
+#   at ~$3 each   → ~$252 per soak window
+#
+# Methodology + assertions: docs/soak.md.
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "ai-memory release the soak is validating (e.g. v0.7.0)."
+        required: true
+        default: "v0.7.0"
+      run_number:
+        description: "Ordinal within the soak window. Must be unique."
+        required: true
+        default: "1"
+  schedule:
+    # Every 4 hours at :17 past — spread workflow load across the fleet.
+    # Disabled-in-fact: the job's first step bails if .soak-state is missing,
+    # which it WILL be until the first manual dispatch lands.
+    - cron: "17 */4 * * *"
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  dispatch_soak_run:
+    name: "Dispatch a v0.7.0 A2A soak run"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Compute campaign_id
+        id: cid
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            tag="${{ github.event.inputs.release_tag }}"
+            n="${{ github.event.inputs.run_number }}"
+          else
+            if [ ! -f ".soak-state" ]; then
+              echo "::warning::.soak-state missing — soak gated. Cron is a no-op."
+              echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+            fi
+            tag=$(jq -r '.release_tag' .soak-state)
+            existing=$(ls -1d "runs/soak-${tag}-r"*/ 2>/dev/null | wc -l)
+            n=$((existing + 1))
+            if [ "$n" -gt 84 ]; then
+              echo "::notice::soak window complete for $tag ($((n - 1)) runs)."
+              echo "skip=true" >> "$GITHUB_OUTPUT"; exit 0
+            fi
+          fi
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "campaign_id=soak-${tag}-r${n}" >> "$GITHUB_OUTPUT"
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Write .soak-state on kick-off
+        if: >
+          github.event_name == 'workflow_dispatch' &&
+          github.event.inputs.run_number == '1' &&
+          steps.cid.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          cat > .soak-state <<EOF
+          {
+            "release_tag": "${{ steps.cid.outputs.tag }}",
+            "started_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "window_runs": 84,
+            "cadence_cron": "17 */4 * * *"
+          }
+          EOF
+          git config user.name  "a2a-v07-bot"
+          git config user.email "a2a-v07-bot@users.noreply.github.com"
+          git add .soak-state
+          git commit -m "soak: start window for ${{ steps.cid.outputs.tag }}" || true
+          for attempt in 1 2 3 4 5; do
+            git push origin HEAD:main && break
+            git fetch origin main && git rebase origin/main || { git rebase --abort; exit 1; }
+            sleep $((attempt * 2))
+          done
+
+      - name: Trigger campaign.yml
+        if: steps.cid.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          gh workflow run campaign.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref main \
+            -f ai_memory_git_ref="${{ steps.cid.outputs.tag }}" \
+            -f campaign_id="${{ steps.cid.outputs.campaign_id }}" \
+            -f round_label="Soak"
+          echo "::notice::dispatched ${{ steps.cid.outputs.campaign_id }}"
