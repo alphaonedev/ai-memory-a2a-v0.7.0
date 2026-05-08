@@ -22,3 +22,36 @@ scenario carries the v0.7.0 banner only; the logic is byte-equivalent.
 If a scenario is modified during the campaign, it MUST be done in an upstream
 ai2ai-gate PR first; the modified file is then re-copied here. Do not fork the
 logic in this repo.
+
+## v0.7.0-alpha postgres + Apache AGE additions (S70–S76)
+
+Seven net-new scenarios were added to cover the postgres + Apache AGE substrate
+that v0.7.0-alpha ships. **Important scope clarification:** v0.7.0-alpha does
+NOT ship live daemon-on-postgres — `ai-memory serve --store-url postgres://...`
+is deferred to v0.7.1. v0.7.0-alpha ships only:
+
+  * the migration tool (`ai-memory migrate --from sqlite://X --to postgres://Y`),
+  * the SAL trait + adapters (feature `sal-postgres`, sqlx + pgvector),
+  * the Apache AGE Cypher path for KG ops with recursive-CTE fallback.
+
+These seven scenarios are scoped to that surface and explicitly do not assume
+the live-pg-backend path. The schema-parity gap (postgres@v15 vs sqlite@v28)
+is documented and trip-wired by S75.
+
+| Scenario | Surface | Run policy |
+|----------|---------|-----------|
+| S70 — pg_migration_roundtrip      | sqlite→pg→sqlite migration round-trip + idempotency + sha256 equivalence | inline with S1–S69 |
+| S71 — age_cte_equivalence         | AGE Cypher ≡ recursive-CTE for kg_query / kg_timeline / kg_invalidate / find_paths | run last; destructive on AGE state (uses disposable aimemory_kgtest db) |
+| S72 — age_a2a_kg                  | A2A: openclaw migrates KG to pg, hermes reads same fingerprint via shared postgres+AGE | inline |
+| S73 — pg_sal_contract             | upstream `tests/sal_contract.rs` against live postgres droplet | SKIP-allowed when cargo not on PATH; otherwise inline |
+| S74 — pg_unsupported_capability   | `link()` and `register_agent()` return `UnsupportedCapability` cleanly | inline |
+| S75 — pg_schema_parity            | postgres@v15 vs sqlite@v28 snapshot; missing-migration roster | inline; guards against silent schema drift |
+| S76 — age_perf_gate               | AGE p95 ≥ 30% faster than CTE p95 at depth=5 (README bench gate) | run last alongside S71 — both touch the AGE extension state |
+
+S70–S76 inherit the same `Harness.from_env` / `h.emit(passed=..., per_agent=...,
+reasons=[])` reporting contract used by S52–S69. New helpers
+`Harness.postgres_url(db=...)` and `Harness.postgres_node_ip()` are added to
+`scripts/a2a_harness.py`; they read `POSTGRES_PASSWORD_PATH` from env (default
+`/tmp/v07-a2a-pg-password.txt`, mode 600 on the orchestrator host).
+
+The `.env.example` is extended with the `POSTGRES_*` block.

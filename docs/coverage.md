@@ -3,8 +3,10 @@
 This table captures the v0.7.0 scenario surface. **S1–S51** are the
 ai2ai-gate v0.6.4 regression baseline (copied verbatim, banner-tagged).
 **S52–S69** are net-new v0.7.0 scenarios authored in this repo.
-**S70–S95** are reserved slots for v0.7.1+ extensions; they are not part of
-the round-1 / round-2 cert gate.
+**S70–S76** are net-new postgres + Apache AGE substrate scenarios that
+exercise the v0.7.0-alpha SAL trait + migration tool surface.
+**S77–S95** remain reserved slots for v0.7.1+ extensions; they are not
+part of the round-1 / round-2 cert gate.
 
 The original gap inventory is at [`/tmp/v07-coverage-gap.md`](/tmp/v07-coverage-gap.md)
 when the orchestrator's planning stage produces it.
@@ -90,10 +92,73 @@ for any deltas under watch.
 | S68 | reasoning_trace             | metadata.reasoning trace round-trips |
 | S69 | token_budget_under_load     | doctor --tokens ≤ 3500 trimmed under 2× 500-store load |
 
-## v0.7.1+ reserve (S70–S95)
+## Postgres + Apache AGE substrate (S70–S76)
 
-S70–S95 are reserved slot ids for follow-up scenarios authored after the
+These scenarios exercise the v0.7.0-alpha postgres surface, which is
+**NOT** the live storage backend yet — `ai-memory serve --store-url
+postgres://...` is deferred to v0.7.1. What v0.7.0-alpha actually ships:
+
+**In scope for v0.7.0:**
+- One-shot migration tool: `ai-memory migrate --from sqlite://X --to postgres://Y`
+  (and the reverse direction). UPSERT-based; idempotent on rerun.
+- SAL trait + adapters (sqlx + pgvector for postgres, behind feature
+  `sal-postgres`). Direct trait access via cargo tests / psql is the
+  v0.7.0 way of touching postgres.
+- Apache AGE Cypher path for the four KG operations (`memory_kg_query`,
+  `memory_kg_timeline`, `memory_kg_invalidate`, `memory_find_paths`) with
+  recursive-CTE fallback when AGE is absent.
+- pgvector HNSW index for the SAL `recall` path; cosine distance
+  normalised to similarity via `1 - distance` in the adapter.
+
+**Out of scope for v0.7.0 (deferred to v0.7.1+):**
+- Live daemon-on-postgres (`ai-memory serve --store-url postgres://...`).
+- `MemoryStore::link()` on postgres — returns `UnsupportedCapability("LINKS")`.
+- `MemoryStore::register_agent()` on postgres — returns
+  `UnsupportedCapability("AGENT_REGISTRATION")`.
+- 4 of the 6 SQLite recall scoring factors (no `access_count`,
+  `confidence`, `tier_bonus`, `recency`) — postgres recall returns the
+  HNSW similarity component only.
+- Schema parity. Postgres ships at schema_version=15; SQLite is at v28.
+  See the schema-parity gap table below.
+
+| ID | Slug | Surface under test |
+|----|------|--------------------|
+| S70 | pg_migration_roundtrip      | sqlite→postgres→sqlite migration round-trip + idempotent rerun + sha256 content equivalence |
+| S71 | age_cte_equivalence         | AGE Cypher path ≡ recursive-CTE fallback for kg_query/kg_timeline/kg_invalidate/find_paths |
+| S72 | age_a2a_kg                  | A2A: openclaw migrates KG, hermes reads same fingerprint via shared postgres+AGE |
+| S73 | pg_sal_contract             | upstream `tests/sal_contract.rs` against live postgres droplet (`cargo test --features sal-postgres`) |
+| S74 | pg_unsupported_capability   | `link()` and `register_agent()` return `UnsupportedCapability` cleanly (no panic, no silent ok) |
+| S75 | pg_schema_parity            | snapshot postgres@v15 vs sqlite@v28; enumerate the 13 missing migrations and which features they gate |
+| S76 | age_perf_gate               | AGE p95 ≥ 30% faster than CTE p95 at depth=5 on a 1000-entity / 5000-edge corpus (README bench gate) |
+
+### Schema parity gap (postgres v15 ↔ sqlite v28)
+
+S75 pins this snapshot. The 13 missing migrations gate the following
+features which are therefore **not exercisable on postgres in v0.7.0**:
+
+| Migration | Feature gated |
+|-----------|---------------|
+| v16 | governance inheritance (cross-agent inherit=true) |
+| v17 | webhook subscriptions |
+| v18 | audit log chain |
+| v19 | transcripts |
+| v20 | signed events |
+| v21 | agent quotas |
+| v22 | link `attest_level` column |
+| v23 | A2A correlation table |
+| v24 | smart-load veto state |
+| v25 | KG temporal-index v2 |
+| v26 | tier-promotion metadata |
+| v27 | subscription DLQ |
+| v28 | `consolidated_from_agents` array |
+
+If the postgres adapter advances past v15 inside the v0.7.0 release
+window, S75 fails — that's the trip-wire we want.
+
+## v0.7.1+ reserve (S77–S95)
+
+S77–S95 are reserved slot ids for follow-up scenarios authored after the
 v0.7.0 cert gate lands. **Not part of the round-1 / round-2 100% gate.**
 Likely fillers: cross-region replication, KMS-backed signing, BYO-key,
-multi-tenant quota, ipv6 mTLS, Postgres SAL, large-corpus rerank, soak
-endurance burst, etc.
+multi-tenant quota, ipv6 mTLS, live daemon-on-postgres, large-corpus
+rerank, soak endurance burst, etc.

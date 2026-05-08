@@ -4,26 +4,15 @@
 """
 Scenario 70 — SQLite→Postgres→SQLite migration round-trip + idempotency.
 
-In v0.7.0-alpha the postgres surface is migration-only — `ai-memory serve
---store-url postgres://...` is deferred to v0.7.1. This scenario exercises
-the only postgres path that ships GREEN in v0.7.0:
-  * `ai-memory migrate --from sqlite://X --to postgres://Y --json` (forward)
-  * idempotent re-run (UPSERT on (namespace, title), 0 net new on rerun)
-  * reverse migration postgres → fresh sqlite
-  * content-hash equivalence end-to-end
-
-Phases:
-  A. openclaw seeds 1000 memories on its local SQLite across 5 namespaces
-     with varied tier/priority/tag distribution.
-  B. forward migrate sqlite → postgres; psql row-count must equal 1000.
-  C. re-run the same migrate; report must show 0 net new + 0 errors.
-  D. reverse migrate postgres → fresh sqlite; row count + content-hash
-     of the round-tripped corpus must equal the original.
-
-PASS iff: A=1000, B=1000 in pg, C delta=0, D=1000 + sha256(content_set)
-matches the seed.
+v0.7.0-alpha postgres surface is migration-only (`ai-memory serve
+--store-url postgres://...` is deferred to v0.7.1). Phases:
+  A. openclaw seeds 1000 memories on local sqlite (5 namespaces, varied tier/priority).
+  B. forward migrate sqlite→postgres; psql row-count must equal 1000.
+  C. idempotent rerun; report must show 0 net new + 0 errors.
+  D. reverse migrate postgres→fresh sqlite; count + content-sha256 == seed.
+PASS iff all four phases agree.
 """
-import sys, pathlib, hashlib, json, shlex
+import sys, pathlib, json, shlex
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "scripts"))
 from a2a_harness import Harness, log, new_uuid
 

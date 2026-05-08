@@ -9,7 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ai-memory · v0.7.0 A2A campaign · awaiting Round 1</title>
-<meta name="description" content="ai-memory v0.7.0 A2A campaign — two-round consecutive 100% GREEN gate. openclaw ↔ hermes via Grok 4.2 reasoning. Two 16 GB DigitalOcean droplets, mTLS on port 19077, audit chain enabled.">
+<meta name="description" content="ai-memory v0.7.0 A2A campaign — two-round consecutive 100% GREEN gate. openclaw ↔ hermes via Grok 4.2 reasoning. Three 16 GB DigitalOcean droplets (openclaw + hermes + postgres+AGE), mTLS on port 19077, audit chain enabled.">
 <style>
 :root{--bg:#000;--bg-card:#111;--bg-elev:#161616;--bg-code:#1a1a1a;--border:#262626;--border-hl:#3d3d3d;--text:#fff;--text-muted:#999;--text-dim:#666;--p1:#6ee7ff;--p2:#ffb86b;--p3:#c8a2ff;--good:#6ee7ff;--bad:#ff6b9d;--gold:#ffd700;--font-mono:'SF Mono','Cascadia Code','Fira Code',Consolas,monospace;--font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;--max-w:1200px}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -53,19 +53,19 @@ footer{padding:3rem 1.5rem;text-align:center;font-size:.85rem;color:var(--text-d
 </head>
 <body>
 <section class="hero">
-  <span class="eyebrow">v0.7.0 A2A · 2-round consecutive 100% GREEN gate · openclaw ↔ hermes via Grok 4.2</span>
+  <span class="eyebrow">v0.7.0 A2A · 2-round consecutive 100% GREEN gate · openclaw ↔ hermes via Grok 4.2 · + postgres+AGE substrate</span>
   <h1>v0.7.0 A2A campaign — scaffold ready, awaiting Round 1</h1>
-  <p class="subtitle">Two 16 GB DigitalOcean droplets · ai-memory v0.7.0 · grok-4.20-0309-reasoning · audit chain on</p>
+  <p class="subtitle">Three 16 GB DigitalOcean droplets · ai-memory v0.7.0 · grok-4.20-0309-reasoning · audit chain on · postgres 16 + AGE 1.5</p>
   <div class="verdict-row">
     <div class="verdict hold"><span class="label">Round 1</span>pending</div>
     <div class="verdict hold"><span class="label">Round 2</span>pending</div>
   </div>
   <p class="lede">Two consecutive 100% GREEN rounds gate the v0.7.0 A2A surface. Round 1 dispatches via <code>.github/workflows/two-rounds.yml</code>; Round 2 auto-dispatches once Round 1 lands GREEN. After both rounds pass, <code>soak.yml</code> activates a 4-hour cron mirroring <code>ai-memory-ship-gate</code>.</p>
   <div class="metrics container">
-    <div class="metric"><div class="label">Scenarios planned</div><div class="value">~67</div><div class="sub">S1–S51 regression + S52–S69 net-new</div></div>
+    <div class="metric"><div class="label">Scenarios planned</div><div class="value">76</div><div class="sub">S1–S51 regression + S52–S69 net-new + S70–S76 postgres+AGE</div></div>
     <div class="metric"><div class="label">Scenarios passed</div><div class="value">—</div><div class="sub">populated after first run</div></div>
     <div class="metric"><div class="label">Agent count</div><div class="value">2</div><div class="sub">openclaw + hermes</div></div>
-    <div class="metric"><div class="label">Droplet count</div><div class="value">2</div><div class="sub">s-4vcpu-16gb-amd · nyc3</div></div>
+    <div class="metric"><div class="label">Droplet count</div><div class="value">3</div><div class="sub">s-4vcpu-16gb-amd · nyc3 · openclaw + hermes + postgres+AGE</div></div>
     <div class="metric"><div class="label">Audit chain length</div><div class="value">—</div><div class="sub">populated after first run</div></div>
   </div>
 </section>
