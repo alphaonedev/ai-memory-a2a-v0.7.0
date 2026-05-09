@@ -1,0 +1,14 @@
+phase A: openclaw seeds 10-entity KG on its local sqlite
+phase B: openclaw migrates → postgres aimemory_s72
+  migrate stdout[:200]={
+  "batches": 1,
+  "dry_run": false,
+  "errors": [],
+  "from_url": "sqlite:///var/lib/ai-memory/store.db",
+  "memories_read": 0,
+  "memories_written": 0,
+  "to_url": "postgres://aimemory:reBkxzZo2uP8
+settle 4s for post-migration AGE settle
+phase C: hermes reads KG fingerprint via psql against shared pg
+  hermes ops: ['kg_query', 'kg_timeline', 'find_paths']
+phase D: openclaw reads ground-truth fingerprint from same pg

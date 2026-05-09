@@ -1,0 +1,24 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 17.8,
+  "pass": false,
+  "per_agent": {
+    "hermes": {
+      "find_paths": null,
+      "kg_query": null,
+      "kg_timeline": null
+    },
+    "openclaw": {
+      "find_paths": null,
+      "kg_query": null,
+      "kg_timeline": null
+    }
+  },
+  "reason": "hermes saw empty kg_query \u2014 migration may not have run",
+  "reasons": [
+    "hermes saw empty kg_query \u2014 migration may not have run"
+  ],
+  "scenario": "72",
+  "skipped": false,
+  "tls_mode": "off"
+}

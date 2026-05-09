@@ -1,0 +1,66 @@
+{
+  "campaign_id": "v0.7.0-a2a-pgvec-20260509-0236",
+  "campaign_scope": "v0.7.0 A2A 2-agent (openclaw + hermes)",
+  "failed": 3,
+  "finished_utc": "2026-05-09T02:37:16+00:00",
+  "in_scope_failed": 3,
+  "in_scope_passed": 1,
+  "in_scope_total": 5,
+  "overall_pass": false,
+  "passed": 1,
+  "round": "pgvector coverage extension",
+  "scenarios": [
+    {
+      "elapsed_sec": 5.8,
+      "in_scope": true,
+      "pass": false,
+      "reason": "seed wrote 0/1000; forward landed 0 in pg (expected 1000); pg row count after rerun = 0 (expected 1000); reverse landed 0 in sqlite (expected 1000)",
+      "scenario": "70",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 17.8,
+      "in_scope": true,
+      "pass": false,
+      "reason": "hermes saw empty kg_query \u2014 migration may not have run",
+      "scenario": "72",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.1,
+      "in_scope": true,
+      "pass": null,
+      "reason": "v0.7.0-alpha ai-memory CLI lacks `probe-capability`/`schema-init`; the SAL UnsupportedCapability error surface is reachable only via cargo-test on the binary. Re-enable when the probe CLI ships.",
+      "scenario": "74",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 1.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "75",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 10.6,
+      "in_scope": true,
+      "pass": false,
+      "reason": "AGE not >= 1.3x faster than CTE at depth=5: ratio=1.05 (cte_p95=83.4ms age_p95=79.7ms)",
+      "scenario": "76",
+      "skipped": false
+    }
+  ],
+  "skipped": 1,
+  "started_utc": "2026-05-09T02:36:41+00:00",
+  "subject_under_test": "ai-memory v0.7.0 (round-2-fixes @ e0d2086, post F1+F2 fixes)",
+  "topology": {
+    "agent_group": "openclaw_hermes",
+    "hermes": "142.93.72.46 (10.20.0.3)",
+    "openclaw": "104.236.52.203 (10.20.0.2)",
+    "postgres": "68.183.157.68 (10.20.0.4)",
+    "tls_mode": "off"
+  },
+  "total": 5,
+  "wall_seconds": 35.2
+}

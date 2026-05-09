@@ -1,0 +1,8 @@
+phase A: read pg schema_version
+  postgres schema_version = 15
+phase B: read sqlite schema_version (openclaw local)
+  sqlite   schema_version = 28
+phase C: compute missing-migration set
+  missing migrations on pg: [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]
+phase D: missing-feature roster
+  features not exercisable on pg: {16: 'governance_inheritance', 17: 'webhook_subscriptions', 18: 'audit_log_chain', 19: 'transcripts', 20: 'signed_events', 21: 'agent_quotas', 22: 'link_attest_level', 23: 'a2a_correlation', 24: 'smart_load_veto_state', 25: 'kg_temporal_indexes_v2', 26: 'tier_promotion_metadata', 27: 'subscription_dlq', 28: 'consolidated_from_agents'}
