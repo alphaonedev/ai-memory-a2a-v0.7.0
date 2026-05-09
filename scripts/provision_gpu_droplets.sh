@@ -12,14 +12,18 @@
 # Tracks:
 #   A1  single openclaw-on-GPU (smoke test, $0.76/hr)
 #       1× gpu-4000adax1-20gb autonomous tier
-#   Q   quad-openclaw (selected for v0.7.0 GPU cert)
+#   Q   quad-openclaw + GPU postgres+AGE (selected for v0.7.0 GPU cert)
 #       4× gpu-4000adax1-20gb autonomous tier (4-node openclaw mesh)
-#       + reuses existing CPU hermes droplet (semantic tier, optional federation peer)
-#       + reuses existing postgres+AGE droplet (shared SAL backend)
+#       1× gpu-4000adax1-20gb running PostgreSQL 16 + AGE 1.5.0 + pgvector
+#         (32 GiB RAM gives representative AGE bench-gate numbers; GPU
+#          itself is unused but its memory is the load-bearing resource)
+#       Existing CPU droplets at 10.20.0.{2,3,4} are preserved untouched
+#         for fallback / parallel testing.
 #
-# Cost @ Q track: 4× $0.76/hr = $3.04/hr GPU only
-# 17h cert pass: ~$52 GPU + ~$2 hermes/postgres CPU + $50 xAI ≈ $104
-# Within $200 hard budget with ~$96 retry/upgrade headroom.
+# Cost @ Q track: 5× $0.76/hr = $3.80/hr GPU only
+# 18h cert pass: ~$68 GPU + $45 xAI ≈ $113 standard
+# +1.5× retry buffer ≈ $170; worst case ≈ $200 (at $200 hard cap).
+# AGGRESSIVE TEARDOWN required after cert close.
 #
 # Cost guard: bails before booking if estimated 24h spend would exceed
 # DO_BUDGET_USD (default 200). Set DO_BUDGET_USD=0 to disable.
@@ -56,8 +60,9 @@ case "$TRACK" in
   Q)  DROPLETS=("a2a-v07-gpu-openclaw-${REGION}-1:10.20.0.10"
                 "a2a-v07-gpu-openclaw-${REGION}-2:10.20.0.11"
                 "a2a-v07-gpu-openclaw-${REGION}-3:10.20.0.12"
-                "a2a-v07-gpu-openclaw-${REGION}-4:10.20.0.13") ;;
-  *) echo "must pass --track A1 (single GPU smoke) or Q (quad-openclaw cert)" >&2; exit 2 ;;
+                "a2a-v07-gpu-openclaw-${REGION}-4:10.20.0.13"
+                "a2a-v07-gpu-postgres-${REGION}-1:10.20.0.14") ;;
+  *) echo "must pass --track A1 (single GPU smoke) or Q (quad-openclaw + GPU pg cert)" >&2; exit 2 ;;
 esac
 
 # Cost estimate before any cloud action
