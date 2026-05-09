@@ -1,0 +1,4 @@
+phase A: openclaw + hermes both store the same fact
+settle 6s for replication
+phase B: hermes calls memory_consolidate on the two stored ids
+  consolidate -> rc=0 body={'consolidated': 2, 'id': '3669b289-6922-4ab3-8087-e0652ee42790'}

@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "charlie_view": {
+    "agent_id": "ai:alice",
+    "content": "v2-26e5399c999147a6ae621dd8a53f67fc"
+  },
+  "elapsed_sec": 14.3,
+  "m1_id": "88b9dca5-483d-45e9-8195-59914cab7e21",
+  "pass": true,
+  "put_http_code": 200,
+  "reasons": [],
+  "scenario": "9",
+  "skipped": false,
+  "tls_mode": "off",
+  "v1_uuid": "v1-9ba4df0ff0e44347877a69433dee5960",
+  "v2_uuid": "v2-26e5399c999147a6ae621dd8a53f67fc"
+}

@@ -1,0 +1,28 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 0.6,
+  "pass": true,
+  "per_agent": {
+    "hermes_v2": {
+      "families": [
+        "archive",
+        "core",
+        "governance",
+        "graph",
+        "lifecycle",
+        "meta",
+        "other",
+        "power"
+      ],
+      "schema_version": "3"
+    },
+    "openclaw_v1": {
+      "families": [],
+      "schema_version": null
+    }
+  },
+  "reasons": [],
+  "scenario": "64",
+  "skipped": false,
+  "tls_mode": "off"
+}

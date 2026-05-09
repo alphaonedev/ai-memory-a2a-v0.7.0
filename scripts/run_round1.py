@@ -262,7 +262,7 @@ def main() -> None:
         "in_scope_failed": n_in_scope_fail,
         "overall_pass": overall,
         "campaign_scope": campaign_scope,
-        "subject_under_test": "ai-memory v0.7.0 (round-2-fixes @ dfb184f)",
+        "subject_under_test": "ai-memory v0.7.0 (round-2-fixes @ e0d2086, post F1+F2 fixes)",
         "topology": {
             "openclaw": "104.236.52.203 (10.20.0.2)",
             "hermes": "142.93.72.46 (10.20.0.3)",

@@ -20,17 +20,11 @@ def main() -> None:
     OPEN = f"ai:s60-openclaw-{suffix}"
     HERM = f"ai:s60-hermes-{suffix}"
     parent = f"s60-parent-{suffix}"
-    # Per F1 (v0.7.0 finding): `namespace_owner` only inspects the EXACT
-    # namespace's standard memory, not the inheritance chain. A deep child
-    # whose policy is inherited from `parent` but whose own standard is
-    # absent fails Owner checks with "no resolvable owner". The intent of
-    # S60 is *cross-agent* deny on a write-protected namespace; testing
-    # the parent itself preserves that intent without tripping the deep-
-    # chain owner-resolution gap. The inherit=false sub-test uses an
-    # unrelated namespace (no policy at all) where both owner and intruder
-    # should be free to write. Re-enable deep-child semantics once F1
-    # ships in v0.7.1.
-    child = parent
+    # F1 fix landed in commit e0d2086 (Round-5): namespace_owner now walks
+    # the inheritance chain leaf-first, so a deep child with no standard
+    # of its own resolves to the parent's owner. This scenario exercises
+    # the full chain-walk path by writing to a deep grandchild.
+    child = f"{parent}/sub/deep"
     unrelated = f"s60-other-{suffix}"
 
     # Pre-write a seed memory in `parent` under OPEN, then attach it as the

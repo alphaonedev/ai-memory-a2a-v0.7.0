@@ -1,0 +1,20 @@
+{
+  "ack_uuid": "a-5802629a92c547329963e69eb5df40d9",
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 17.7,
+  "handoff_uuid": "h-013faabf8ec54aac8afdbeebd1c02f9a",
+  "pass": true,
+  "path": "serve-http",
+  "per_agent": {
+    "ai:alice": {
+      "sees_ack": 1
+    },
+    "ai:bob": {
+      "sees_handoff": 1
+    }
+  },
+  "reasons": [],
+  "scenario": "2",
+  "skipped": false,
+  "tls_mode": "off"
+}

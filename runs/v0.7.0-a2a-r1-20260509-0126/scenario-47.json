@@ -1,0 +1,40 @@
+{
+  "agent_group": "openclaw_hermes",
+  "alias_resolutions": {
+    "a1-project": {
+      "entity_id": "40bea0f7-423b-4534-87f1-d048cdbee7e9",
+      "http_code": 200
+    },
+    "alpha1-proj": {
+      "entity_id": "40bea0f7-423b-4534-87f1-d048cdbee7e9",
+      "http_code": 200
+    },
+    "alphaone-proj": {
+      "entity_id": "40bea0f7-423b-4534-87f1-d048cdbee7e9",
+      "http_code": 200
+    },
+    "ao-project": {
+      "entity_id": "40bea0f7-423b-4534-87f1-d048cdbee7e9",
+      "http_code": 200
+    }
+  },
+  "aliases_on_entity": [
+    "AlphaOne-Project-13217a",
+    "a1-project",
+    "alphaone-proj",
+    "alpha1-proj",
+    "ao-project"
+  ],
+  "canonical": "AlphaOne-Project-13217a",
+  "elapsed_sec": 5.9,
+  "first_entity_id": "40bea0f7-423b-4534-87f1-d048cdbee7e9",
+  "first_register_http_code": 201,
+  "namespace": "scenario47-ent-13217a",
+  "pass": true,
+  "reasons": [],
+  "scenario": "47",
+  "second_entity_id": "40bea0f7-423b-4534-87f1-d048cdbee7e9",
+  "second_register_http_code": 200,
+  "skipped": false,
+  "tls_mode": "off"
+}

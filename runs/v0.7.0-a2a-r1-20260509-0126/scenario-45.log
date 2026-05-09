@@ -1,0 +1,15 @@
+seed: write M0 + T1/T2/T3 on node-1 as ai:s45-c24ec0
+  M0=1a40a182-cd22-4cb8-a29b-2bd7a1c92d79 targets=['b456b2dc-fff0-4c9e-b297-eeeba02de954', 'd953db6e-ad6d-48a2-838b-796dbb1f2b45', '5239f481-b767-4166-95e4-782b1e50842c']
+settle 4s for seed propagation
+creating 3 edges (valid_from defaults to now per LinkBody contract)
+  edge M0->T1 HTTP 201
+  edge M0->T2 HTTP 201
+  edge M0->T3 HTTP 201
+settle 4s for edge fanout
+invalidating edge M0->T2 (target d953db6e-ad6d-48a2-838b-796dbb1f2b45)
+  invalidate HTTP 200
+settle 4s for invalidation fanout
+kg_query include_invalidated=true (past view) — expecting 3 edges
+  HTTP 200 edge count=3
+kg_query (now / default) — expecting 2 edges (T2 invalidated)
+  HTTP 200 edge count=2

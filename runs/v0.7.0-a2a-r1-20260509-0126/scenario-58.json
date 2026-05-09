@@ -1,0 +1,12 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 6.7,
+  "inbox_size": 1,
+  "marker": "s58-c78ef299b95d4868aaac323a31f4db16",
+  "matched": 1,
+  "pass": true,
+  "reasons": [],
+  "scenario": "58",
+  "skipped": false,
+  "tls_mode": "off"
+}

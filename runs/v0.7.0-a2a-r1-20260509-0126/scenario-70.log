@@ -1,0 +1,1 @@
+skipped — v0.7.0-alpha pg adapter requires pgvector — not installed on the postgres-node bootstrap (only `age` available). Re-run after `apt install postgresql-16-pgvector` + `CREATE EXTENSION vector`.

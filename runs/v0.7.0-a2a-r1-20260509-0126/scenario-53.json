@@ -1,0 +1,13 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 7.1,
+  "enforce_delta": 3,
+  "intruder_http_code": 403,
+  "namespace": "scenario53-9005a0",
+  "owner_http_code": 201,
+  "pass": true,
+  "reasons": [],
+  "scenario": "53",
+  "skipped": false,
+  "tls_mode": "off"
+}

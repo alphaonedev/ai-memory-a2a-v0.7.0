@@ -1,0 +1,9 @@
+{
+  "agent_group": "openclaw_hermes",
+  "campaign_scope": "v0.7.0 A2A 2-agent (openclaw + hermes)",
+  "elapsed_sec": 0,
+  "pass": null,
+  "scenario": "27",
+  "skip_reason": "S27 invokes drive_agent.sh against the openclaw legacy MCP path; not installed at v0.7.0-alpha",
+  "skipped": true
+}

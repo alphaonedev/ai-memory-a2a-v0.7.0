@@ -1,0 +1,14 @@
+{
+  "agent_group": "openclaw_hermes",
+  "check_http_code": 200,
+  "elapsed_sec": 6.8,
+  "match_count": 1,
+  "original_id": "a961fe11-c4f7-4092-b53d-503905f57ac1",
+  "original_in_matches": true,
+  "pass": true,
+  "reasons": [],
+  "scenario": "48",
+  "similarity_score": 0.8149999976158142,
+  "skipped": false,
+  "tls_mode": "off"
+}

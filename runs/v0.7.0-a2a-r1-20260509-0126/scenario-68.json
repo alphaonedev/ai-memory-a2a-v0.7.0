@@ -1,0 +1,12 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 70.3,
+  "memory_id": "3822d4b0-71cc-4816-bc70-b80cb1ee2282",
+  "orig_reasoning_chars": 1339,
+  "pass": true,
+  "reasons": [],
+  "recalled_reasoning_chars": 1339,
+  "scenario": "68",
+  "skipped": false,
+  "tls_mode": "off"
+}

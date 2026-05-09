@@ -1,0 +1,16 @@
+{
+  "agent_group": "openclaw_hermes",
+  "capabilities_models": {
+    "cross_encoder": "none",
+    "embedding": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_dim": 384,
+    "llm": "none"
+  },
+  "capabilities_tier": "semantic",
+  "elapsed_sec": 0.4,
+  "pass": null,
+  "reason": "autonomous/smart tier not available on node-1 \u2014 tier='semantic' models={'cross_encoder': 'none', 'embedding': 'sentence-transformers/all-MiniLM-L6-v2', 'embedding_dim': 384, 'llm': 'none'}",
+  "scenario": "51",
+  "skipped": true,
+  "tls_mode": "off"
+}

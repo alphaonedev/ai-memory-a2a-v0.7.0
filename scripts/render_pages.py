@@ -76,10 +76,16 @@ def render_card(rec: dict) -> str:
 
 
 def find_round_run(runs: list[Path], label: str) -> Path | None:
-    """Find the most recent run with the given round label (Round 1 or Round 2)."""
+    """Find the most recent run with the given round label (Round 1 or Round 2).
+
+    Matches loosely on the canonical round token so labels like
+    `Round 1 (post-fix)` still resolve to the `Round 1` slot.
+    """
+    needle = label.lower().split()[0:2]  # ['round', '1'] or ['round', '2']
     for r in runs:
         s = load_summary(r)
-        if s.get("round") == label:
+        actual = (s.get("round") or "").lower().split()
+        if actual[:2] == needle:
             return r
     return None
 

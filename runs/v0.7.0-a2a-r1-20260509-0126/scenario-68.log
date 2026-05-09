@@ -1,0 +1,4 @@
+phase A: ask Grok 4.2 to reason about a problem
+phase B: store with metadata.reasoning
+settle 3s for persist
+phase C: recall --include-content; expect reasoning visible

@@ -1,0 +1,36 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 30.2,
+  "expected_per_reader": 20,
+  "pass": true,
+  "path": "serve-http",
+  "per_agent": {
+    "ai:alice": {
+      "recall": 20
+    },
+    "ai:bob": {
+      "recall": 20
+    },
+    "ai:charlie": {
+      "recall": 20
+    }
+  },
+  "per_namespace_node4": {
+    "scenario1b-ai:alice": {
+      "count": 10,
+      "wrong_agent_id": 0
+    },
+    "scenario1b-ai:bob": {
+      "count": 10,
+      "wrong_agent_id": 0
+    },
+    "scenario1b-ai:charlie": {
+      "count": 10,
+      "wrong_agent_id": 0
+    }
+  },
+  "reasons": [],
+  "scenario": "1b",
+  "skipped": false,
+  "tls_mode": "off"
+}
