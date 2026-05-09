@@ -7,7 +7,7 @@ Scenario 68 — Reasoning-trace persistence.
 Grok 4.2 reasoning trace is captured into metadata.reasoning field on store;
 verify recall --include-content surfaces the trace.
 """
-import sys, pathlib, urllib.parse
+import os, sys, pathlib, urllib.parse
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "scripts"))
 from a2a_harness import Harness, log, new_uuid
 from grok_driver import grok_chat  # noqa: E402
@@ -21,8 +21,28 @@ def main() -> None:
     ns = f"s68-{new_uuid()[:6]}"
 
     log("phase A: ask Grok 4.2 to reason about a problem")
-    out = grok_chat(prompt="If a 12L jug + 7L jug + 5L jug, how do you measure exactly 6 liters?",
-                    system_msg="Show your reasoning steps explicitly.")
+    # Allow generous timeout — `grok-4.20-0309-reasoning` can take >60s on
+    # multi-step puzzles; bump to 180s and retry once on transient SSL/Read
+    # timeouts before failing the scenario.
+    os.environ.setdefault("XAI_TIMEOUT_S", "180")
+    out: dict = {}
+    last_err: Exception | None = None
+    for attempt in range(2):
+        try:
+            out = grok_chat(
+                prompt="If a 12L jug + 7L jug + 5L jug, how do you measure exactly 6 liters?",
+                system_msg="Show your reasoning steps explicitly.")
+            if out and (out.get("text") or out.get("error")):
+                break
+        except Exception as exc:  # SSL/network blips
+            last_err = exc
+            log(f"  grok_chat attempt {attempt+1} raised {type(exc).__name__}: {exc}")
+    if not out:
+        h.emit(passed=False, reason=f"grok_chat unreachable: {last_err}",
+               reasons=[f"grok unreachable: {last_err}"])
+        return
+    if out.get("error"):
+        log(f"  grok error: {out['error']}")
 
     log("phase B: store with metadata.reasoning")
     _, doc = h.write_memory(

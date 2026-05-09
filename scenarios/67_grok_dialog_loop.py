@@ -8,13 +8,31 @@ openclaw asks "what's M's status?" via memory_notify → hermes Grok-4.2-reasoni
 answers via memory_store → openclaw reads → openclaw asks follow-up → >=3 turns;
 verify each turn's metadata.reasoning is populated and timestamps are monotonic.
 """
-import sys, pathlib, json, time
+import os, sys, pathlib, json, time
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "scripts"))
 from a2a_harness import Harness, log, new_uuid
-from grok_driver import grok_chat  # noqa: E402
+from grok_driver import grok_chat as _grok_chat_raw  # noqa: E402
 
 SCENARIO_ID = "67"
 TURNS = 3
+
+# Generous default timeout for the reasoning model (60s default 400s once on
+# multi-step prompts). Plus retry-once-on-network-blip wrapper.
+os.environ.setdefault("XAI_TIMEOUT_S", "180")
+
+
+def grok_chat(*args, **kwargs):
+    last_err: Exception | None = None
+    for attempt in range(2):
+        try:
+            out = _grok_chat_raw(*args, **kwargs)
+            if out and (out.get("text") or out.get("error")):
+                return out
+        except Exception as exc:
+            last_err = exc
+            log(f"  grok_chat attempt {attempt+1} raised {type(exc).__name__}: {exc}")
+    return {"text": "", "reasoning": "", "model": "unknown",
+            "usage": {}, "error": f"unreachable: {last_err}"}
 
 
 def main() -> None:
