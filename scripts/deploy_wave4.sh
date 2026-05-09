@@ -36,6 +36,21 @@ AI_MEMORY_BINARY_PATH="${AI_MEMORY_BINARY_PATH:-/Users/fate/v07/v07-fixes/target
 A2A_PORT="${A2A_PORT:-19077}"
 DEPLOY_SUMMARY="/tmp/v07-wave4-deploy-summary.json"
 
+# v0.7.0 Continuation-6 — opt-in TLS / mTLS plumbing.
+#
+# When `DEPLOY_TLS=1`, the script:
+#   1. SCPs the TLS material from /tmp/a2a-v07-tls/ to each droplet's
+#      /etc/ai-memory-a2a/tls/ directory.
+#   2. Adds `--tls-cert`, `--tls-key`, and (when MTLS=1) `--mtls-allowlist`
+#      flags to the daemon's systemd ExecStart line.
+# When unset (default), the script behaves as pre-Continuation-6 — plain
+# HTTP, no cert distribution. This keeps the existing baseline working
+# while we land the cert-validated path opt-in.
+DEPLOY_TLS="${DEPLOY_TLS:-0}"
+DEPLOY_MTLS="${DEPLOY_MTLS:-1}"   # only meaningful when DEPLOY_TLS=1
+TLS_LOCAL_DIR="${TLS_LOCAL_DIR:-/tmp/a2a-v07-tls}"
+TLS_REMOTE_DIR="${TLS_REMOTE_DIR:-/etc/ai-memory-a2a/tls}"
+
 DRY_RUN=0
 ONLY_NODE=""
 
@@ -123,11 +138,51 @@ deploy_one() {
         psql '${store_url}' -c \"CREATE EXTENSION IF NOT EXISTS age;\" || true
     "
 
+    # ----------------------------------------------------------------
+    # Continuation-6 — opt-in TLS / mTLS cert distribution + flag wiring
+    # ----------------------------------------------------------------
+    local tls_extra_flags=""
+    if [[ "$DEPLOY_TLS" == "1" ]]; then
+        note "[$node_label] DEPLOY_TLS=1 — pushing TLS material to ${TLS_REMOTE_DIR}"
+        [[ -d "$TLS_LOCAL_DIR" ]] || err "DEPLOY_TLS=1 but TLS_LOCAL_DIR=$TLS_LOCAL_DIR missing"
+        ssh "${SSH_OPTS[@]}" "root@${node_ip}" "mkdir -p '${TLS_REMOTE_DIR}' && chmod 0750 '${TLS_REMOTE_DIR}'"
+        # Per-node server cert + key — use the node label to pick which.
+        local server_cert="${TLS_LOCAL_DIR}/server-${node_label}.pem"
+        local server_key="${TLS_LOCAL_DIR}/server-${node_label}.key"
+        [[ -r "$server_cert" ]] || err "missing server cert: $server_cert"
+        [[ -r "$server_key"  ]] || err "missing server key:  $server_key"
+        scp "${SSH_OPTS[@]}" \
+            "${TLS_LOCAL_DIR}/ca.pem" \
+            "$server_cert" \
+            "$server_key" \
+            "${TLS_LOCAL_DIR}/mtls-allowlist.txt" \
+            "root@${node_ip}:${TLS_REMOTE_DIR}/"
+        # Distribute every client cert + key (the harness picks one per
+        # agent at runtime).
+        scp "${SSH_OPTS[@]}" \
+            "${TLS_LOCAL_DIR}"/client-*.pem \
+            "${TLS_LOCAL_DIR}"/client-*.key \
+            "root@${node_ip}:${TLS_REMOTE_DIR}/"
+        ssh "${SSH_OPTS[@]}" "root@${node_ip}" "
+            set -e
+            chown -R root:root '${TLS_REMOTE_DIR}'
+            chmod 0600 '${TLS_REMOTE_DIR}'/*.key
+            chmod 0644 '${TLS_REMOTE_DIR}'/*.pem '${TLS_REMOTE_DIR}'/mtls-allowlist.txt
+        "
+        # Compose the ExecStart suffix.
+        tls_extra_flags=" --tls-cert ${TLS_REMOTE_DIR}/server-${node_label}.pem --tls-key ${TLS_REMOTE_DIR}/server-${node_label}.key"
+        if [[ "$DEPLOY_MTLS" == "1" ]]; then
+            tls_extra_flags+=" --mtls-allowlist ${TLS_REMOTE_DIR}/mtls-allowlist.txt"
+        fi
+        note "[$node_label] TLS material in place; flags='${tls_extra_flags}'"
+    fi
+
     note "[$node_label] rewrite systemd unit to use --store-url"
     # We assume /etc/systemd/system/ai-memory.service exists (boot_*.sh
     # installed it). The replacement keeps the same Environment block
     # but swaps the ExecStart `--db <path>` flag for `--store-url
-    # postgres://...`.
+    # postgres://...`. When DEPLOY_TLS=1, also appends the TLS flags
+    # to the same ExecStart line.
     ssh "${SSH_OPTS[@]}" "root@${node_ip}" "
         set -e
         UNIT=/etc/systemd/system/ai-memory.service
@@ -139,6 +194,14 @@ deploy_one() {
             sed -i -E 's|--store-url [^ ]+|--store-url ${store_url}|' \"\$UNIT\"
         else
             sed -i -E 's|--db [^ ]+|--store-url ${store_url}|' \"\$UNIT\"
+        fi
+        # Continuation-6: scrub any pre-existing --tls-cert/--tls-key/--mtls-allowlist
+        # flags so re-deploys don't double-up. Only re-add when DEPLOY_TLS=1.
+        sed -i -E 's| --tls-cert [^ ]+||g' \"\$UNIT\"
+        sed -i -E 's| --tls-key [^ ]+||g' \"\$UNIT\"
+        sed -i -E 's| --mtls-allowlist [^ ]+||g' \"\$UNIT\"
+        if [ -n '${tls_extra_flags}' ]; then
+            sed -i -E 's|^(ExecStart=.*)$|\\1${tls_extra_flags}|' \"\$UNIT\"
         fi
         # Defensive: ensure auto-migrate is enabled so first boot creates schema.
         grep -q 'AI_MEMORY_AUTO_MIGRATE=1' \"\$UNIT\" || \

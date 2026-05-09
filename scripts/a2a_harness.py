@@ -105,6 +105,9 @@ class Harness:
     # F4 fix: per-node db-path cache for `node_db_path()`. Populated lazily
     # on first call; never invalidated within a scenario run.
     _db_path_cache: dict[str, str] = field(default_factory=dict)
+    # Continuation-6: per-scenario TLS handshake samples (seconds). One
+    # entry per HTTP request; the scenario report rolls min/mean/max.
+    _tls_handshake_samples: list[float] = field(default_factory=list)
 
     @staticmethod
     def new_uuid(prefix: str = "") -> str:
@@ -382,14 +385,125 @@ class Harness:
             cmd = ["ssh", *SSH_OPTS, f"root@{node_ip}", f"bash -s -- {argv}"]
         return self._run(cmd, timeout=timeout, stdin=script)
 
+    # -------- TLS plumbing (Continuation 6 — Phase 5) ---------------------
+    #
+    # The cert harness distributes server + client certs to each
+    # droplet at /etc/ai-memory-a2a/tls/ via the orchestrator's SCP
+    # phase. The harness's responsibility is to choose the RIGHT
+    # client cert per agent identity and emit the matching curl flags
+    # so each scenario can authenticate as its caller.
+    #
+    # Env knobs (each optional, harness falls back to a sensible default):
+    #
+    #   TLS_MODE                 — "off" | "tls" | "mtls"  (also via Harness.tls_mode)
+    #   TLS_CA_PEM               — path to the CA bundle on the remote droplet
+    #                              (default: /etc/ai-memory-a2a/tls/ca.pem)
+    #   TLS_CLIENT_CERT_<AGENT>  — per-agent client cert path on the remote droplet
+    #   TLS_CLIENT_KEY_<AGENT>   — per-agent client key path on the remote droplet
+    #   TLS_DEFAULT_CLIENT_CERT  — fallback cert used when no per-agent cert is set
+    #   TLS_DEFAULT_CLIENT_KEY   — fallback key used when no per-agent key is set
+    #
+    # `<AGENT>` is the upper-cased agent stem with non-alphanumerics
+    # collapsed to `_` (so `ai:alice@nyc3-droplet-1` -> `AI_ALICE_NYC3_DROPLET_1`).
+    # Plain unprefixed names like `alice` / `bob` are also looked up via
+    # `<AGENT>` directly.
+
+    @staticmethod
+    def _agent_env_stem(agent_id: str) -> str:
+        """Normalize an agent_id into a stable env-var suffix.
+
+        e.g. `alice` -> `ALICE`, `ai:alice@nyc3:droplet-1` ->
+        `AI_ALICE_NYC3_DROPLET_1`. Used by `client_cert_for` to look up
+        `TLS_CLIENT_CERT_<stem>` / `TLS_CLIENT_KEY_<stem>` env vars.
+        """
+        if not agent_id:
+            return ""
+        out = []
+        for ch in agent_id:
+            if ch.isalnum():
+                out.append(ch.upper())
+            else:
+                out.append("_")
+        # collapse runs of "_" to a single one
+        s = "".join(out)
+        while "__" in s:
+            s = s.replace("__", "_")
+        return s.strip("_")
+
+    def client_cert_for(self, agent_id: str | None) -> tuple[str | None, str | None]:
+        """Return `(cert_path, key_path)` for the supplied agent_id.
+
+        Resolution order:
+          1. `TLS_CLIENT_CERT_<stem>` / `TLS_CLIENT_KEY_<stem>` env vars.
+          2. `TLS_DEFAULT_CLIENT_CERT` / `TLS_DEFAULT_CLIENT_KEY` env vars.
+          3. The legacy `/etc/ai-memory-a2a/tls/client.pem` / `client.key`
+             pair (pre-Continuation-6 default).
+
+        Returns `(None, None)` only when the legacy defaults are also
+        explicitly disabled via `TLS_DEFAULT_CLIENT_CERT=`. Scenarios
+        that need per-agent cert distinction MUST set the per-agent env
+        vars; otherwise every scenario picks up the default and the
+        daemon's mTLS allowlist sees a single fingerprint regardless
+        of which scenario is calling.
+        """
+        # 1. Per-agent override.
+        stem = self._agent_env_stem(agent_id) if agent_id else ""
+        if stem:
+            cert = os.environ.get(f"TLS_CLIENT_CERT_{stem}")
+            key = os.environ.get(f"TLS_CLIENT_KEY_{stem}")
+            if cert and key:
+                return cert, key
+        # 2. Process-wide default.
+        cert = os.environ.get("TLS_DEFAULT_CLIENT_CERT")
+        key = os.environ.get("TLS_DEFAULT_CLIENT_KEY")
+        if cert and key:
+            return cert, key
+        # 3. Legacy fallback (pre-Continuation-6 path the harness used
+        #    when cert plumbing was a single shared keypair). The
+        #    orchestrator can suppress this by setting
+        #    `TLS_DEFAULT_CLIENT_CERT=NONE` (any non-readable path) so
+        #    a misconfigured scenario fails loudly instead of silently
+        #    auth'ing as the legacy identity.
+        return (
+            "/etc/ai-memory-a2a/tls/client.pem",
+            "/etc/ai-memory-a2a/tls/client.key",
+        )
+
+    def ca_pem_path(self) -> str:
+        """Path to the CA bundle on the remote droplet. Defaults to the
+        Continuation-6 install path. Override via `TLS_CA_PEM`."""
+        return os.environ.get("TLS_CA_PEM", "/etc/ai-memory-a2a/tls/ca.pem")
+
     # -------- curl construction --------
 
-    def _remote_curl_prefix(self, node_ip: str | None = None) -> str:
+    def _remote_curl_prefix(self, node_ip: str | None = None,
+                            agent_id: str | None = None) -> str:
+        """Build the remote curl command prefix, honoring `tls_mode` and
+        the per-agent cert mapping.
+
+        Continuation-6 changes:
+          * `--cacert` honors `TLS_CA_PEM` env (default
+            `/etc/ai-memory-a2a/tls/ca.pem`).
+          * `--cert` / `--key` honor the per-agent mapping resolved by
+            `client_cert_for(agent_id)`.
+          * `-w '%{time_appconnect} %{time_connect}\n'` is emitted on
+            every TLS request so the caller can capture the handshake
+            duration via the `tls_handshake_seconds` field on the JSON
+            report (see `Harness.emit`).
+        """
         if self.tls_mode == "off":
             return "curl -sS"
-        flags = "curl -sS --cacert /etc/ai-memory-a2a/tls/ca.pem --resolve localhost:9077:127.0.0.1"
+        ca = self.ca_pem_path()
+        flags = (
+            f"curl -sS --cacert {shlex.quote(ca)} "
+            f"--resolve localhost:9077:127.0.0.1"
+        )
         if self.tls_mode == "mtls":
-            flags += " --cert /etc/ai-memory-a2a/tls/client.pem --key /etc/ai-memory-a2a/tls/client.key"
+            cert, key = self.client_cert_for(agent_id)
+            if cert and key:
+                flags += (
+                    f" --cert {shlex.quote(cert)} --key {shlex.quote(key)}"
+                )
         return flags
 
     # v0.7.0 A2A campaign: daemons listen on PRIVATE VPC IPs only at port
@@ -456,7 +570,7 @@ class Harness:
             headers["X-Agent-Id"] = agent_id
         if extra_headers:
             headers.update(extra_headers)
-        curl_prefix = self._remote_curl_prefix(node_ip)
+        curl_prefix = self._remote_curl_prefix(node_ip, agent_id=agent_id)
 
         parts = [curl_prefix, "-X", method, shlex.quote(url)]
         for k, v in headers.items():
@@ -478,34 +592,83 @@ class Harness:
                 stdin_body = body_json
             else:
                 parts += ["-d", shlex.quote(body_json)]
+        # Continuation-6: always emit the TLS handshake timing marker so
+        # `Harness.emit` can roll a `tls_handshake_seconds` field into
+        # the per-scenario JSON report. `time_appconnect` is the
+        # cumulative seconds at the end of the TLS handshake (0 on
+        # plain HTTP), and `time_connect` is at end of TCP connect; the
+        # difference is the handshake itself. We emit BOTH along with
+        # the existing `__HTTP__<code>` status marker so the caller
+        # can split on the markers without breaking the older shape.
+        marker_suffix = "\n__HTTP__%{http_code} __TLS__%{time_appconnect} __TCP__%{time_connect}"
         if include_status:
-            parts += ["-w", shlex.quote("\n__HTTP__%{http_code}")]
+            parts += ["-w", shlex.quote(marker_suffix)]
+        else:
+            # Even when the caller doesn't ask for status, we still
+            # emit the timing markers so the harness picks them up for
+            # logging — the caller-facing return shape stays unchanged
+            # because we strip the markers before returning.
+            parts += ["-w", shlex.quote(marker_suffix)]
         remote_cmd = " ".join(parts)
 
+        # Local timer wraps the ssh_exec — gives us an upper-bound
+        # measurement that includes the ssh overhead. The remote
+        # `time_appconnect`/`time_connect` is the authoritative
+        # handshake number; the local wrap is logged at debug only.
+        t_local_start = time.perf_counter()
         result = self.ssh_exec(node_ip, remote_cmd, timeout=timeout, stdin=stdin_body)
+        t_local_total = time.perf_counter() - t_local_start
         raw = (result.stdout or "").strip()
 
-        if include_status:
-            status_marker = "__HTTP__"
-            status = 0
-            body_str = raw
-            if status_marker in raw:
-                body_str, _, code_str = raw.rpartition(status_marker)
-                body_str = body_str.rstrip("\n")
-                try:
-                    status = int(code_str.strip())
-                except ValueError:
-                    status = 0
+        # Strip the timing + status markers from the body. Marker
+        # ordering is `\n__HTTP__<code> __TLS__<seconds> __TCP__<seconds>`
+        # so the rpartition chain consumes them right-to-left.
+        tls_handshake = None
+        tcp_connect = None
+        http_code = 0
+        body_str = raw
+        if "__TCP__" in body_str:
+            head, _, tcp_part = body_str.rpartition(" __TCP__")
             try:
-                parsed = json.loads(body_str) if body_str else None
-            except json.JSONDecodeError:
-                parsed = body_str
-            return result.returncode, {"body": parsed, "http_code": status}
+                tcp_connect = float(tcp_part.strip())
+            except ValueError:
+                pass
+            body_str = head
+        if "__TLS__" in body_str:
+            head, _, tls_part = body_str.rpartition(" __TLS__")
+            try:
+                tls_handshake = float(tls_part.strip())
+            except ValueError:
+                pass
+            body_str = head
+        if "__HTTP__" in body_str:
+            head, _, code_part = body_str.rpartition("\n__HTTP__")
+            try:
+                http_code = int(code_part.strip())
+            except ValueError:
+                http_code = 0
+            body_str = head
+
+        # Cumulative TLS handshake bookkeeping for the scenario report.
+        # `tls_handshake` is `time_appconnect - time_connect` (handshake
+        # itself, in seconds). `time_appconnect` = 0 on plain HTTP, so
+        # the resulting field is 0.0 there.
+        if tls_handshake is not None and tcp_connect is not None:
+            handshake_secs = max(tls_handshake - tcp_connect, 0.0)
+            self._tls_handshake_samples.append(handshake_secs)
+            log(
+                f"  curl tls_handshake={handshake_secs:.4f}s "
+                f"(appconnect={tls_handshake:.4f}s, connect={tcp_connect:.4f}s, "
+                f"local_total={t_local_total:.3f}s) {method} {path}"
+            )
 
         try:
-            parsed = json.loads(raw) if raw else None
+            parsed = json.loads(body_str) if body_str else None
         except json.JSONDecodeError:
-            parsed = raw
+            parsed = body_str
+
+        if include_status:
+            return result.returncode, {"body": parsed, "http_code": http_code}
         return result.returncode, parsed
 
     def http_on_expect_fail(self, node_ip: str, method: str, path: str, **kwargs) -> int:
@@ -627,6 +790,12 @@ class Harness:
         """Emit the final JSON scenario report to stdout and exit 0.
 
         `passed=None` is allowed for skipped scenarios.
+
+        Continuation-6: when one or more TLS handshakes were observed
+        (i.e. the scenario ran against a TLS/mTLS daemon), the report
+        carries a `tls_handshake` block with `count`, `min_seconds`,
+        `mean_seconds`, `max_seconds`, and `total_seconds`. Plain-HTTP
+        scenarios omit the block entirely.
         """
         doc: dict[str, Any] = {
             "scenario": self.scenario_id,
@@ -638,6 +807,19 @@ class Harness:
         }
         if reason:
             doc["reason"] = reason
+        # Roll TLS handshake samples into the report. Filter out
+        # zero-valued samples (which happen on every plain-HTTP
+        # scenario or when curl's `time_appconnect` failed to populate)
+        # so the stats reflect ACTUAL handshake events.
+        nonzero = [s for s in self._tls_handshake_samples if s > 0.0]
+        if nonzero:
+            doc["tls_handshake"] = {
+                "count": len(nonzero),
+                "min_seconds": round(min(nonzero), 6),
+                "mean_seconds": round(sum(nonzero) / len(nonzero), 6),
+                "max_seconds": round(max(nonzero), 6),
+                "total_seconds": round(sum(nonzero), 6),
+            }
         doc.update(fields)
         print(json.dumps(doc, sort_keys=True), flush=True)
         sys.exit(0)
