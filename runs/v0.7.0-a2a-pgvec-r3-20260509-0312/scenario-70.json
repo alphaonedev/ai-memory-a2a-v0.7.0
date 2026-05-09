@@ -1,0 +1,20 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 10.2,
+  "pass": true,
+  "per_agent": {
+    "openclaw": {
+      "fwd_pg_count": 1000,
+      "rerun_errors": 0,
+      "rerun_written": 1000,
+      "return_hash": "b373993e017c7a28",
+      "rev_sqlite_count": 1000,
+      "seed_hash": "b373993e017c7a28",
+      "seeded": 1000
+    }
+  },
+  "reasons": [],
+  "scenario": "70",
+  "skipped": false,
+  "tls_mode": "off"
+}

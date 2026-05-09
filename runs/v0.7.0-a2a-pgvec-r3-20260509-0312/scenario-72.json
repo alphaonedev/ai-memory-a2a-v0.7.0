@@ -1,0 +1,22 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 21.5,
+  "pass": true,
+  "path_b": true,
+  "per_agent": {
+    "hermes": {
+      "memories_converged": 10
+    },
+    "openclaw": {
+      "cargo_rc": 0,
+      "memories_seeded": 10,
+      "namespace": "s72-kg-ce3b6c",
+      "summary_line": "test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.48s",
+      "validator": "tests/sal_contract.rs"
+    }
+  },
+  "reasons": [],
+  "scenario": "72",
+  "skipped": false,
+  "tls_mode": "off"
+}

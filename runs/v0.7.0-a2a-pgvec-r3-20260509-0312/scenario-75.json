@@ -1,0 +1,47 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 1.1,
+  "missing_features": {
+    "16": "governance_inheritance",
+    "17": "webhook_subscriptions",
+    "18": "audit_log_chain",
+    "19": "transcripts",
+    "20": "signed_events",
+    "21": "agent_quotas",
+    "22": "link_attest_level",
+    "23": "a2a_correlation",
+    "24": "smart_load_veto_state",
+    "25": "kg_temporal_indexes_v2",
+    "26": "tier_promotion_metadata",
+    "27": "subscription_dlq",
+    "28": "consolidated_from_agents"
+  },
+  "missing_migrations": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ],
+  "pass": true,
+  "per_agent": {
+    "postgres": {
+      "schema_version": 15
+    },
+    "sqlite": {
+      "schema_version": 28
+    }
+  },
+  "reasons": [],
+  "scenario": "75",
+  "skipped": false,
+  "tls_mode": "off"
+}
