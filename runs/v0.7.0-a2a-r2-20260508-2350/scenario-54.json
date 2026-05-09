@@ -1,0 +1,16 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 0.5,
+  "pass": true,
+  "rc": [
+    0,
+    1,
+    0,
+    0
+  ],
+  "reasons": [],
+  "scenario": "54",
+  "second_invocation_msg": "ai-memory: loaded config from /root/.config/ai-memory/config.toml\nError: keypair for ai:s54-test-72beae20 already exists at /tmp/s54-keys-5f1b0eb8/ai:s54-test-72beae20.pub (pass --force to rotate; ref",
+  "skipped": false,
+  "tls_mode": "off"
+}

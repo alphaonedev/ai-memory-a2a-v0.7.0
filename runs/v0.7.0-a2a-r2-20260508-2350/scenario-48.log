@@ -1,0 +1,7 @@
+alice writes the original memory on node-1
+  original id=a85a3cd8-316f-4275-afce-87126b5bb8f2
+settle 6s for indexing + embedding before duplicate check
+alice calls /api/v1/check_duplicate with near-match content
+  HTTP 200
+  matches returned: 1
+  original-as-match found=True score=0.8100000023841858

@@ -1,0 +1,21 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 18.2,
+  "m1_id": "2e68ecce-dafb-4546-a63b-81d8ffbc3959",
+  "pass": true,
+  "peer_view": {
+    "node_1": "va-6e83ecfa8ae74eb88e444777e6c56f8d",
+    "node_2": "va-6e83ecfa8ae74eb88e444777e6c56f8d",
+    "node_3": "va-6e83ecfa8ae74eb88e444777e6c56f8d",
+    "node_4": "va-6e83ecfa8ae74eb88e444777e6c56f8d"
+  },
+  "reasons": [],
+  "scenario": "13",
+  "skipped": false,
+  "submitted": {
+    "v0": "v0-47a0f2ba142340b2948ae0f6d0b7d072",
+    "vA_alice": "va-6e83ecfa8ae74eb88e444777e6c56f8d",
+    "vB_bob": "vb-5ced609bdc6e46eb93c87f23d2073bb9"
+  },
+  "tls_mode": "off"
+}

@@ -1,0 +1,14 @@
+alice writes M1 on node-1
+  M1 id=1d260cf1-a835-4e3e-b2cf-e9cc925aa230
+settle 5s for pre-archive replication
+alice archives M1 via POST /api/v1/archive (ai-memory-mcp PR #361)
+  archive (POST) returned HTTP 200
+settle 5s for archive propagation
+bob queries /api/v1/archive on node-2
+  bob sees M1 in archive: True
+charlie restores M1 via /api/v1/archive/{id}/restore on node-3
+  restore returned HTTP 200
+settle 5s for restore propagation
+node-4 aggregator: M1 must be active again
+  node-4 active rows matching marker: 1
+fetch /api/v1/archive/stats on node-4

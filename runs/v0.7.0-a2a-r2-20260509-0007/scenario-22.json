@@ -1,0 +1,22 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 6.0,
+  "pass": true,
+  "reasons": [],
+  "scenario": "22",
+  "skipped": false,
+  "tests": {
+    "body_vs_header_conflict": {
+      "acceptable": [
+        "ai:body-wins",
+        "ai:attacker"
+      ],
+      "stored_agent_id": "ai:attacker"
+    },
+    "header_only": {
+      "expected": "ai:alice",
+      "stored_agent_id": "ai:alice"
+    }
+  },
+  "tls_mode": "off"
+}

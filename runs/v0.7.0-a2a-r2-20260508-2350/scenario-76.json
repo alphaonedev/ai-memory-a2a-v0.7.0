@@ -1,0 +1,9 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 0.4,
+  "pass": null,
+  "reason": "v0.7.0-alpha pg adapter requires pgvector + schema-init CLI (neither shipped on this build); perf gate cannot run.",
+  "scenario": "76",
+  "skipped": true,
+  "tls_mode": "off"
+}

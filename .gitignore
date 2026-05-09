@@ -56,3 +56,5 @@ runs/*
 !runs/.gitkeep
 !runs/v0.7.0-a2a-r1-*/
 !runs/v0.7.0-a2a-r1-*/**
+!runs/v0.7.0-a2a-r2-*/
+!runs/v0.7.0-a2a-r2-*/**

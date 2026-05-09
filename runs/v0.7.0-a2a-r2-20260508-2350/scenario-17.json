@@ -1,0 +1,16 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 22.3,
+  "expected_count": 15,
+  "pass": true,
+  "per_peer": {
+    "node_1": 15,
+    "node_2": 15,
+    "node_3": 15,
+    "node_4": 15
+  },
+  "reasons": [],
+  "scenario": "17",
+  "skipped": false,
+  "tls_mode": "off"
+}

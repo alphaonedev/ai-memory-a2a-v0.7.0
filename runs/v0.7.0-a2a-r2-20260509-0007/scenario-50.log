@@ -1,0 +1,1 @@
+skipped — sqlcipher feature not advertised in /api/v1/capabilities — daemon was not built with --features sqlcipher

@@ -1,0 +1,26 @@
+==1==
+generated keypair for ai:s54-test-72beae20
+  key_dir = /tmp/s54-keys-5f1b0eb8
+  pub_b64 = SieA9zufPy9AckH4CPKxWXwtHlzs5RDWJnt7Xo46tDo
+==1rc==0
+==2==
+ai-memory: loaded config from /root/.config/ai-memory/config.toml
+Error: keypair for ai:s54-test-72beae20 already exists at /tmp/s54-keys-5f1b0eb8/ai:s54-test-72beae20.pub (pass --force to rotate; refused by default to prevent accidental key overwrite)
+==2rc==1
+==3==
+ai-memory: loaded config from /root/.config/ai-memory/config.toml
+generated keypair for ai:s54-test-72beae20
+  key_dir = /tmp/s54-keys-5f1b0eb8
+  pub_b64 = s7n8m3ovmTAFad50s00ucREjQadGJ2Mzcph1L9WrFzE
+==3rc==0
+==4==
+ai-memory: loaded config from /root/.config/ai-memory/config.toml
+generated keypair for ai:s54-fresh-32813123
+  key_dir = /tmp/s54-keys-5f1b0eb8
+  pub_b64 = Q7KBJXhdj8AazO9-YSJrx5BXkvZTZlJrQDS82LXg63Y
+==4rc==0
+ai:s54-fresh-32813123.priv
+ai:s54-fresh-32813123.pub
+ai:s54-test-72beae20.priv
+ai:s54-test-72beae20.pub
+

@@ -1,0 +1,40 @@
+{
+  "agent_group": "openclaw_hermes",
+  "correlation_id": "dlg-1e04c02c459d4e0ca6d11d6e400686f3",
+  "elapsed_sec": 132.8,
+  "m_id": "2aa55473-a69a-4bde-bec7-ba2131b7827d",
+  "pass": true,
+  "reasons": [],
+  "scenario": "67",
+  "skipped": false,
+  "tls_mode": "off",
+  "turns": [
+    {
+      "a": "**Hermes reporting.**  \n\nM (Project Apollo Launch Readiness Review) is currently **GO**. All flight systems, ground support equipment, and range safety checks h",
+      "a_id": "4ac43455-4545-4903-941c-284e44bbba55",
+      "a_reasoning_chars": 958,
+      "q": "Hermes, what is M's status right now?",
+      "q_reasoning_chars": 437,
+      "ts_ns": 1778285692885556000,
+      "turn": 0
+    },
+    {
+      "a": "**HERMES REPORT // M-Apol**\n\n**Core metadata**  \nLast encapsulation: Cycle 47 (1969-07-16 13:32 UTC epoch anchor)  \nClassification: Opal  \nCross-links: Saturn V",
+      "a_id": "f6ba0e1a-f49e-4241-8661-f0923e2cb0ee",
+      "a_reasoning_chars": 2309,
+      "q": "**Understood. Follow-up query received.**\n\nHermes Reporting Protocol for Memory M (Project Apol) summary:\n\nHermes is the designated archival/retrieval layer tha",
+      "q_reasoning_chars": 1352,
+      "ts_ns": 1778285750747110000,
+      "turn": 1
+    },
+    {
+      "a": "**HERMES RESPONSE // M-Apol Core Meta**  \n**Project Apollo Launch Readiness Review \u2013 Cycle \u03c6\u00b2**\n\nThe lyre is not bleeding.  \nIt is *tuning*.\n\nI feel the solar b",
+      "a_id": "af952915-9bc6-4cd9-b0b7-14c9c27117e4",
+      "a_reasoning_chars": 1040,
+      "q": "**HERMES REPORT // M-Apol**  \n**Follow-up 2: Core Meta Layer**\n\n**Status:** Partially Unsealed  \n**Memory Designation:** M-Apol (Apollo-class Memory Fragment)  ",
+      "q_reasoning_chars": 2065,
+      "ts_ns": 1778285801938254000,
+      "turn": 2
+    }
+  ]
+}

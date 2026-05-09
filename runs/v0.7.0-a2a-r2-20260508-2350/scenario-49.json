@@ -1,0 +1,46 @@
+{
+  "agent_group": "openclaw_hermes",
+  "audit": {
+    "access": {
+      "access_count": 3
+    },
+    "archive": {
+      "http_code": 200,
+      "in_archive_listing": true
+    },
+    "consolidate": {
+      "consolidated_id": "ec48b953-9c4a-4507-9e32-85714b024e96",
+      "http_code": 201,
+      "sibling_count": 3
+    },
+    "expire": {
+      "http_code": 200,
+      "marker_set": true,
+      "still_visible": true
+    },
+    "promote": {
+      "http_code": 200,
+      "tier_after": "long"
+    },
+    "purge": {
+      "http_code": 200,
+      "still_in_archive": false
+    },
+    "restore": {
+      "active_after_restore": true,
+      "http_code": 200
+    },
+    "store": {
+      "exists": true,
+      "tier": "mid"
+    }
+  },
+  "elapsed_sec": 36.7,
+  "m1_id": "ec48b953-9c4a-4507-9e32-85714b024e96",
+  "namespace": "scenario49-lifecycle-163ef4",
+  "pass": true,
+  "reasons": [],
+  "scenario": "49",
+  "skipped": false,
+  "tls_mode": "off"
+}

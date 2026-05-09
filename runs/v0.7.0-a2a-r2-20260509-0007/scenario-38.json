@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "dst_ns": "scenario38-dst-d5fac6",
+  "elapsed_sec": 20.9,
+  "expected_rows": 5,
+  "export_http_code": 200,
+  "import_http_code": 200,
+  "markers_preserved": 5,
+  "pass": true,
+  "reasons": [],
+  "rows_exported": 5,
+  "rows_in_destination": 5,
+  "scenario": "38",
+  "skipped": false,
+  "src_ns": "scenario38-src-d5fac6",
+  "tls_mode": "off"
+}

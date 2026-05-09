@@ -1,0 +1,16 @@
+{
+  "agent_group": "openclaw_hermes",
+  "consolidate_http_code": 201,
+  "consolidated_from_agents": [
+    "ai:charlie",
+    "ai:bob",
+    "ai:alice"
+  ],
+  "consolidated_id": "07e62ddd-888f-46c1-9a20-aceebb1b3165",
+  "elapsed_sec": 23.2,
+  "pass": true,
+  "reasons": [],
+  "scenario": "5",
+  "skipped": false,
+  "tls_mode": "off"
+}

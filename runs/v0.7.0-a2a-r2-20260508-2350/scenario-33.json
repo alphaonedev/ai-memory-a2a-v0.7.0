@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 17.3,
+  "m1_delivered": 1,
+  "namespace": "scenario33-pubsub-79ea7f",
+  "ns_in_subs_after": false,
+  "ns_in_subs_before": true,
+  "pass": true,
+  "reasons": [],
+  "scenario": "33",
+  "skipped": false,
+  "subscribe_http_code": 201,
+  "subscriptions_after_count": 0,
+  "subscriptions_before_count": 1,
+  "tls_mode": "off",
+  "unsubscribe_http_code": 200
+}

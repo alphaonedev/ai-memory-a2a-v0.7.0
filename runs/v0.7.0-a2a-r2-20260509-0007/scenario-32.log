@@ -1,0 +1,7 @@
+alice calls /api/v1/notify → target=ai:bob
+  notify returned HTTP 201
+settle 6s for notification fanout
+bob queries his inbox on node-2
+  bob inbox has 1 messages; sees marker: True
+charlie queries his inbox on node-3 (must NOT see it)
+  charlie inbox has 0 messages; sees marker: False

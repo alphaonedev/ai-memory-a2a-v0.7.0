@@ -1,0 +1,206 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 8.2,
+  "identical": true,
+  "pass": true,
+  "per_agent": {
+    "hermes": {
+      "correct": 13,
+      "results": [
+        {
+          "expected": "other",
+          "got": "other",
+          "intent": "send a notification",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "power",
+          "intent": "expand a query and find related memories",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "power",
+          "intent": "auto-tag this content",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "power",
+          "intent": "detect contradictions in my notes",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "power",
+          "intent": "consolidate duplicate memories",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "core",
+          "got": "core",
+          "intent": "store a new memory about my project",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "core",
+          "got": "core",
+          "intent": "recall what I learned yesterday",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "governance",
+          "got": "governance",
+          "intent": "list all my namespaces",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "graph",
+          "got": "graph",
+          "intent": "query the knowledge graph",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "graph",
+          "got": "graph",
+          "intent": "walk the taxonomy",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "governance",
+          "got": "governance",
+          "intent": "subscribe to namespace events",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "power",
+          "intent": "get my quota status",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "graph",
+          "got": "graph",
+          "intent": "verify the audit chain",
+          "ok": true,
+          "rc": 0
+        }
+      ],
+      "total": 13
+    },
+    "openclaw": {
+      "correct": 13,
+      "results": [
+        {
+          "expected": "other",
+          "got": "other",
+          "intent": "send a notification",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "power",
+          "intent": "expand a query and find related memories",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "power",
+          "intent": "auto-tag this content",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "power",
+          "intent": "detect contradictions in my notes",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "power",
+          "intent": "consolidate duplicate memories",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "core",
+          "got": "core",
+          "intent": "store a new memory about my project",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "core",
+          "got": "core",
+          "intent": "recall what I learned yesterday",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "governance",
+          "got": "governance",
+          "intent": "list all my namespaces",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "graph",
+          "got": "graph",
+          "intent": "query the knowledge graph",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "graph",
+          "got": "graph",
+          "intent": "walk the taxonomy",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "governance",
+          "got": "governance",
+          "intent": "subscribe to namespace events",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "power",
+          "got": "power",
+          "intent": "get my quota status",
+          "ok": true,
+          "rc": 0
+        },
+        {
+          "expected": "graph",
+          "got": "graph",
+          "intent": "verify the audit chain",
+          "ok": true,
+          "rc": 0
+        }
+      ],
+      "total": 13
+    }
+  },
+  "reasons": [],
+  "scenario": "55",
+  "skipped": false,
+  "tls_mode": "off"
+}

@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "bulk_http_code": 200,
+  "bulk_size": 500,
+  "elapsed_sec": 54.1,
+  "namespace": "scenario40-bulk-69ccde",
+  "pass": true,
+  "per_peer_count": {
+    "node_2": 500,
+    "node_3": 500,
+    "node_4": 500
+  },
+  "reasons": [],
+  "scenario": "40",
+  "skipped": false,
+  "tls_mode": "off"
+}

@@ -1,0 +1,27 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 80.1,
+  "namespace": "s62-383ae4",
+  "pass": true,
+  "reasons": [],
+  "recalls": {
+    "kafka": {
+      "rank_of_seed": 1,
+      "rc": 0,
+      "top_k": 1
+    },
+    "photosynthesis": {
+      "rank_of_seed": 1,
+      "rc": 0,
+      "top_k": 1
+    },
+    "relativity": {
+      "rank_of_seed": 1,
+      "rc": 0,
+      "top_k": 1
+    }
+  },
+  "scenario": "62",
+  "skipped": false,
+  "tls_mode": "off"
+}

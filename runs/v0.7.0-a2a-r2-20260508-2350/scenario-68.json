@@ -1,0 +1,8 @@
+{
+  "elapsed_sec": 60.1,
+  "harness_error": true,
+  "pass": false,
+  "reason": "no JSON report on stdout (rc=1); stderr tail: r)\n           ~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/ssl.py\", line 1138, in read\n    return self._sslobj.read(len, buffer)\n           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\nTimeoutError: The read operation timed out\n",
+  "scenario": "68",
+  "skipped": false
+}

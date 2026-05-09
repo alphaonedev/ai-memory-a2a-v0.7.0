@@ -1,0 +1,12 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 13.2,
+  "pass": true,
+  "reasons": [],
+  "scenario": "36",
+  "session_id": "c33eca87-cbbd-4b23-845c-3dba56e03a5d",
+  "session_tagged_rows_on_bob": 2,
+  "skipped": false,
+  "start_http_code": 200,
+  "tls_mode": "off"
+}

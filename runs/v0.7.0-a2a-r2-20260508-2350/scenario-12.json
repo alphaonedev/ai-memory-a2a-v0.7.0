@@ -1,0 +1,16 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 12.2,
+  "pass": true,
+  "peers_see": {
+    "node_2": 1,
+    "node_3": 1,
+    "node_4": 1
+  },
+  "reasons": [],
+  "register_http_code": 201,
+  "registered_agent": "ai:dave-probe-963c4a0b",
+  "scenario": "12",
+  "skipped": false,
+  "tls_mode": "off"
+}

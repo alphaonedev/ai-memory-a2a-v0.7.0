@@ -1,0 +1,27 @@
+{
+  "agent_group": "openclaw_hermes",
+  "diag_list_alice_present": 1,
+  "diag_list_bob_present": 1,
+  "diag_node3_embedding_probe": "",
+  "elapsed_sec": 5.1,
+  "pass": true,
+  "query": "morning outdoor exercise routine",
+  "reasons": [],
+  "recall_mode": "hybrid",
+  "rows_in_recall": 2,
+  "scenario": "18",
+  "skipped": false,
+  "tls_mode": "off",
+  "writers": [
+    {
+      "agent": "ai:alice",
+      "marker": "alice-sunrise-31fd5965",
+      "seen_by_charlie": 1
+    },
+    {
+      "agent": "ai:bob",
+      "marker": "bob-daybreak-5f0b4a5d",
+      "seen_by_charlie": 1
+    }
+  ]
+}

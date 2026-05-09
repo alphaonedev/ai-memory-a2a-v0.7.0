@@ -1,0 +1,15 @@
+{
+  "agent_group": "openclaw_hermes",
+  "consolidated_from_agents": [
+    "ai:s63-hermes-b28821",
+    "ai:s63-openclaw-b28821"
+  ],
+  "elapsed_sec": 7.3,
+  "id1": "04a545fa-b218-42ea-9a32-190b45ed7251",
+  "id2": "9c3c983e-681a-433e-bcb5-0d7eb6fb17de",
+  "pass": true,
+  "reasons": [],
+  "scenario": "63",
+  "skipped": false,
+  "tls_mode": "off"
+}

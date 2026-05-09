@@ -1,0 +1,27 @@
+{
+  "activity_namespace": "scenario41-activity-b7a697",
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 16.0,
+  "pass": true,
+  "per_peer": {
+    "node_1": {
+      "counters_t0": 8,
+      "counters_t1": 8,
+      "regressed_keys": 0
+    },
+    "node_2": {
+      "counters_t0": 8,
+      "counters_t1": 8,
+      "regressed_keys": 0
+    },
+    "node_3": {
+      "counters_t0": 8,
+      "counters_t1": 8,
+      "regressed_keys": 0
+    }
+  },
+  "reasons": [],
+  "scenario": "41",
+  "skipped": false,
+  "tls_mode": "off"
+}

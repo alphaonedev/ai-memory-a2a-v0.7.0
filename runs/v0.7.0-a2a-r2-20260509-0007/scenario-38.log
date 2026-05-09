@@ -1,0 +1,11 @@
+alice writes 5 rows into scenario38-src-d5fac6
+settle 4s for pre-export replication
+alice exports on node-1 (endpoint has no namespace filter; filter client-side)
+  export returned HTTP 200, total_rows=201
+  rewrote 5 memories from scenario38-src-d5fac6 -> scenario38-dst-d5fac6
+bob imports the payload into scenario38-dst-d5fac6 on node-2
+  import returned HTTP 200
+settle 6s for import + fanout
+verify row counts match on destination
+  scenario38-dst-d5fac6 has 5 rows (expected 5)
+  markers preserved in destination: 5/5

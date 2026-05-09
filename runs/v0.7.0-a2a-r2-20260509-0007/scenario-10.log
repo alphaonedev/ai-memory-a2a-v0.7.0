@@ -1,0 +1,14 @@
+alice writes M1 content=d-b3af74ea2d0d4b55a4b63c397e23cbbd on node-1
+  created memory id=bc3ae705-783c-4ee2-a2f8-a22adbf20f7c
+settle 8s for pre-delete fanout
+pre-delete: verifying M1 is visible on all peers
+  pre-delete node-2 sees 1
+  pre-delete node-3 sees 1
+  pre-delete node-4 sees 1
+alice deletes M1 on node-1
+  DELETE returned HTTP 200
+settle 15s for tombstone propagation
+post-delete: verifying M1 is GONE from all peers
+  post-delete node-2 sees 0 (expected 0)
+  post-delete node-3 sees 0 (expected 0)
+  post-delete node-4 sees 0 (expected 0)

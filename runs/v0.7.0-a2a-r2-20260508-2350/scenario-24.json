@@ -1,0 +1,12 @@
+{
+  "agent_group": "openclaw_hermes",
+  "byzantine_marker": "bz-8056d8faea2e4a22971403f1aea1c43b",
+  "elapsed_sec": 5.8,
+  "pass": true,
+  "reasons": [],
+  "scenario": "24",
+  "skipped": false,
+  "stored_metadata_agent_id": "REJECTED_BY_SERVER",
+  "sync_push_http_code": "422",
+  "tls_mode": "off"
+}

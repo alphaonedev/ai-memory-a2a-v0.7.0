@@ -1,0 +1,15 @@
+{
+  "agent_group": "openclaw_hermes",
+  "alice_id": "a7cac5d3-d15f-4d4a-99f0-461c8b074e84",
+  "bob_id": "5203b05c-eb9d-402b-b781-2b2f1abaa212",
+  "charlie_sees_both_memories": true,
+  "charlie_sees_contradicts_link": true,
+  "detect_http_code": 200,
+  "elapsed_sec": 12.0,
+  "pass": true,
+  "reasons": [],
+  "scenario": "6",
+  "skipped": false,
+  "tls_mode": "off",
+  "topic": "sky-color-673e4434"
+}

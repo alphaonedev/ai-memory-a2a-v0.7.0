@@ -1,0 +1,7 @@
+phase A: openclaw seeds standard memory + sets inherit=true,write=owner on s60-parent-21b310
+  parent anchor id=f6a207ce-e976-44fc-b6cc-80c6da0e87ac
+  set_standard rc=0 resp={'body': {'governance': {'inherit': True, 'write': 'owner'}, 'namespace': 's60-parent-21b310', 'set': True, 'standard_id': 'f6a207ce-e976-44fc-b6cc-80c6da0e87ac'}, 'http_code': 201}
+settle 3s for policy propagate
+phase B: openclaw writes to deep child s60-parent-21b310 (expect 201)
+phase C: hermes writes to deep child s60-parent-21b310 (expect 403)
+phase D: hermes writes to unrelated namespace s60-other-21b310 (expect 201)

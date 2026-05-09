@@ -1,0 +1,5 @@
+node-2 sends sync_push to node-3 claiming sender_agent_id=ai:alice
+  sync_push returned HTTP 422
+settle 5s for server-side sync apply
+  node-3 stored metadata.agent_id=ABSENT (declared: ai:alice)
+  sync_push rejected HTTP 422 — stricter-than-spec, acceptable

@@ -1,0 +1,13 @@
+bob subscribes to namespace scenario33-pubsub-79ea7f on node-2
+  subscribe returned HTTP 201
+settle 2s for subscription settle
+  bob subscriptions: 1 entries; contains ns: True
+alice writes M1 into the subscribed namespace
+settle 6s for write fanout to subscribers
+  bob sees M1 in subscribed namespace: 1
+bob unsubscribes from scenario33-pubsub-79ea7f
+  unsubscribe returned HTTP 200
+settle 2s for unsubscribe settle
+  bob subscriptions after unsubscribe: ns still present = False
+alice writes M2 post-unsubscribe (may still replicate via federation but subscription list excludes ns)
+settle 5s for post-unsubscribe settle

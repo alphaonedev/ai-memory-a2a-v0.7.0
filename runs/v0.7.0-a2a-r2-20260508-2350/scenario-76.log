@@ -1,0 +1,1 @@
+skipped — v0.7.0-alpha pg adapter requires pgvector + schema-init CLI (neither shipped on this build); perf gate cannot run.

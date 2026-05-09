@@ -1,0 +1,9 @@
+writing 30 memories across 6 subtrees rooted at scenario44-270e7f/alphaone
+  wrote 30/30
+settle 8s for taxonomy index fanout
+GET /api/v1/taxonomy?root=scenario44-270e7f/alphaone&depth=8&limit=20 on node-1
+  HTTP 200
+  root node found: True
+  children returned: 3 (limit was 20)
+  sum(count) over returned children: 0
+  root subtree_count: 30

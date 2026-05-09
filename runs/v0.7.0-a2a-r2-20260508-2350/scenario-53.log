@@ -1,0 +1,9 @@
+phase A: owner (ai:s53-openclaw-740bcc) seeds standard memory + sets write=owner on scenario53-740bcc
+  seed standard memory id=288a3fb4-3b45-4dbf-b45e-361823409b93
+  set_standard -> rc=0 resp={'body': {'governance': {'write': 'owner'}, 'namespace': 'scenario53-740bcc', 'set': True, 'standard_id': '288a3fb4-3b45-4dbf-b45e-361823409b93'}, 'http_code': 201}
+phase B: owner writes to scenario53-740bcc (expect 201)
+settle 2s for let counter snapshots quiesce
+  enforce_before openclaw=2151 hermes=311
+phase C: intruder (ai:s53-hermes-740bcc) writes to scenario53-740bcc via openclaw daemon (expect 403 x3)
+settle 2s for let counter samples settle
+  enforce_after openclaw=2154 hermes=311

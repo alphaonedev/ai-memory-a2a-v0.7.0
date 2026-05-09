@@ -1,0 +1,15 @@
+{
+  "agent_group": "openclaw_hermes",
+  "bob_inbox_count": 1,
+  "bob_sees_marker": true,
+  "charlie_inbox_count": 0,
+  "charlie_sees_marker": false,
+  "elapsed_sec": 7.0,
+  "marker": "inb-5d253b21c79849eba2804905f73d0619",
+  "notify_http_code": 201,
+  "pass": true,
+  "reasons": [],
+  "scenario": "32",
+  "skipped": false,
+  "tls_mode": "off"
+}

@@ -1,0 +1,5 @@
+phase A: openclaw -> memory_notify ai:hermes
+  notify rc=0 resp={'body': {'delivered_at': '2026-05-09T00:34:41.298466047+00:00', 'from': 'daemon', 'id': '3d105e8b-e771-446d-b473-bb8197f59ffb', 'namespace': '_messages/ai:hermes@nyc3:droplet-2', 'tier': 'mid', 'to': 'ai:hermes@nyc3:droplet-2'}, 'http_code': 201}
+settle 6s for notify fanout
+phase B: hermes -> memory_inbox
+  inbox entries=1 matched=1

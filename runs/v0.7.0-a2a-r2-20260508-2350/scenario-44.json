@@ -1,0 +1,15 @@
+{
+  "agent_group": "openclaw_hermes",
+  "children_returned": 3,
+  "elapsed_sec": 19.4,
+  "memories_written": 30,
+  "pass": true,
+  "reasons": [],
+  "root": "scenario44-270e7f/alphaone",
+  "root_subtree_count": 30,
+  "scenario": "44",
+  "skipped": false,
+  "sum_children_counts": 0,
+  "taxonomy_http_code": 200,
+  "tls_mode": "off"
+}

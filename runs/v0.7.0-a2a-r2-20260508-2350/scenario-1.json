@@ -1,0 +1,9 @@
+{
+  "agent_group": "openclaw_hermes",
+  "campaign_scope": "v0.7.0 A2A 2-agent (openclaw + hermes)",
+  "elapsed_sec": 0,
+  "pass": null,
+  "scenario": "1",
+  "skip_reason": "drive_agent.sh / MCP-stdio path is not installed on v0.7.0-alpha droplets; no HTTP equivalent of S1 (the HTTP analog is S1b which IS in scope)",
+  "skipped": true
+}
