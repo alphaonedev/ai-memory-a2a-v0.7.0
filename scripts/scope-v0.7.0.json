@@ -1,6 +1,11 @@
 {
   "campaign_scope": "v0.7.0 A2A 2-agent (openclaw + hermes)",
   "rationale_doc": "v0.7.0-alpha topology is 2 ai-memory droplets + 1 postgres+AGE droplet. NODE3_IP / NODE4_IP fall back to NODE2_IP via Harness.from_env, so any scenario whose oracle requires THREE distinct daemons (3-way distinct write/quorum, isolation between two peers, SIGSTOP one of three peers) cannot be validated in this topology. Those are deferred to v0.7.1 when a 3rd ai-memory droplet is added.",
+  "wave4_pre_stage": {
+    "summary": "Wave 4 = live A2A re-validation on postgres-backed daemons. S77-S82 are added pre-stage for Continuation 3 (--store-url postgres:// support). They self-skip when A2A_BACKEND_KIND=sqlite, preserving the existing 56/68 GREEN baseline on the legacy sqlite topology.",
+    "backend_kinds": ["sqlite", "postgres", "mixed"],
+    "in_scope_when_postgres_or_mixed": ["77", "78", "79", "80", "81", "82"]
+  },
   "in_scope": [
     {"id": "1b", "rationale": "3 distinct agent_ids on 2 nodes is fine; node3/node4 verification reads alias to node2 and still validate federation visibility (hermes saw alice's row)"},
     {"id": "2",  "rationale": "alice→bob handoff is genuinely 2-agent / 2-node"},
@@ -69,7 +74,13 @@
     {"id": "73", "rationale": "pg sal contract — postgres-or-AGE in scope"},
     {"id": "74", "rationale": "pg unsupported capability — postgres-or-AGE in scope"},
     {"id": "75", "rationale": "pg schema parity — postgres-or-AGE in scope"},
-    {"id": "76", "rationale": "age perf gate — postgres-or-AGE in scope"}
+    {"id": "76", "rationale": "age perf gate — postgres-or-AGE in scope"},
+    {"id": "77", "rationale": "Wave 4 postgres bootstrap — verifies daemon launched with --store-url postgres:// and capabilities reports storage_backend=postgres; self-skips when A2A_BACKEND_KIND=sqlite", "wave4_only": true},
+    {"id": "78", "rationale": "Wave 4 audit chain monotonicity on postgres backend — F2 fix parity; self-skips when A2A_BACKEND_KIND=sqlite (S57 covers sqlite path)", "wave4_only": true},
+    {"id": "79", "rationale": "Wave 4 6-factor recall parity on postgres production path — top-K@5 Jaccard >= 0.80 vs sqlite reference; self-skips when A2A_BACKEND_KIND=sqlite (S62 covers sqlite reranker)", "wave4_only": true},
+    {"id": "80", "rationale": "Wave 4 governance owner-only inheritance on postgres — F1 fix parity; self-skips when A2A_BACKEND_KIND=sqlite (S60 covers sqlite path)", "wave4_only": true},
+    {"id": "81", "rationale": "Wave 4 heterogeneous federation — bidirectional sync_push convergence with mixed openclaw=sqlite + hermes=postgres (or both postgres); self-skips when A2A_BACKEND_KIND=sqlite", "wave4_only": true},
+    {"id": "82", "rationale": "Wave 4 memory_kg_query routes through AGE Cypher on postgres-backed daemon — node-set equality vs CTE oracle; self-skips when A2A_BACKEND_KIND=sqlite (S45/S46/S65 cover the CTE path)", "wave4_only": true}
   ],
   "skip_3_agent": [
     {"id": "14", "rationale": "S14 SIGSTOPs NODE3 daemon and SIGCONTs it; with NODE3==NODE2 alias this freezes hermes mid-test (proven in failed Round 1) — requires real third daemon"},

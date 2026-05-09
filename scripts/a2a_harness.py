@@ -44,6 +44,30 @@ LARGE_BODY_THRESHOLD = 64 * 1024
 # scripts don't need to care — the shift is contained in this module.
 TOPOLOGY = os.environ.get("TOPOLOGY", "ssh")
 
+# A2A_BACKEND_KIND — Wave 4 pre-stage knob (added 2026-05-08).
+#   "sqlite"   (default) — daemons run with `--db <sqlite-path>`; legacy
+#                          v0.7.0-alpha topology that produced 56/68 GREEN.
+#   "postgres"           — daemons run with `--store-url postgres://...`;
+#                          live A2A re-validation post-Continuation 3.
+#   "mixed"              — heterogeneous: openclaw=sqlite, hermes=postgres
+#                          (or vice versa) for federation interop tests.
+#
+# Scenarios that are backend-agnostic (most HTTP-driven oracles) ignore
+# this. Scenarios that ssh into the daemon's filesystem to read sqlite or
+# audit-log artifacts use the helpers below to dispatch correctly.
+#
+# Wave 4 adds S77-S82 which self-skip when this is "sqlite" so that the
+# existing 56/68 baseline remains valid on legacy hardware.
+BACKEND_KIND = os.environ.get("A2A_BACKEND_KIND", "sqlite").strip().lower()
+VALID_BACKEND_KINDS = ("sqlite", "postgres", "mixed")
+if BACKEND_KIND not in VALID_BACKEND_KINDS:
+    print(
+        f"[harness] WARNING: A2A_BACKEND_KIND={BACKEND_KIND!r} not in "
+        f"{VALID_BACKEND_KINDS}; falling back to 'sqlite'",
+        file=sys.stderr,
+    )
+    BACKEND_KIND = "sqlite"
+
 
 def log(msg: str) -> None:
     """Write a log line to stderr."""
@@ -195,6 +219,87 @@ class Harness:
         back to the default droplet IP from /tmp/v07-a2a-droplets.json.
         """
         return os.environ.get("POSTGRES_NODE_IP", "68.183.157.68")
+
+    # -------- backend-kind helpers (Wave 4 pre-stage) --------
+
+    @staticmethod
+    def backend_kind() -> str:
+        """Return the campaign-wide backend kind: 'sqlite' | 'postgres' | 'mixed'.
+
+        Source of truth is the module-level BACKEND_KIND read from
+        A2A_BACKEND_KIND at import time. Scenarios that need to dispatch
+        per-backend should call this rather than reading the env directly
+        (so a future per-node override stays contained here).
+        """
+        return BACKEND_KIND
+
+    def node_backend(self, node_ip: str) -> str:
+        """Return the per-node backend ('sqlite'|'postgres') honoring 'mixed'.
+
+        For 'sqlite' / 'postgres' kinds, every node uses the same backend.
+        For 'mixed', openclaw (node1) is sqlite and hermes (node2) is
+        postgres — that's the heterogeneous federation shape S81 exercises.
+        Override via A2A_NODE{N}_BACKEND env if a non-default mapping is
+        ever needed.
+        """
+        override_var = None
+        if node_ip == self.node1_ip:
+            override_var = "A2A_NODE1_BACKEND"
+        elif node_ip == self.node2_ip:
+            override_var = "A2A_NODE2_BACKEND"
+        if override_var:
+            ovr = os.environ.get(override_var, "").strip().lower()
+            if ovr in ("sqlite", "postgres"):
+                return ovr
+        kind = self.backend_kind()
+        if kind == "mixed":
+            if node_ip == self.node1_ip:
+                return "sqlite"
+            if node_ip == self.node2_ip:
+                return "postgres"
+            return "sqlite"
+        if kind == "postgres":
+            return "postgres"
+        return "sqlite"
+
+    def skip_if_backend_sqlite(self, reason: str | None = None) -> None:
+        """Self-skip helper for postgres-only Wave 4 scenarios (S77-S82).
+
+        Emits a clean SKIP record via h.skip() when the campaign is
+        running on a sqlite-only baseline. No-op when backend is postgres
+        or mixed.
+        """
+        if self.backend_kind() == "sqlite":
+            self.skip(
+                reason
+                or "scenario requires A2A_BACKEND_KIND in {postgres,mixed}; "
+                "campaign is on sqlite baseline"
+            )
+
+    def daemon_storage_label(self, node_ip: str) -> str:
+        """Probe `/api/v1/capabilities` for the daemon's storage backend
+        identifier. Returns '' on probe failure or if the field is absent.
+
+        Called by S77 to verify capabilities surface reports
+        `storage_backend: postgres` after Continuation 3 lands.
+        """
+        for path in ("/api/v1/capabilities", "/api/v1/capability", "/api/v1/version"):
+            _, resp = self.http_on(node_ip, "GET", path, include_status=True)
+            if isinstance(resp, dict) and resp.get("http_code") == 200:
+                body = resp.get("body")
+                if isinstance(body, dict):
+                    for key in ("storage_backend", "store_backend", "backend",
+                                "store", "storage"):
+                        v = body.get(key)
+                        if isinstance(v, str) and v:
+                            return v.lower()
+                    # nested {storage: {backend: "..."}}
+                    storage = body.get("storage")
+                    if isinstance(storage, dict):
+                        v = storage.get("backend") or storage.get("kind")
+                        if isinstance(v, str) and v:
+                            return v.lower()
+        return ""
 
     # -------- daemon db-path discovery (v0.7.0 F4 fix) --------
 
@@ -529,6 +634,7 @@ class Harness:
             "skipped": skipped,
             "agent_group": self.agent_group,
             "tls_mode": self.tls_mode,
+            "backend_kind": BACKEND_KIND,
         }
         if reason:
             doc["reason"] = reason

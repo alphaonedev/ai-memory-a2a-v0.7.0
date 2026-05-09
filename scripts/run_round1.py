@@ -14,7 +14,15 @@ WITHOUT executing them. In-scope scenarios are dispatched normally.
 
 Aggregates pass/fail/skip into runs/<campaign>/a2a-summary.json
 matching the schema render_pages.py expects.
+
+Wave 4 (2026-05-08): supports --backend-kind {sqlite|postgres|mixed}.
+When postgres or mixed, the runner sets A2A_BACKEND_KIND for each
+scenario's child env so S77-S82 dispatch on the postgres production
+path; sqlite mode keeps the existing 56/68 baseline behavior. The
+runner itself does NOT re-deploy daemons — that is the responsibility
+of scripts/deploy_wave4.sh which is invoked separately by the orchestrator.
 """
+import argparse
 import json
 import os
 import re
@@ -76,20 +84,38 @@ def per_scenario_timeout(sid: str) -> int:
     # 1000-row burst takes >120s under federation quorum_writes=2.
     if sid in {"61"}:
         return 300
+    # Wave 4 postgres-mode scenarios — restart, AGE bench, recall sweep
+    if sid in {"77"}:
+        return 90  # capabilities probe + cmdline check; lightweight
+    if sid in {"78"}:
+        return 240  # daemon restart + audit fsync settle
+    if sid in {"79"}:
+        return 240  # 50 seeds + 10 recall queries
+    if sid in {"80"}:
+        return 120  # governance write matrix
+    if sid in {"81"}:
+        return 240  # bidirectional federation seed + settle
+    if sid in {"82"}:
+        return 180  # 10-node KG seed + AGE Cypher path query
     # Default
     return 120
 
 
-def run_one(sid: str, scenario_path: Path, run_dir: Path) -> dict:
+def run_one(sid: str, scenario_path: Path, run_dir: Path,
+            backend_kind: str = "sqlite") -> dict:
     json_path = run_dir / f"scenario-{sid}.json"
     log_path = run_dir / f"scenario-{sid}.log"
     timeout = per_scenario_timeout(sid)
+    # Inherit parent env + force A2A_BACKEND_KIND so the harness's
+    # module-level read picks it up uniformly across every child.
+    child_env = dict(os.environ)
+    child_env["A2A_BACKEND_KIND"] = backend_kind
     t0 = time.time()
     try:
         r = subprocess.run(
             ["python3", str(scenario_path)],
             capture_output=True, text=True, timeout=timeout,
-            cwd=str(REPO),
+            cwd=str(REPO), env=child_env,
         )
         elapsed = time.time() - t0
         log_path.write_text(r.stderr or "")
@@ -145,6 +171,23 @@ def run_one(sid: str, scenario_path: Path, run_dir: Path) -> dict:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Round driver for v0.7.0 A2A campaign (sqlite or postgres backend)."
+    )
+    parser.add_argument(
+        "--backend-kind",
+        choices=("sqlite", "postgres", "mixed"),
+        default=os.environ.get("A2A_BACKEND_KIND", "sqlite"),
+        help=(
+            "Daemon storage backend topology. 'sqlite' (default, Wave 1-3 baseline) "
+            "runs daemons with --db <sqlite-path>. 'postgres' (Wave 4) requires "
+            "Continuation 3 + scripts/deploy_wave4.sh to have run. 'mixed' is "
+            "openclaw=sqlite + hermes=postgres for heterogeneous federation tests."
+        ),
+    )
+    args = parser.parse_args()
+    backend_kind = args.backend_kind
+
     campaign_id = os.environ.get("CAMPAIGN_ID")
     if not campaign_id:
         print("CAMPAIGN_ID env var required", file=sys.stderr)
@@ -158,7 +201,11 @@ def main() -> None:
     in_scope: set[str] = scope["in_scope"]
     scope_skips: dict[str, str] = scope["skips"]
     campaign_scope = scope["campaign_scope"]
-    print(f"scope: {len(in_scope)} in-scope; {len(scope_skips)} pre-classified skips", file=sys.stderr)
+    print(
+        f"scope: {len(in_scope)} in-scope; {len(scope_skips)} pre-classified skips; "
+        f"backend_kind={backend_kind}",
+        file=sys.stderr,
+    )
 
     run_dir = REPO / "runs" / campaign_id
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -218,7 +265,7 @@ def main() -> None:
             results.append(doc)
             continue
         print(f"  [{sid}] running ({f.name}) ...", file=sys.stderr, flush=True)
-        doc = run_one(sid, f, run_dir)
+        doc = run_one(sid, f, run_dir, backend_kind=backend_kind)
         verdict = "SKIP" if doc.get("skipped") else ("PASS" if doc.get("pass") else "FAIL")
         reason = doc.get("reason") or ""
         if reason and len(reason) > 100:
@@ -262,6 +309,7 @@ def main() -> None:
         "in_scope_failed": n_in_scope_fail,
         "overall_pass": overall,
         "campaign_scope": campaign_scope,
+        "backend_kind": backend_kind,
         "subject_under_test": "ai-memory v0.7.0 (round-2-fixes @ e0d2086, post F1+F2 fixes)",
         "topology": {
             "openclaw": "104.236.52.203 (10.20.0.2)",
@@ -269,6 +317,7 @@ def main() -> None:
             "postgres": "68.183.157.68 (10.20.0.4)",
             "tls_mode": "off",
             "agent_group": "openclaw_hermes",
+            "backend_kind": backend_kind,
         },
         "scenarios": [
             {
