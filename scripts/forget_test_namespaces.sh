@@ -16,7 +16,7 @@ reset_one() {
   ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 "root@${host}" "
     sqlite3 ${db} 'SELECT DISTINCT namespace FROM memories' | while read ns; do
       case \"\$ns\" in
-        scenario*|a2a-r1*|a2a-r2*|a2a-smoke*|a2a-v07*|testns*|probe*|f1-fixture*|f2-fixture*|f3-fixture*|smoke-test|link-test)
+        scenario*|a2a-r1*|a2a-r2*|a2a-smoke*|a2a-v07*|testns*|probe*|f1-fixture*|f2-fixture*|f3-fixture*|smoke-test*|link-test|s5[0-9]-*|s6[0-9]-*|s7[0-9]-*|s4[0-9]-*|smoke-cd|s33-*|s32-*|s58-*|s57-*|_messages*)
           /usr/local/bin/ai-memory forget --namespace \"\$ns\" --db ${db} 2>&1 | tail -1 | sed \"s|^|[\$ns] |\"
           ;;
       esac

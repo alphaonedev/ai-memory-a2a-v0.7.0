@@ -73,6 +73,9 @@ def per_scenario_timeout(sid: str) -> int:
     # Bulk + concurrency
     if sid in {"4", "13", "40", "62", "69"}:
         return 180
+    # 1000-row burst takes >120s under federation quorum_writes=2.
+    if sid in {"61"}:
+        return 300
     # Default
     return 120
 

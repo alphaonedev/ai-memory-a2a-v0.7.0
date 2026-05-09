@@ -1,0 +1,20 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 59.6,
+  "pass": true,
+  "per_agent": {
+    "hermes": {
+      "http_code": 201,
+      "quota_used": 1
+    },
+    "openclaw": {
+      "quota_used": 800,
+      "successes": 800,
+      "throttled": 0
+    }
+  },
+  "reasons": [],
+  "scenario": "61",
+  "skipped": false,
+  "tls_mode": "off"
+}

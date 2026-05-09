@@ -26,6 +26,9 @@ def main() -> None:
     h = Harness.from_env(SCENARIO_ID, require_node4=True)
     ns = f"scenario40-bulk-{new_uuid()[:6]}"
 
+    # Per-scenario agent id: avoid daily-quota collisions with other scenarios
+    # that reuse `ai:alice`.
+    agent = f"ai:s40-alice-{new_uuid()[:6]}"
     log(f"constructing {BULK_SIZE}-row bulk payload")
     rows = [
         {
@@ -33,30 +36,19 @@ def main() -> None:
             "title": f"b-{i}",
             "content": f"bulk-marker={new_uuid()}",
             "priority": 5, "confidence": 1.0, "source": "api",
-            "metadata": {"agent_id": "ai:alice", "scenario": "40", "bulk_seq": i},
+            "metadata": {"agent_id": agent, "scenario": "40", "bulk_seq": i},
         }
         for i in range(BULK_SIZE)
     ]
-    # bulk_create handler (handlers.rs:1873) takes `Json<Vec<CreateMemory>>` —
-    # bare array, NOT {"memories": [...]}.
-    log("staging bulk payload on node-1 /tmp, then POST /api/v1/memories/bulk")
-    json_payload = json.dumps(rows)
-    stage_cmd = f"cat > /tmp/s40-bulk.json <<'PAYLOAD_EOF'\n{json_payload}\nPAYLOAD_EOF"
-    r_stage = h.ssh_exec(h.node1_ip, stage_cmd, timeout=60)
-    if r_stage.returncode != 0:
-        h.emit(passed=False, reason=f"failed to stage bulk payload: {r_stage.stderr[:200]}",
-               reasons=[f"staging failed rc={r_stage.returncode}"])
-
-    curl = h._remote_curl_prefix()
-    post_cmd = (
-        f"{curl} -o /dev/null -w '%{{http_code}}' "
-        f"-X POST {shlex.quote(f'{h.remote_base_url()}/api/v1/memories/bulk')} "
-        f"-H 'X-Agent-Id: ai:alice' -H 'Content-Type: application/json' "
-        f"--data-binary @/tmp/s40-bulk.json"
-    )
-    r_post = h.ssh_exec(h.node1_ip, post_cmd, timeout=60)
-    write_code = (r_post.stdout or "0").strip() or "0"
-    log(f"  bulk POST returned HTTP {write_code}")
+    # bulk_create handler takes `Json<Vec<CreateMemory>>` — bare array,
+    # NOT {"memories": [...]}. The harness's http_on auto-pipes payloads
+    # over the LARGE_BODY_THRESHOLD via ssh stdin + `curl -d @-`, which
+    # avoids the heredoc-staging E2BIG path the v0.6.x baseline used.
+    log("POST /api/v1/memories/bulk via harness http_on (auto stdin-pipe for >64KB)")
+    rc_post, resp = h.http_on(h.node1_ip, "POST", "/api/v1/memories/bulk",
+                              body=rows, agent_id=agent, include_status=True, timeout=120)
+    write_code = (resp or {}).get("http_code", 0) if isinstance(resp, dict) else 0
+    log(f"  bulk POST returned HTTP {write_code} (rc={rc_post})")
     h.settle(20, reason="bulk fanout across 3 peers + aggregator")
 
     per_peer: dict[str, int] = {}
@@ -68,7 +60,7 @@ def main() -> None:
 
     reasons: list[str] = []
     passed = True
-    if write_code not in {"200", "201", "202", "204"}:
+    if write_code not in (200, 201, 202, 204):
         passed = False
         reasons.append(f"bulk returned HTTP {write_code}")
     for name, n in per_peer.items():

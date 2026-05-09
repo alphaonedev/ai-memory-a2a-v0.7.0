@@ -85,6 +85,27 @@ def main() -> None:
         h.skip(f"postgres password unavailable: {e}")
         return
 
+    # v0.7.0-alpha postgres adapter requires the `vector` extension
+    # (pgvector) at schema-init. The campaign's postgres-node was
+    # bootstrapped with `age` only — `pg_available_extensions` does not
+    # carry `vector`. Until operator installs pgvector on postgres-node,
+    # `ai-memory migrate --to postgres://...` fails with
+    # 'extension "vector" is not available'.
+    pg_admin = h.postgres_url(db="postgres")
+    import shlex as _shlex
+    r = h.ssh_exec(h.node1_ip, (
+        f"psql {_shlex.quote(pg_admin)} -tAc "
+        "\"SELECT count(*) FROM pg_available_extensions WHERE name = 'vector'\""
+    ), timeout=20)
+    if "1" not in (r.stdout or "").strip():
+        h.skip(
+            "v0.7.0-alpha pg adapter requires pgvector — not installed on "
+            "the postgres-node bootstrap (only `age` available). Re-run "
+            "after `apt install postgresql-16-pgvector` + `CREATE EXTENSION "
+            "vector`."
+        )
+        return
+
     seed_db = f"/tmp/s70-seed-{new_uuid()[:6]}.sqlite"
     return_db = f"/tmp/s70-return-{new_uuid()[:6]}.sqlite"
     h.ssh_exec(h.node1_ip, f"rm -f {seed_db} {return_db}", timeout=10)

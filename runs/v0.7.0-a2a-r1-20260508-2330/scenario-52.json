@@ -1,0 +1,27 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 21.2,
+  "pass": true,
+  "per_agent": {
+    "hermes_side": {
+      "attest_level": "self_signed",
+      "from": "394d591f-206d-4393-a2b2-5be79de6df41",
+      "observed_by": "daemon",
+      "rc": 0,
+      "signature_verified": true,
+      "to": "4a58cd49-1157-42f5-8d6f-c99a49268a19"
+    },
+    "openclaw_side": {
+      "attest_level": "self_signed",
+      "from": "27688953-5550-45f7-ba98-61850aa0388b",
+      "observed_by": "daemon",
+      "rc": 0,
+      "signature_verified": true,
+      "to": "c5edd1cc-8cfe-4960-8f0c-f70299da77a6"
+    }
+  },
+  "reasons": [],
+  "scenario": "52",
+  "skipped": false,
+  "tls_mode": "off"
+}

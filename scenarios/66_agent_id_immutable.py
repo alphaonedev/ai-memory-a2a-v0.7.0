@@ -16,8 +16,12 @@ SCENARIO_ID = "66"
 
 def main() -> None:
     h = Harness.from_env(SCENARIO_ID)
-    OPEN, HERM = "ai:openclaw@nyc3:droplet-1", "ai:hermes@nyc3:droplet-2"
-    ns = f"s66-{new_uuid()[:6]}"
+    # Unique per-scenario agent ids so daily-quota state from prior scenarios
+    # doesn't bleed into S66.
+    suffix = new_uuid()[:6]
+    OPEN = f"ai:s66-openclaw-{suffix}"
+    HERM = f"ai:s66-hermes-{suffix}"
+    ns = f"s66-{suffix}"
 
     log("phase A: openclaw stores M with agent_id A")
     _, d = h.write_memory(h.node1_ip, OPEN, ns, title="immutable",
@@ -39,7 +43,9 @@ def main() -> None:
     _, fetched = h.get_memory(h.node1_ip, mid)
     final_agent = ""
     if isinstance(fetched, dict):
-        final_agent = (fetched.get("metadata") or {}).get("agent_id") or ""
+        # v0.7 GET wraps the row in `{memory: {...}, links: [...]}`.
+        mem = fetched.get("memory") if isinstance(fetched.get("memory"), dict) else fetched
+        final_agent = ((mem.get("metadata") or {}).get("agent_id")) or ""
 
     reasons: list[str] = []
     passed = True

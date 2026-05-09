@@ -12,39 +12,55 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "scripts
 from a2a_harness import Harness, log, new_uuid
 
 SCENARIO_ID = "69"
-PER_NODE = 500
+# Each node burst keeps PER_NODE under the daily-quota ceiling (1000) so a
+# single run doesn't exhaust the agent's quota; the doctor sampling thread
+# runs in parallel to catch trim behavior under sustained load.
+PER_NODE = 200
 SAMPLE_INTERVAL_S = 4
 
 
 def doctor_tokens(h: Harness, node_ip: str) -> int | None:
-    r = h.ssh_exec(node_ip, "ai-memory doctor --tokens --json", timeout=20)
+    """Return the active-profile trimmed token total. v0.7 keys:
+       - trimmed_active_total_tokens (preferred)
+       - trimmed_full_profile_total_tokens (full profile alt)
+       - active_total_tokens (untrimmed fallback)
+    """
+    # `--json` stdout is multi-line; the JSON document opens with `{` and
+    # spans the rest of stdout. Concatenate non-stderr lines and parse.
+    r = h.ssh_exec(node_ip, "ai-memory doctor --tokens --json 2>/dev/null", timeout=20)
     out = (r.stdout or "").strip()
-    for line in out.splitlines():
-        line = line.strip()
-        if not line.startswith("{"):
-            continue
-        try:
-            d = json.loads(line)
-        except json.JSONDecodeError:
-            continue
-        # accept top-level trimmed_full_tokens or nested
-        if isinstance(d, dict):
-            for k in ("trimmed_full_tokens", "trimmed", "tokens_full_trimmed"):
-                v = d.get(k)
-                if isinstance(v, int):
-                    return v
-            full = d.get("full") or d.get("profile_full") or {}
-            if isinstance(full, dict):
-                v = full.get("trimmed") or full.get("tokens")
-                if isinstance(v, int):
-                    return v
+    if not out:
+        return None
+    # Drop any leading non-JSON banner lines.
+    while out and not out.startswith("{"):
+        nl = out.find("\n")
+        if nl < 0:
+            return None
+        out = out[nl + 1:].lstrip()
+    try:
+        d = json.loads(out)
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(d, dict):
+        return None
+    for k in (
+        "trimmed_active_total_tokens",
+        "trimmed_full_profile_total_tokens",
+        "active_total_tokens",
+        "trimmed_full_tokens",
+    ):
+        v = d.get(k)
+        if isinstance(v, int):
+            return v
     return None
 
 
 def main() -> None:
     h = Harness.from_env(SCENARIO_ID)
-    OPEN, HERM = "ai:openclaw@nyc3:droplet-1", "ai:hermes@nyc3:droplet-2"
-    ns = f"s69-{new_uuid()[:6]}"
+    suffix = new_uuid()[:6]
+    OPEN = f"ai:s69-burner-open-{suffix}"
+    HERM = f"ai:s69-burner-herm-{suffix}"
+    ns = f"s69-{suffix}"
 
     samples: list[dict] = []
     stop = threading.Event()
@@ -79,13 +95,18 @@ def main() -> None:
 
     log("phase B: tools_verbose env ratio at end of load")
     def measure(node_ip: str) -> dict:
-        cmd = """unset AI_MEMORY_TOOLS_VERBOSE
-echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | ai-memory mcp 2>/dev/null
+        # v0.7 default profile is `core` (8 tools); use `--profile full` to
+        # exercise the full 51-tool surface where the verbose:default ratio
+        # is meaningful. The init handshake is required before tools/list.
+        init = '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"clientInfo":{"name":"a2a-s69","version":"0"},"capabilities":{},"protocolVersion":"2024-11-05"}}'
+        lst = '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+        cmd = f"""set -u
+unset AI_MEMORY_TOOLS_VERBOSE
+printf '%s\\n%s\\n' '{init}' '{lst}' | ai-memory mcp --profile full 2>/dev/null
 echo "==="
-AI_MEMORY_TOOLS_VERBOSE=1 echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' \
-    | AI_MEMORY_TOOLS_VERBOSE=1 ai-memory mcp 2>/dev/null
+printf '%s\\n%s\\n' '{init}' '{lst}' | AI_MEMORY_TOOLS_VERBOSE=1 ai-memory mcp --profile full 2>/dev/null
 """
-        r = h.ssh_bash_script(node_ip, cmd, timeout=30)
+        r = h.ssh_bash_script(node_ip, cmd, timeout=60)
         out = r.stdout or ""
         a, _, b = out.partition("===")
         return {"default_bytes": len(a.strip()), "verbose_bytes": len(b.strip())}

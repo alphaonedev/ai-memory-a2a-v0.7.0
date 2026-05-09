@@ -113,6 +113,20 @@ def main() -> None:
         h.skip(f"postgres password unavailable: {e}")
         return
 
+    # v0.7.0-alpha pg adapter requires pgvector — not installed on the
+    # campaign's postgres-node. Skip cleanly until operator installs it.
+    import shlex as _shlex
+    r = h.ssh_exec(h.node1_ip, (
+        f"psql {_shlex.quote(admin_url)} -tAc "
+        "\"SELECT count(*) FROM pg_available_extensions WHERE name = 'vector'\""
+    ), timeout=20)
+    if "1" not in (r.stdout or "").strip():
+        h.skip(
+            "v0.7.0-alpha pg adapter requires pgvector; postgres-node has "
+            "only `age`. Re-run after pgvector is installed + enabled."
+        )
+        return
+
     log("phase A: openclaw seeds 10-entity KG on its local sqlite")
     seed_db = f"/tmp/s72-seed-{new_uuid()[:6]}.sqlite"
     h.ssh_exec(h.node1_ip, f"rm -f {seed_db}", timeout=10)

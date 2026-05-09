@@ -19,8 +19,10 @@ TURNS = 3
 
 def main() -> None:
     h = Harness.from_env(SCENARIO_ID)
-    OPEN, HERM = "ai:openclaw@nyc3:droplet-1", "ai:hermes@nyc3:droplet-2"
-    ns = f"s67-{new_uuid()[:6]}"
+    suffix = new_uuid()[:6]
+    OPEN = f"ai:s67-openclaw-{suffix}"
+    HERM = f"ai:s67-hermes-{suffix}"
+    ns = f"s67-{suffix}"
     correlation = new_uuid("dlg-")
 
     # Seed M on hermes for the question to refer to.
@@ -38,8 +40,10 @@ def main() -> None:
         # openclaw drafts the message via Grok 4.2 reasoning.
         ask = grok_chat(prompt=last_q,
                         system_msg="You are openclaw, asking hermes about memory M.")
+        # v0.7 notify contract: target_agent_id (not "to"); payload (or
+        # `content` alias) instead of "body".
         notify_body = {
-            "to": HERM, "title": f"q-{turn_idx}", "body": ask["text"],
+            "target_agent_id": HERM, "title": f"q-{turn_idx}", "payload": ask["text"],
             "metadata": {
                 "scenario": SCENARIO_ID, "turn": turn_idx,
                 "correlation_id": correlation,

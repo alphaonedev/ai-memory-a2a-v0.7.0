@@ -1,0 +1,4 @@
+measure openclaw
+  {'default_bytes': 10924, 'verbose_bytes': 15853, 'default_tools': 51, 'verbose_tools': 51}
+measure hermes
+  {'default_bytes': 10924, 'verbose_bytes': 15853, 'default_tools': 51, 'verbose_tools': 51}

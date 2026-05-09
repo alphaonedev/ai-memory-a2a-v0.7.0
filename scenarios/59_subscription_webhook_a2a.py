@@ -17,6 +17,21 @@ SCENARIO_ID = "59"
 
 def main() -> None:
     h = Harness.from_env(SCENARIO_ID)
+    # v0.7 SSRF guard: webhook URLs that resolve to private/loopback IPs are
+    # rejected by default unless `[subscriptions] allow_loopback_webhooks =
+    # true` is set in the daemon's config.toml. The campaign daemons use the
+    # default-deny config (operator-gated; not modifiable from the test
+    # harness), so a private-VPC receiver on `OPEN_PRIV:28590` cannot be
+    # subscribed. Without an external public-IP receiver, webhook delivery
+    # cannot be exercised end-to-end on this topology.
+    import os
+    if os.environ.get("ALLOW_LOOPBACK_WEBHOOKS_VERIFIED", "0") != "1":
+        h.skip(
+            "v0.7 SSRF guard rejects private-VPC webhook URLs by default; set "
+            "`[subscriptions] allow_loopback_webhooks = true` on both daemons "
+            "and export ALLOW_LOOPBACK_WEBHOOKS_VERIFIED=1 to run this scenario."
+        )
+        return
     OPEN, HERM = "ai:openclaw@nyc3:droplet-1", "ai:hermes@nyc3:droplet-2"
     ns = f"s59-{new_uuid()[:6]}"
     correlation = new_uuid("corr-")

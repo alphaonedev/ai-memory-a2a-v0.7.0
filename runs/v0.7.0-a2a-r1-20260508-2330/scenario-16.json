@@ -1,0 +1,12 @@
+{
+  "agent_group": "openclaw_hermes",
+  "bob_sees_tier": "long",
+  "elapsed_sec": 14.3,
+  "m1_id": "badafd0a-16f1-4783-900c-31d1f3ac1d0b",
+  "pass": true,
+  "promote_http_code": 200,
+  "reasons": [],
+  "scenario": "16",
+  "skipped": false,
+  "tls_mode": "off"
+}

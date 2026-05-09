@@ -16,13 +16,16 @@ SCENARIO_ID = "56"
 
 def measure(h: Harness, node_ip: str) -> dict:
     """Run two `ai-memory mcp tools/list` invocations, with and without env."""
-    script = """set -u
+    # v0.7 ships profile=core by default (8 tools). To assert the full
+    # 51-tool surface, invoke `mcp --profile full` explicitly.
+    init_msg = '{"jsonrpc":"2.0","id":0,"method":"initialize","params":{"clientInfo":{"name":"a2a-s56","version":"0"},"capabilities":{},"protocolVersion":"2024-11-05"}}'
+    list_msg = '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+    script = f"""set -u
 echo "==DEFAULT=="
 unset AI_MEMORY_TOOLS_VERBOSE
-echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | ai-memory mcp 2>/dev/null
+printf '%s\\n%s\\n' '{init_msg}' '{list_msg}' | ai-memory mcp --profile full 2>/dev/null
 echo "==VERBOSE=="
-AI_MEMORY_TOOLS_VERBOSE=1 echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' \
-    | AI_MEMORY_TOOLS_VERBOSE=1 ai-memory mcp 2>/dev/null
+printf '%s\\n%s\\n' '{init_msg}' '{list_msg}' | AI_MEMORY_TOOLS_VERBOSE=1 ai-memory mcp --profile full 2>/dev/null
 """
     r = h.ssh_bash_script(node_ip, script, timeout=60)
     out = r.stdout or ""

@@ -16,8 +16,10 @@ SCENARIO_ID = "63"
 
 def main() -> None:
     h = Harness.from_env(SCENARIO_ID)
-    OPEN, HERM = "ai:openclaw@nyc3:droplet-1", "ai:hermes@nyc3:droplet-2"
-    ns = f"s63-{new_uuid()[:6]}"
+    suffix = new_uuid()[:6]
+    OPEN = f"ai:s63-openclaw-{suffix}"
+    HERM = f"ai:s63-hermes-{suffix}"
+    ns = f"s63-{suffix}"
     body = "Project Apollo's launch escape system was tested at White Sands."
 
     log("phase A: openclaw + hermes both store the same fact")
@@ -29,18 +31,38 @@ def main() -> None:
     id2 = (d2 or {}).get("body", {}).get("id") if isinstance(d2, dict) else None
     h.settle(6, "replication")
 
-    log("phase B: hermes calls memory_consolidate on namespace")
+    log("phase B: hermes calls memory_consolidate on the two stored ids")
+    # v0.7 contract: consolidate requires {ids:[...], title, summary, namespace?}.
+    # The "consolidate-all-near-dupes-in-a-namespace" verb is not in the v0.7
+    # HTTP surface; consolidate explicitly merges the listed ids 1->1.
+    if not (id1 and id2):
+        h.emit(passed=False, reason="store ids missing for consolidation",
+               id1=id1, id2=id2, reasons=["seed failed"])
+        return
     rc, resp = h.http_on(h.node2_ip, "POST", "/api/v1/consolidate",
-                         body={"namespace": ns, "min_similarity": 0.85},
+                         body={
+                             "ids": [id1, id2],
+                             "title": "apollo-consolidated",
+                             "summary": "Apollo LES tested at White Sands.",
+                             "namespace": ns,
+                         },
                          agent_id=HERM, include_status=True)
     body = (resp or {}).get("body") if isinstance(resp, dict) else None
     log(f"  consolidate -> rc={rc} body={body}")
 
     consolidated_from = []
+    cons_id = ""
     if isinstance(body, dict):
-        for grp in (body.get("groups") or body.get("clusters") or []):
-            if isinstance(grp, dict):
-                consolidated_from.extend(grp.get("consolidated_from_agents") or [])
+        cons_id = body.get("id") or body.get("consolidated_memory_id") or ""
+    if cons_id:
+        # v0.7: fetch the merged memory and read metadata.consolidated_from_agents.
+        _, fetched = h.http_on(h.node2_ip, "GET", f"/api/v1/memories/{cons_id}")
+        mem = (fetched or {}).get("memory") if isinstance(fetched, dict) else None
+        if isinstance(mem, dict):
+            md = mem.get("metadata") or {}
+            cfa = md.get("consolidated_from_agents")
+            if isinstance(cfa, list):
+                consolidated_from.extend(cfa)
 
     reasons: list[str] = []
     passed = True

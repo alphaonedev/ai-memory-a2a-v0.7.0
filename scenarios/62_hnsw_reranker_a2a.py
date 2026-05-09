@@ -25,8 +25,13 @@ GROUND_TRUTH = [
 
 def main() -> None:
     h = Harness.from_env(SCENARIO_ID)
-    OPEN, HERM = "ai:openclaw@nyc3:droplet-1", "ai:hermes@nyc3:droplet-2"
-    ns = f"s62-{new_uuid()[:6]}"
+    # Per-scenario unique agent_ids: a 1000-row burst will burn the daily
+    # quota under any agent; using a fresh id keeps the scenario reusable
+    # within the same day.
+    suffix = new_uuid()[:6]
+    OPEN = f"ai:s62-store-{suffix}"
+    HERM = f"ai:s62-recall-{suffix}"
+    ns = f"s62-{suffix}"
 
     log(f"phase A: openclaw stores {N} items including 3 ground-truth seeds")
     # Ground truth seeds
@@ -47,11 +52,16 @@ def main() -> None:
     h.settle(8, "embed + index settle")
 
     log("phase B: hermes recalls topK via semantic for each ground-truth query")
+    # v0.7 endpoint: /api/v1/recall (not /api/v1/memories/recall) with
+    # `context` query param (not `q`). Default mode is `hybrid` which blends
+    # semantic + FTS — sufficient for ranking ground-truth seeds.
+    import urllib.parse as _u
     recalls: dict[str, dict] = {}
     for q, _ in GROUND_TRUTH:
+        qs = _u.urlencode({"namespace": ns, "context": q, "limit": TOPK})
         rc, resp = h.http_on(
             h.node2_ip, "GET",
-            f"/api/v1/memories/recall?namespace={ns}&q={q}&mode=semantic&top_k={TOPK}",
+            f"/api/v1/recall?{qs}",
             agent_id=HERM,
         )
         rows = (resp or {}).get("memories", []) if isinstance(resp, dict) else []

@@ -1,0 +1,24 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 33.0,
+  "expected_per_agent": 30,
+  "pass": true,
+  "per_agent": {
+    "ai:alice": {
+      "count": 30,
+      "wrong_agent_id": 0
+    },
+    "ai:bob": {
+      "count": 30,
+      "wrong_agent_id": 0
+    },
+    "ai:charlie": {
+      "count": 30,
+      "wrong_agent_id": 0
+    }
+  },
+  "reasons": [],
+  "scenario": "4",
+  "skipped": false,
+  "tls_mode": "off"
+}

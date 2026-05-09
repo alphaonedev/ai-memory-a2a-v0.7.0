@@ -1,0 +1,9 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 0.4,
+  "pass": null,
+  "reason": "v0.7.0-alpha pg adapter requires pgvector; postgres-node has only `age`. Re-run after pgvector is installed + enabled.",
+  "scenario": "72",
+  "skipped": true,
+  "tls_mode": "off"
+}

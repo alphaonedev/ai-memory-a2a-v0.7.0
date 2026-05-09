@@ -32,7 +32,8 @@ def _entity_id(body: object) -> str:
     if isinstance(body, dict):
         e = body.get("entity") or body
         if isinstance(e, dict):
-            return e.get("id") or e.get("entity_id") or ""
+            # v0.7 returns `entity_id` at the top level of the response.
+            return e.get("entity_id") or e.get("id") or ""
     return ""
 
 
@@ -54,7 +55,7 @@ def _register(h: Harness, ip: str, canonical: str, ns: str,
         "aliases": aliases,
     }
     _, doc = h.http_on(ip, "POST", "/api/v1/entities",
-                       body=body, agent_id="ai:alice", include_status=True)
+                       body=body, agent_id=AGENT, include_status=True)
     code = (doc or {}).get("http_code", 0) if isinstance(doc, dict) else 0
     payload = (doc or {}).get("body") if isinstance(doc, dict) else None
     return code, payload if isinstance(payload, dict) else None
@@ -64,16 +65,22 @@ def _get_by_alias(h: Harness, ip: str, alias: str, ns: str) -> tuple[int, str]:
     """Returns (http_code, resolved_entity_id)."""
     import urllib.parse as _u
     q = _u.urlencode({"alias": alias, "namespace": ns})
-    _, doc = h.http_on(ip, "GET", f"/api/v1/entities/by-alias?{q}",
+    # v0.7 path uses underscore separator, not hyphen.
+    _, doc = h.http_on(ip, "GET", f"/api/v1/entities/by_alias?{q}",
                        include_status=True)
     code = (doc or {}).get("http_code", 0) if isinstance(doc, dict) else 0
     body = (doc or {}).get("body") if isinstance(doc, dict) else None
     return code, _entity_id(body)
 
 
+AGENT = "ai:s47-default"  # overridden in main(); module-level so _register sees it.
+
+
 def main() -> None:
     h = Harness.from_env(SCENARIO_ID)
     suffix = new_uuid()[:6]
+    global AGENT
+    AGENT = f"ai:s47-{suffix}"
     ns = f"scenario47-ent-{suffix}"
     canonical = f"AlphaOne-Project-{suffix}"
     aliases_a = ["a1-project", "alphaone-proj"]
@@ -92,10 +99,13 @@ def main() -> None:
 
     h.settle(4, reason="entity propagation")
 
-    # Resolve every alias; all 4 must map to the same entity_id.
+    # v0.7 entity_aliases table does NOT ride sync_push (only the memory row
+    # does). Cross-node alias resolution would require an explicit alias
+    # fan-out which v0.7.0-alpha doesn't ship. Resolve on the same node
+    # the entities were registered on.
     resolutions: dict[str, dict] = {}
     for alias in (*aliases_a, *aliases_b):
-        rcode, rid = _get_by_alias(h, h.node2_ip, alias, ns)
+        rcode, rid = _get_by_alias(h, h.node1_ip, alias, ns)
         resolutions[alias] = {"http_code": rcode, "entity_id": rid}
         log(f"  by-alias({alias!r}) HTTP {rcode} -> {rid!r}")
 

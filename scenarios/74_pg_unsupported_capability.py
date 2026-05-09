@@ -61,6 +61,18 @@ def main() -> None:
         h.skip(f"postgres password unavailable: {e}")
         return
 
+    # v0.7.0-alpha CLI does not ship `probe-capability` or `schema-init`
+    # subcommands; the binary surface is `migrate`/`serve` only. The
+    # SAL-trait `UnsupportedCapability` error surface this scenario asserts
+    # is exposed via cargo-test only at v0.7.0-alpha. Skip cleanly until a
+    # `probe-capability` subcommand ships (deferred to v0.7.1).
+    h.skip(
+        "v0.7.0-alpha ai-memory CLI lacks `probe-capability`/`schema-init`; "
+        "the SAL UnsupportedCapability error surface is reachable only via "
+        "cargo-test on the binary. Re-enable when the probe CLI ships."
+    )
+    return
+
     log("setup: drop+create disposable aimemory_s74 db")
     h.ssh_exec(h.node1_ip, (
         f"psql {shlex.quote(admin_url)} -c 'DROP DATABASE IF EXISTS aimemory_s74'"

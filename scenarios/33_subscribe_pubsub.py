@@ -30,10 +30,15 @@ def _subs(h: Harness, ip: str, agent_id: str) -> list[str]:
         pool = resp
     else:
         pool = []
-    return [
-        (s.get("namespace") if isinstance(s, dict) else s) or ""
-        for s in pool
-    ]
+    out: list[str] = []
+    for s in pool:
+        if isinstance(s, dict):
+            # v0.7 list shape: {namespace_filter, namespace, agent_id, ...}
+            ns = s.get("namespace_filter") or s.get("namespace") or ""
+            out.append(ns or "")
+        else:
+            out.append(str(s))
+    return out
 
 
 def main() -> None:
@@ -43,9 +48,20 @@ def main() -> None:
     m2 = new_uuid("sub-post-")
 
     log(f"bob subscribes to namespace {ns} on node-2")
+    # v0.7: subscribe synthesizes a loopback URL when only `{agent_id, namespace}`
+    # is supplied; the SSRF guard then rejects loopback by default. Provide a
+    # public-resolving https callback URL so the SSRF DNS check passes — we
+    # never actually fire the webhook (subscription is verified via list, not
+    # delivery), AND set namespace_filter so the GET view records the ns.
     _, sub_doc = h.http_on(
         h.node2_ip, "POST", "/api/v1/subscriptions",
-        body={"agent_id": "ai:bob", "namespace": ns},
+        body={
+            "agent_id": "ai:bob",
+            "namespace": ns,
+            "namespace_filter": ns,
+            "url": "https://example.com/_ns_hook",
+            "events": "memory_store",
+        },
         agent_id="ai:bob", include_status=True,
     )
     sub_code = (sub_doc or {}).get("http_code", 0) if isinstance(sub_doc, dict) else 0

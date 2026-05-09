@@ -41,16 +41,35 @@ def _id_of(resp: object) -> str:
     return ""
 
 
-def _query_edges(h: Harness, ip: str, source_id: str, as_of_iso: str) -> tuple[int, list[dict]]:
-    """Returns (http_code, edges_list)."""
-    body = {"source_id": source_id, "as_of": as_of_iso}
+def _query_edges(h: Harness, ip: str, source_id: str, valid_at_iso: str | None,
+                 include_invalidated: bool = False) -> tuple[int, list[dict]]:
+    """Returns (http_code, edges_list).
+
+    v0.7 contract: kg_query body field is `valid_at` (not `as_of`), and the
+    response shape is `{count, max_depth, memories, paths, source_id}` where
+    `paths` is the list of edge entries (each: {source_id, target_id, ...}).
+    """
+    body: dict[str, object] = {"source_id": source_id, "max_depth": 1}
+    if valid_at_iso:
+        body["valid_at"] = valid_at_iso
+    if include_invalidated:
+        body["include_invalidated"] = True
     _, doc = h.http_on(ip, "POST", "/api/v1/kg/query",
                        body=body, include_status=True, timeout=30)
     code = (doc or {}).get("http_code", 0) if isinstance(doc, dict) else 0
     payload = (doc or {}).get("body") if isinstance(doc, dict) else None
     edges: list[dict] = []
     if isinstance(payload, dict):
-        edges = payload.get("edges") or payload.get("links") or payload.get("results") or []
+        # v0.7 kg_query response: `memories` carries dict entries with
+        # source_id/target_id/depth/relation; `paths` is only the id chain.
+        edges = (payload.get("memories")
+                 or payload.get("edges")
+                 or payload.get("links")
+                 or payload.get("results")
+                 or [])
+        # Tolerate `paths` shape too (list of strings or dicts).
+        if not edges and isinstance(payload.get("paths"), list):
+            edges = payload["paths"]
     elif isinstance(payload, list):
         edges = payload
     return code, [e for e in edges if isinstance(e, dict)]
@@ -60,12 +79,14 @@ def main() -> None:
     h = Harness.from_env(SCENARIO_ID)
     ns = f"scenario45-kg-{new_uuid()[:6]}"
 
-    log("seed: write M0 + T1/T2/T3 on node-1")
-    _, r0 = h.write_memory(h.node1_ip, "ai:alice", ns, title="kg-source", content="kg-M0")
+    # Per-scenario unique agent_id to avoid daily-quota interference.
+    agent = f"ai:s45-{new_uuid()[:6]}"
+    log(f"seed: write M0 + T1/T2/T3 on node-1 as {agent}")
+    _, r0 = h.write_memory(h.node1_ip, agent, ns, title="kg-source", content="kg-M0")
     m0 = _id_of(r0)
     targets = []
     for i in (1, 2, 3):
-        _, r = h.write_memory(h.node1_ip, "ai:alice", ns,
+        _, r = h.write_memory(h.node1_ip, agent, ns,
                               title=f"kg-target-{i}", content=f"kg-T{i}")
         targets.append(_id_of(r))
     log(f"  M0={m0} targets={targets}")
@@ -75,53 +96,62 @@ def main() -> None:
 
     h.settle(4, reason="seed propagation")
 
-    # Build valid_from in the past so as_of=now still places these edges
-    # within their validity window.
-    t_past = int(time.time()) - 3600  # 1h ago
-    t_past_iso = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(t_past))
-    log(f"creating 3 edges with valid_from={t_past_iso}")
+    # v0.7 LinkBody only accepts {source_id, target_id, relation} — there is
+    # no operator-settable `valid_from` field on /api/v1/links. The temporal-
+    # slice contract is therefore expressed via valid_until (set by kg_invalidate
+    # when an edge is retired) and the include_invalidated flag on kg_query:
+    #   * default kg_query (no valid_at, include_invalidated=false): live edges only
+    #   * include_invalidated=true: full historical set incl. retired edges
+    log(f"creating 3 edges (valid_from defaults to now per LinkBody contract)")
 
     for i, tid in enumerate(targets, start=1):
         body = {
             "source_id": m0,
             "target_id": tid,
-            "relation": "kg_related_to",
-            "valid_from": t_past_iso,
+            "relation": "related_to",
         }
         _, link_doc = h.http_on(h.node1_ip, "POST", "/api/v1/links",
-                                body=body, agent_id="ai:alice", include_status=True)
+                                body=body, agent_id=agent, include_status=True)
         code = (link_doc or {}).get("http_code", 0) if isinstance(link_doc, dict) else 0
         log(f"  edge M0->T{i} HTTP {code}")
 
     h.settle(4, reason="edge fanout")
 
-    # Invalidate the M0->T2 edge. /api/v1/kg/invalidate is the v0.6.3
-    # surface; sets valid_until = now without deleting the row.
+    # Invalidate the M0->T2 edge. /api/v1/kg/invalidate sets valid_until=now
+    # without deleting the row.
     log(f"invalidating edge M0->T2 (target {targets[1]})")
     _, inv_doc = h.http_on(
         h.node1_ip, "POST", "/api/v1/kg/invalidate",
-        body={"source_id": m0, "target_id": targets[1], "relation": "kg_related_to"},
-        agent_id="ai:alice", include_status=True,
+        body={"source_id": m0, "target_id": targets[1], "relation": "related_to"},
+        agent_id=agent, include_status=True,
     )
     inv_code = (inv_doc or {}).get("http_code", 0) if isinstance(inv_doc, dict) else 0
     log(f"  invalidate HTTP {inv_code}")
     h.settle(4, reason="invalidation fanout")
 
     now_iso = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    log(f"kg_query as_of={t_past_iso} (past) — expecting 3 edges")
-    past_code, past_edges = _query_edges(h, h.node1_ip, m0, t_past_iso)
+    # "Past" view: include_invalidated=true returns the full historical set
+    # (3 edges — including the invalidated one).
+    log("kg_query include_invalidated=true (past view) — expecting 3 edges")
+    past_code, past_edges = _query_edges(h, h.node1_ip, m0, None, include_invalidated=True)
     log(f"  HTTP {past_code} edge count={len(past_edges)}")
 
-    log(f"kg_query as_of={now_iso} (now) — expecting 2 edges (T2 invalidated)")
-    now_code, now_edges = _query_edges(h, h.node1_ip, m0, now_iso)
+    # "Now" view: default exclude-invalidated returns 2 edges (T2 retired).
+    log(f"kg_query (now / default) — expecting 2 edges (T2 invalidated)")
+    now_code, now_edges = _query_edges(h, h.node1_ip, m0, None, include_invalidated=False)
     log(f"  HTTP {now_code} edge count={len(now_edges)}")
+    t_past_iso = "<historical view via include_invalidated=true>"
 
     def _targets_seen(edges: list[dict]) -> set[str]:
         out: set[str] = set()
         for e in edges:
+            # v0.7 path entry shape: {source_id, target_id, ...}
             t = e.get("target_id") or e.get("target") or e.get("to") or ""
             if t:
                 out.add(t)
+            # tolerate `path: [src, ..., dst]` entries
+            elif isinstance(e.get("path"), list) and len(e["path"]) >= 2:
+                out.add(e["path"][-1])
         return out
 
     past_set = _targets_seen(past_edges)

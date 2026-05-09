@@ -17,7 +17,7 @@ SCENARIO_ID = "68"
 
 def main() -> None:
     h = Harness.from_env(SCENARIO_ID)
-    OPEN = "ai:openclaw@nyc3:droplet-1"
+    OPEN = f"ai:s68-openclaw-{new_uuid()[:6]}"
     ns = f"s68-{new_uuid()[:6]}"
 
     log("phase A: ask Grok 4.2 to reason about a problem")

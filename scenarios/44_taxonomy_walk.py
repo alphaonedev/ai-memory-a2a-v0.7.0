@@ -44,12 +44,13 @@ ROWS_PER_SUBTREE = 5  # 6 * 5 = 30
 def _find_node(tree: object, ns: str) -> dict | None:
     """DFS through whatever shape the taxonomy endpoint returns to find the
     node for `ns`. Tolerates {namespace}/{children} or {name}/{nodes} or
-    flat list-of-dicts shapes."""
+    flat list-of-dicts shapes, AND the v0.7 envelope `{tree: {...}, total_count: N}`."""
     if isinstance(tree, dict):
         nm = tree.get("namespace") or tree.get("name") or tree.get("path")
         if nm == ns:
             return tree
-        for key in ("children", "nodes", "subtree", "items"):
+        # v0.7 envelope: payload nested under `tree` (the response wrapper).
+        for key in ("tree", "children", "nodes", "subtree", "items"):
             v = tree.get(key)
             if v is not None:
                 hit = _find_node(v, ns)

@@ -1,0 +1,14 @@
+{
+  "agent_group": "openclaw_hermes",
+  "charlie_sees_link": 1,
+  "elapsed_sec": 15.2,
+  "link_http_code": 201,
+  "m1_id": "55ec127c-c9f0-41c5-9cad-511d5668f99e",
+  "m2_id": "513e614a-f1cf-43d5-bd59-a145a406b520",
+  "pass": true,
+  "reasons": [],
+  "relation": "related_to",
+  "scenario": "11",
+  "skipped": false,
+  "tls_mode": "off"
+}

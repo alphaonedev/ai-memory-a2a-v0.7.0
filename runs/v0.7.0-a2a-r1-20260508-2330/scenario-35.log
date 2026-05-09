@@ -1,0 +1,13 @@
+alice writes parent-standard-memory on node-1
+alice sets namespace standard on scenario35-parent-931d1f
+  set-parent returned HTTP 201
+alice writes child-standard-memory on node-1
+alice sets namespace standard on scenario35-parent-931d1f/child with parent=scenario35-parent-931d1f
+  set-child returned HTTP 201
+settle 4s for standard fanout
+bob gets standard for scenario35-parent-931d1f/child on node-2 (expects layered parent+child)
+  get-standard returned HTTP 200
+  parent-rule visible=True; child-rule visible=True
+alice clears standard on scenario35-parent-931d1f/child
+  clear returned HTTP 200
+settle 3s for clear settle

@@ -1,0 +1,20 @@
+step 1: store M1 at tier=mid
+  M1=6e6a3b39-81ff-45d6-b6b9-9686c214c924
+settle 3s for post-store
+step 2: access M1 (3x recall to bump counter)
+settle 2s for access counter flush
+step 3: write 2 sibling memories + consolidate
+settle 3s for siblings settle
+settle 4s for consolidation index
+  pivot: m1 -> consolidated id 042d7bc8-559e-4b8b-8f63-34ec7ecf27ef
+step 4: promote M1 to tier=long
+settle 3s for promote settle
+step 5: expire M1 via PUT expires_at=past
+settle 3s for expire settle
+step 6: archive M1 via POST /api/v1/archive
+settle 4s for archive settle
+step 7: restore M1
+settle 3s for restore settle
+step 8: archive again then hard-purge
+settle 2s for re-archive settle
+settle 3s for purge settle

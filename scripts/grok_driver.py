@@ -52,10 +52,14 @@ def grok_chat(prompt: str, system_msg: str = "",
         "messages": messages,
         "max_tokens": max_tokens,
         "temperature": temperature,
-        # xAI honors `reasoning_effort: "high"` for the *reasoning* SKUs;
-        # the field is silently ignored on non-reasoning SKUs.
-        "reasoning_effort": "high",
     }
+    # xAI honors `reasoning_effort: "high"` on some reasoning SKUs but the
+    # current `grok-4.20-0309-reasoning` model 400s with "does not support
+    # parameter reasoningEffort". Opt in only when the operator explicitly
+    # exports XAI_REASONING_EFFORT (e.g. `low|medium|high`).
+    eff = os.environ.get("XAI_REASONING_EFFORT", "")
+    if eff:
+        req_body["reasoning_effort"] = eff
 
     req = urllib.request.Request(
         url=f"{base.rstrip('/')}/chat/completions",
@@ -91,6 +95,21 @@ def grok_chat(prompt: str, system_msg: str = "",
     if not reasoning:
         # fallback: some servers stream reasoning into the top level
         reasoning = data.get("reasoning_content") or ""
+
+    # `grok-4.20-0309-reasoning` does NOT surface the chain-of-thought trace
+    # in the response payload (per xAI policy). The token-counting `usage`
+    # block does carry `completion_tokens_details.reasoning_tokens` so we
+    # can synthesize a non-empty placeholder when the model spent reasoning
+    # tokens but didn't return the trace text. Callers that need actual CoT
+    # text should use a different SKU.
+    rt = ((data.get("usage") or {})
+          .get("completion_tokens_details") or {}
+          ).get("reasoning_tokens")
+    if (not reasoning or len(str(reasoning).strip()) < 10) and isinstance(rt, int) and rt > 0:
+        reasoning = (
+            f"[reasoning trace not surfaced by {model}; "
+            f"completion_tokens_details.reasoning_tokens={rt}]"
+        )
 
     return {
         "text": text.strip(),

@@ -1,0 +1,2 @@
+phase A: openclaw queries capabilities accept=v1 (via Accept-Capabilities header)
+phase B: hermes queries capabilities accept=v2 (via Accept-Capabilities header)

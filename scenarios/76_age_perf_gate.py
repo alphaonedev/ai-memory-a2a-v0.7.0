@@ -113,6 +113,22 @@ def main() -> None:
         h.skip(f"postgres password unavailable: {e}")
         return
 
+    # v0.7.0-alpha pg adapter requires pgvector + `schema-init` CLI to
+    # populate the `entities`/`kg_edges`/`kg_find_paths_view` schema. Both
+    # are absent on this campaign's postgres-node bootstrap — no way to
+    # seed a perf corpus.
+    import shlex as _shlex
+    r = h.ssh_exec(h.node1_ip, (
+        f"psql {_shlex.quote(admin_url)} -tAc "
+        "\"SELECT count(*) FROM pg_available_extensions WHERE name = 'vector'\""
+    ), timeout=20)
+    if "1" not in (r.stdout or "").strip():
+        h.skip(
+            "v0.7.0-alpha pg adapter requires pgvector + schema-init CLI "
+            "(neither shipped on this build); perf gate cannot run."
+        )
+        return
+
     log("phase A: drop+create aimemory_perf, schema-init, AGE on")
     h.ssh_exec(h.node1_ip, (
         f"psql {shlex.quote(admin_url)} -c 'DROP DATABASE IF EXISTS aimemory_perf'"

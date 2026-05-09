@@ -1,0 +1,10 @@
+seed: write source M0 + 2 targets on node-1
+  M0=569cbd5f-3dcb-4c08-a561-d79bbfa7f1f6 T1=a4c90d47-d162-439c-b84e-4a5cc9d85956 T2=37884e6a-991f-4e21-a50e-2fedfdd065e4
+settle 3s for seed settle
+create edge M0->T1 (event 1: edge_added)
+create edge M0->T2 (event 2: edge_added)
+invalidate M0->T1 (event 3: edge_invalidated)
+settle 4s for timeline indexer
+GET /api/v1/kg/timeline?source_id=569cbd5f-3dcb-4c08-a561-d79bbfa7f1f6 on node-1
+  HTTP 200
+  2 edge events, derived_types=['invalidated', 'added']

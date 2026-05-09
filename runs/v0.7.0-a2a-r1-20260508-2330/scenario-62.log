@@ -1,0 +1,3 @@
+phase A: openclaw stores 1000 items including 3 ground-truth seeds
+settle 8s for embed + index settle
+phase B: hermes recalls topK via semantic for each ground-truth query

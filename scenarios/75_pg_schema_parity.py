@@ -89,6 +89,23 @@ def main() -> None:
         h.skip(f"postgres password unavailable: {e}")
         return
 
+    # v0.7.0-alpha pg adapter requires pgvector. Without pgvector +
+    # `ai-memory schema-init` (CLI verb not yet shipped), the postgres
+    # `aimemory.schema_version` table is never populated — every read
+    # returns -1 by design.
+    import shlex as _shlex
+    admin_url = h.postgres_url(db="postgres")
+    r = h.ssh_exec(h.node1_ip, (
+        f"psql {_shlex.quote(admin_url)} -tAc "
+        "\"SELECT count(*) FROM pg_available_extensions WHERE name = 'vector'\""
+    ), timeout=20)
+    if "1" not in (r.stdout or "").strip():
+        h.skip(
+            "v0.7.0-alpha pg adapter requires pgvector; postgres-node has "
+            "only `age`. Schema-parity report is unreachable without it."
+        )
+        return
+
     log("phase A: read pg schema_version")
     pg_v = _read_pg_schema_version(h, pg_url)
     log(f"  postgres schema_version = {pg_v}")

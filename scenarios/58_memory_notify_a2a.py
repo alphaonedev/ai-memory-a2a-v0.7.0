@@ -21,7 +21,8 @@ def main() -> None:
     body_text = f"hello hermes from openclaw — marker={marker}"
 
     log("phase A: openclaw -> memory_notify ai:hermes")
-    notify = {"to": HERM, "title": "ping", "body": body_text,
+    # v0.7 contract: target_agent_id (not "to"); payload (or content alias) instead of "body".
+    notify = {"target_agent_id": HERM, "title": "ping", "payload": body_text,
               "metadata": {"scenario": SCENARIO_ID, "marker": marker}}
     rc_n, resp_n = h.http_on(h.node1_ip, "POST", "/api/v1/notify",
                              body=notify, agent_id=OPEN, include_status=True)

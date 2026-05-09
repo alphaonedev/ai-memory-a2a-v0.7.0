@@ -1,0 +1,6 @@
+phase A: openclaw creates 5 entities A→B→C→D→E + cycle E→B
+settle 5s for link replication
+phase B: hermes calls find_paths A→E max_depth=7 (via MCP-stdio)
+  paths_found=2
+phase C: hermes calls find_paths A→E max_depth=1 (no direct edge; expect 0 paths)
+phase D: hermes calls find_paths E→E (cycle detection: must terminate)
