@@ -80,7 +80,10 @@
     {"id": "79", "rationale": "Wave 4 6-factor recall parity on postgres production path — top-K@5 Jaccard >= 0.80 vs sqlite reference; self-skips when A2A_BACKEND_KIND=sqlite (S62 covers sqlite reranker)", "wave4_only": true},
     {"id": "80", "rationale": "Wave 4 governance owner-only inheritance on postgres — F1 fix parity; self-skips when A2A_BACKEND_KIND=sqlite (S60 covers sqlite path)", "wave4_only": true},
     {"id": "81", "rationale": "Wave 4 heterogeneous federation — bidirectional sync_push convergence with mixed openclaw=sqlite + hermes=postgres (or both postgres); self-skips when A2A_BACKEND_KIND=sqlite", "wave4_only": true},
-    {"id": "82", "rationale": "Wave 4 memory_kg_query routes through AGE Cypher on postgres-backed daemon — node-set equality vs CTE oracle; self-skips when A2A_BACKEND_KIND=sqlite (S45/S46/S65 cover the CTE path)", "wave4_only": true}
+    {"id": "82", "rationale": "Wave 4 memory_kg_query routes through AGE Cypher on postgres-backed daemon — node-set equality vs CTE oracle; self-skips when A2A_BACKEND_KIND=sqlite (S45/S46/S65 cover the CTE path)", "wave4_only": true},
+    {"id": "83", "rationale": "NHI discovery — openclaw perspective. Grok-4.2-reasoning drives bug-discovery loop against node1's HTTP surface. Tier-aware (semantic|autonomous). Non-gating (always PASS unless harness broken); findings written to runs/<id>/nhi-findings/. Skips when XAI_API_KEY absent."},
+    {"id": "84", "rationale": "NHI discovery — hermes perspective. Federation-focused bug-discovery loop. Same protocol as S83. Non-gating; XAI_API_KEY required."},
+    {"id": "85", "rationale": "NHI discovery — A2A bilateral. Runs S83+S84 in parallel and cross-validates findings (consensus vs single-observer). Non-gating; XAI_API_KEY required."}
   ],
   "skip_3_agent": [
     {"id": "14", "rationale": "S14 SIGSTOPs NODE3 daemon and SIGCONTs it; with NODE3==NODE2 alias this freezes hermes mid-test (proven in failed Round 1) — requires real third daemon"},
