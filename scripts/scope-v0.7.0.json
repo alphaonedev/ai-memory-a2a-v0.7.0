@@ -85,10 +85,15 @@
     {"id": "84", "rationale": "NHI discovery — hermes perspective. Federation-focused bug-discovery loop. Same protocol as S83. Non-gating; XAI_API_KEY required."},
     {"id": "85", "rationale": "NHI discovery — A2A bilateral. Runs S83+S84 in parallel and cross-validates findings (consensus vs single-observer). Non-gating; XAI_API_KEY required."}
   ],
+  "q_track_in_scope": [
+    {"id": "14", "rationale": "Q track has 4 distinct GPU openclaw daemons (NODE3=openclaw-3, NODE4=openclaw-4, no alias). S14 SIGSTOP+SIGCONT cycle on openclaw-3 is now safe — test isolates the chosen peer from quorum."},
+    {"id": "25", "rationale": "Q track NODE3 is openclaw-3 (distinct daemon). S25 ssh-shifts its clock +300s; harm is contained to that node and audit-chain drift is the explicit oracle."},
+    {"id": "39", "rationale": "Q track NODE3 is openclaw-3 (distinct daemon). S39 SIGSTOP for delta-since test isolates that peer from sync; recovery on SIGCONT is the oracle."}
+  ],
   "skip_3_agent": [
-    {"id": "14", "rationale": "S14 SIGSTOPs NODE3 daemon and SIGCONTs it; with NODE3==NODE2 alias this freezes hermes mid-test (proven in failed Round 1) — requires real third daemon"},
-    {"id": "25", "rationale": "S25 ssh-shifts NODE3 system clock by +300s; with NODE3==NODE2 this destructively skews hermes (corrupts federation timestamps) — requires real third node"},
-    {"id": "39", "rationale": "S39 SIGSTOPs NODE3 daemon for delta-since test; with NODE3==NODE2 this freezes hermes — requires real third daemon"}
+    {"id": "14", "rationale": "[CPU 2-node track only — Q track tests this in q_track_in_scope] S14 SIGSTOPs NODE3 daemon and SIGCONTs it; with NODE3==NODE2 alias this freezes hermes mid-test (proven in failed Round 1) — requires real third daemon"},
+    {"id": "25", "rationale": "[CPU 2-node track only — Q track tests this in q_track_in_scope] S25 ssh-shifts NODE3 system clock by +300s; with NODE3==NODE2 this destructively skews hermes (corrupts federation timestamps) — requires real third node"},
+    {"id": "39", "rationale": "[CPU 2-node track only — Q track tests this in q_track_in_scope] S39 SIGSTOPs NODE3 daemon for delta-since test; with NODE3==NODE2 this freezes hermes — requires real third daemon"}
   ],
   "skip_mcp_stdio": [
     {"id": "1",  "rationale": "drive_agent.sh / MCP-stdio path is not installed on v0.7.0-alpha droplets; no HTTP equivalent of S1 (the HTTP analog is S1b which IS in scope)"},

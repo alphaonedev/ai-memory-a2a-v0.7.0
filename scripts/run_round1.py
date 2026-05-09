@@ -41,24 +41,42 @@ SCOPE_PATH = REPO / "scripts" / "scope-v0.7.0.json"
 def load_scope() -> dict:
     """Read scripts/scope-v0.7.0.json and return a normalized dispatch map.
 
+    Track-aware: when A2A_TRACK=Q (the v0.7.0 GPU cert quad-openclaw
+    topology), the q_track_in_scope scenarios (S14, S25, S39 — which
+    require a distinct 3rd-and-4th daemon node) move from skip_3_agent
+    into in_scope. Other tracks see the legacy 2-node CPU behavior.
+
     Returns:
         {
             "in_scope": set[str],
             "skips": {scenario_id: skip_reason, ...},
             "campaign_scope": "...",
+            "track": "...",
         }
     """
     with open(SCOPE_PATH, "r", encoding="utf-8") as f:
         m = json.load(f)
+    track = os.environ.get("A2A_TRACK", "").strip().upper()
     in_scope = {s["id"] for s in m.get("in_scope", [])}
+    if track == "Q":
+        for s in m.get("q_track_in_scope", []):
+            in_scope.add(s["id"])
     skips: dict[str, str] = {}
-    for key in ("skip_3_agent", "skip_mcp_stdio", "skip_other"):
+    skip_keys = ("skip_3_agent", "skip_mcp_stdio", "skip_other")
+    for key in skip_keys:
         for s in m.get(key, []):
-            skips[s["id"]] = s.get("rationale", f"skipped via {key}")
+            sid = s["id"]
+            # On Q track, scenarios that moved into q_track_in_scope are
+            # NOT skipped despite still being listed in skip_3_agent (we
+            # keep both lists for documentation symmetry).
+            if track == "Q" and sid in in_scope:
+                continue
+            skips[sid] = s.get("rationale", f"skipped via {key}")
     return {
         "in_scope": in_scope,
         "skips": skips,
         "campaign_scope": m.get("campaign_scope", ""),
+        "track": track or "default",
     }
 
 
@@ -97,6 +115,12 @@ def per_scenario_timeout(sid: str) -> int:
         return 240  # bidirectional federation seed + settle
     if sid in {"82"}:
         return 180  # 10-node KG seed + AGE Cypher path query
+    # NHI discovery (S83/84 single-agent, S85 bilateral) — 30-min budget
+    # plus harness overhead. Override via NHI_TIME_BUDGET_S in scenario env.
+    if sid in {"83", "84"}:
+        return 2100   # ~35 min: NHI_TIME_BUDGET_S=1800 + harness/grok overhead
+    if sid in {"85"}:
+        return 2400   # ~40 min: bilateral S83+S84 in parallel + consensus
     # Default
     return 120
 
