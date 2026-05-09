@@ -40,12 +40,31 @@ DEPLOY_SUMMARY="/tmp/v07-wave4-deploy-summary.json"
 #
 # When `DEPLOY_TLS=1`, the script:
 #   1. SCPs the TLS material from /tmp/a2a-v07-tls/ to each droplet's
-#      /etc/ai-memory-a2a/tls/ directory.
+#      /etc/ai-memory-a2a/tls/ directory (server cert/key, ca, client
+#      certs/keys, mtls allowlist).
 #   2. Adds `--tls-cert`, `--tls-key`, and (when MTLS=1) `--mtls-allowlist`
 #      flags to the daemon's systemd ExecStart line.
+#   3. Adds `--quorum-ca-cert`, `--quorum-client-cert`, `--quorum-client-key`
+#      so the daemon's federation client can authenticate to the peer's
+#      mTLS-protected listener (the peer is HTTPS-only when DEPLOY_TLS=1).
+#   4. Rewrites `--quorum-peers http://` and `--catchup-peers http://`
+#      to `https://` so peers actually reach the TLS listener.
 # When unset (default), the script behaves as pre-Continuation-6 — plain
 # HTTP, no cert distribution. This keeps the existing baseline working
 # while we land the cert-validated path opt-in.
+#
+# Continuation-6 cert-closure refinement (2026-05-09):
+#   * The systemd unit edits now target the dropin
+#     `/etc/systemd/system/ai-memory.service.d/federation.conf`
+#     rather than the main service file — that's where the boot
+#     scripts now write the `--store-url` / `--quorum-*` flags. The
+#     legacy main-file path is still scrubbed for safety.
+#   * `AI_MEMORY_BINARY_PATH` is no longer required to be locally
+#     executable — when the orchestrator stages a Linux ELF on macOS
+#     (cross-compiled or pulled out of the openclaw build dir), the
+#     local exec check failed even though the binary was healthy on
+#     the droplet. Skipping the local exec check + relying on the
+#     remote `--version` smoke test below is the honest gate.
 DEPLOY_TLS="${DEPLOY_TLS:-0}"
 DEPLOY_MTLS="${DEPLOY_MTLS:-1}"   # only meaningful when DEPLOY_TLS=1
 TLS_LOCAL_DIR="${TLS_LOCAL_DIR:-/tmp/a2a-v07-tls}"
@@ -67,7 +86,7 @@ EOF
     esac
 done
 
-SSH_OPTS=(-o StrictHostKeyChecking=no -o ConnectTimeout=10 -o ServerAliveInterval=5)
+SSH_OPTS=(-o StrictHostKeyChecking=no -o ConnectTimeout=10 -o ServerAliveInterval=5 -i "${HOME}/.ssh/id_ed25519")
 
 # ------------------------------------------------------------------
 # 1. validate prereqs
@@ -78,12 +97,32 @@ note() { echo "===> $*"; }
 
 [[ -r "$SUMMARY_PATH" ]] || err "missing $SUMMARY_PATH (Phase 22 prereq)"
 [[ -r "$PG_PASSWORD_PATH" ]] || err "missing $PG_PASSWORD_PATH (postgres password)"
-[[ -x "$AI_MEMORY_BINARY_PATH" ]] || err "AI_MEMORY_BINARY_PATH=$AI_MEMORY_BINARY_PATH not executable"
+[[ -r "$AI_MEMORY_BINARY_PATH" ]] || err "AI_MEMORY_BINARY_PATH=$AI_MEMORY_BINARY_PATH not readable"
+
+# Continuation-6: when the binary is pre-built for Linux on a macOS
+# orchestrator, the local exec check fails even when the binary is
+# perfectly healthy on the target droplet. Detect ELF (Linux) vs
+# Mach-O (macOS) and only require local-executability when the file
+# matches the host's ABI. The remote `--version` smoke test below
+# is the load-bearing gate.
+local_arch=""
+if [[ -r "$AI_MEMORY_BINARY_PATH" ]]; then
+    local_arch="$(file -b "$AI_MEMORY_BINARY_PATH" 2>/dev/null | head -1)"
+fi
+if [[ "$(uname -s)" == "Darwin" && "$local_arch" == *"ELF"* ]]; then
+    note "binary is Linux ELF on macOS host — skipping local exec check (remote smoke is authoritative)"
+elif [[ ! -x "$AI_MEMORY_BINARY_PATH" ]]; then
+    err "AI_MEMORY_BINARY_PATH=$AI_MEMORY_BINARY_PATH not executable on local host"
+fi
 
 # Confirm the binary supports --store-url (Continuation 3 prereq).
+# Skip when the binary is cross-compiled for Linux on macOS — verified
+# via remote --version below.
 note "validate ai-memory binary supports --store-url"
-if ! "$AI_MEMORY_BINARY_PATH" serve --help 2>&1 | grep -q -- "--store-url"; then
-    err "ai-memory binary at $AI_MEMORY_BINARY_PATH does not advertise --store-url; Continuation 3 not merged?"
+if [[ "$local_arch" != *"ELF"* ]]; then
+    if ! "$AI_MEMORY_BINARY_PATH" serve --help 2>&1 | grep -q -- "--store-url"; then
+        err "ai-memory binary at $AI_MEMORY_BINARY_PATH does not advertise --store-url; Continuation 3 not merged?"
+    fi
 fi
 
 OPENCLAW_IP="$(jq -r '.openclaw.public_ip // .openclaw_ip // empty' "$SUMMARY_PATH")"
@@ -174,34 +213,57 @@ deploy_one() {
         if [[ "$DEPLOY_MTLS" == "1" ]]; then
             tls_extra_flags+=" --mtls-allowlist ${TLS_REMOTE_DIR}/mtls-allowlist.txt"
         fi
+        # Continuation-6: federation peers are HTTPS-only when DEPLOY_TLS=1, so
+        # the local daemon's federation client must authenticate to peers via
+        # mTLS too. Add the quorum cert flags pointing at the same client
+        # cert/key the harness uses for this droplet.
+        tls_extra_flags+=" --quorum-ca-cert ${TLS_REMOTE_DIR}/ca.pem"
+        tls_extra_flags+=" --quorum-client-cert ${TLS_REMOTE_DIR}/client-${node_label}.pem"
+        tls_extra_flags+=" --quorum-client-key ${TLS_REMOTE_DIR}/client-${node_label}.key"
         note "[$node_label] TLS material in place; flags='${tls_extra_flags}'"
     fi
 
-    note "[$node_label] rewrite systemd unit to use --store-url"
-    # We assume /etc/systemd/system/ai-memory.service exists (boot_*.sh
-    # installed it). The replacement keeps the same Environment block
-    # but swaps the ExecStart `--db <path>` flag for `--store-url
-    # postgres://...`. When DEPLOY_TLS=1, also appends the TLS flags
-    # to the same ExecStart line.
+    note "[$node_label] rewrite systemd dropin to use --store-url + TLS flags"
+    # Continuation-6: target the dropin
+    # `/etc/systemd/system/ai-memory.service.d/federation.conf` — that's
+    # where the boot scripts now write the `--store-url` /
+    # `--quorum-*` flags. The legacy main service file is also scrubbed
+    # for safety (so a pre-cont6 path that put the flags there gets
+    # cleaned up on re-deploy).
     ssh "${SSH_OPTS[@]}" "root@${node_ip}" "
         set -e
-        UNIT=/etc/systemd/system/ai-memory.service
-        [ -f \"\$UNIT\" ] || { echo 'no ai-memory.service unit on $node_label'; exit 1; }
+        DROPIN=/etc/systemd/system/ai-memory.service.d/federation.conf
+        MAIN=/etc/systemd/system/ai-memory.service
+        if [ ! -f \"\$DROPIN\" ] && [ ! -f \"\$MAIN\" ]; then
+            echo 'no ai-memory unit (dropin or main) on $node_label'; exit 1
+        fi
+        # Choose the unit to edit: prefer the dropin (Continuation 6 path),
+        # fall back to the main service file (pre-cont6 path).
+        UNIT=\"\$DROPIN\"
+        [ -f \"\$UNIT\" ] || UNIT=\"\$MAIN\"
         cp \"\$UNIT\" \"\$UNIT.wave3.bak.\$(date +%s)\"
-        # Swap --db <something> for --store-url <url>. If the unit already
-        # carries --store-url (re-deploy), update in place.
+        # Swap --db <something> for --store-url <url> (or update existing
+        # --store-url in place on a re-deploy).
         if grep -q -- '--store-url' \"\$UNIT\"; then
             sed -i -E 's|--store-url [^ ]+|--store-url ${store_url}|' \"\$UNIT\"
         else
             sed -i -E 's|--db [^ ]+|--store-url ${store_url}|' \"\$UNIT\"
         fi
-        # Continuation-6: scrub any pre-existing --tls-cert/--tls-key/--mtls-allowlist
-        # flags so re-deploys don't double-up. Only re-add when DEPLOY_TLS=1.
-        sed -i -E 's| --tls-cert [^ ]+||g' \"\$UNIT\"
-        sed -i -E 's| --tls-key [^ ]+||g' \"\$UNIT\"
-        sed -i -E 's| --mtls-allowlist [^ ]+||g' \"\$UNIT\"
+        # Continuation-6: scrub ALL pre-existing TLS / quorum-mTLS flags so
+        # re-deploys don't double-up. Only re-add when DEPLOY_TLS=1.
+        for flag in --tls-cert --tls-key --mtls-allowlist \\
+                    --quorum-ca-cert --quorum-client-cert --quorum-client-key; do
+            sed -i -E \"s| \$flag [^ ]+||g\" \"\$UNIT\"
+        done
         if [ -n '${tls_extra_flags}' ]; then
-            sed -i -E 's|^(ExecStart=.*)$|\\1${tls_extra_flags}|' \"\$UNIT\"
+            # Match only the ExecStart line that has the binary path; the
+            # systemd dropin convention puts an empty 'ExecStart=' reset
+            # line before the actual ExecStart=/usr/local/bin/ai-memory ...
+            # line. Avoid corrupting the reset line.
+            sed -i -E 's|^(ExecStart=/usr/local/bin/ai-memory.*)$|\\1${tls_extra_flags}|' \"\$UNIT\"
+            # When running in TLS mode, federation peers must use https://.
+            sed -i -E 's|--quorum-peers http://|--quorum-peers https://|g' \"\$UNIT\"
+            sed -i -E 's|--catchup-peers http://|--catchup-peers https://|g' \"\$UNIT\"
         fi
         # Defensive: ensure auto-migrate is enabled so first boot creates schema.
         grep -q 'AI_MEMORY_AUTO_MIGRATE=1' \"\$UNIT\" || \

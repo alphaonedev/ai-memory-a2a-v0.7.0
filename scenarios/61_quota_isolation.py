@@ -6,8 +6,27 @@ Scenario 61 — Quota isolation.
 
 openclaw burns daily memory quota (1000 stores); hermes still writes
 successfully; per-agent memory_quota_status reports the right counters.
+
+# v0.7.0 Continuation 6 — HTTP migration (2026-05-09)
+#
+# Migrated from MCP-stdio (`ai-memory mcp` against
+# `AI_MEMORY_DB=/var/lib/ai-memory/<node>.db` sqlite path) to the
+# new HTTP endpoint `POST /api/v1/quota/status`. The MCP-stdio path
+# read from a sqlite file that is empty/stale on postgres-backed
+# daemons — the new endpoint dispatches via the SAL
+# `MemoryStore::quota_status` trait so postgres-backed daemons read
+# from the live `agent_quotas` table.
+#
+# Wire shape (POST /api/v1/quota/status):
+#   { agent_id }
+#   -> QuotaStatus { agent_id, max_memories_per_day, max_storage_bytes,
+#                    max_links_per_day, current_memories_today,
+#                    current_storage_bytes, current_links_today,
+#                    day_started_at, created_at, updated_at }
 """
-import sys, pathlib
+import sys
+import pathlib
+
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "scripts"))
 from a2a_harness import Harness, log, new_uuid
 
@@ -28,7 +47,9 @@ def main() -> None:
     ns = f"s61-{suffix}"
 
     log(f"phase A: openclaw issues {BURN} stores (burn quota)")
-    successes = 0; throttled = 0
+    successes = 0
+    throttled = 0
+
     def one_write(idx):
         # v0.7 dedups on (title, namespace) — unique titles avoid 409 upsert
         # short-circuits that misreport as quota saturation.
@@ -39,10 +60,13 @@ def main() -> None:
             include_status=True,
         )
         return (doc or {}).get("http_code") if isinstance(doc, dict) else 0
+
     codes = h.run_parallel(one_write, [(i,) for i in range(BURN)], max_workers=8)
     for c in codes:
-        if c in (200, 201): successes += 1
-        elif c == 429:      throttled  += 1
+        if c in (200, 201):
+            successes += 1
+        elif c == 429:
+            throttled += 1
 
     log(f"  openclaw 201s={successes} 429s={throttled}")
 
@@ -51,62 +75,38 @@ def main() -> None:
                              content="quota isolated", include_status=True)
     herm_code = (herm or {}).get("http_code") if isinstance(herm, dict) else 0
 
-    log("phase C: memory_quota_status per agent (via MCP — no HTTP twin in v0.7)")
-    import json as _json
-    def quota_via_mcp(node_ip: str, agent_id: str) -> int:
-        msgs = [
-            _json.dumps({"jsonrpc": "2.0", "id": 0, "method": "initialize",
-                         "params": {"clientInfo": {"name": "a2a-s61", "version": "0"},
-                                    "capabilities": {}, "protocolVersion": "2024-11-05"}}),
-            _json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/call",
-                         "params": {"name": "memory_quota_status",
-                                    "arguments": {"agent_id": agent_id}}}),
-        ]
-        stdin = "\n".join(msgs) + "\n"
-        # Without AI_MEMORY_DB the stdio MCP opens ./ai-memory.db (empty);
-        # point at the daemon's live db so quota_status sees real rows.
-        daemon_db = ("/var/lib/ai-memory/openclaw.db"
-                     if node_ip == h.node1_ip
-                     else "/var/lib/ai-memory/hermes.db")
-        cmd = f"AI_MEMORY_DB={daemon_db} ai-memory mcp --profile full"
-        r = h.ssh_exec(node_ip, cmd, timeout=30, stdin=stdin)
-        for line in (r.stdout or "").splitlines():
-            line = line.strip()
-            if not line.startswith("{"):
-                continue
-            try:
-                d = _json.loads(line)
-            except _json.JSONDecodeError:
-                continue
-            if d.get("id") != 1:
-                continue
-            cont = (d.get("result") or {}).get("content") or []
-            if cont and isinstance(cont[0], dict):
-                txt = cont[0].get("text") or ""
-                try:
-                    p = _json.loads(txt)
-                    # v0.7 shape: {agent_id, quota: {current_memories_today, max_memories_per_day, ...}}
-                    q = p.get("quota") if isinstance(p, dict) else None
-                    if isinstance(q, dict):
-                        return int(q.get("current_memories_today") or 0)
-                    return int(p.get("current_memories_today") or p.get("used") or 0)
-                except (_json.JSONDecodeError, TypeError, ValueError):
-                    pass
-        return 0
+    log("phase C: POST /api/v1/quota/status per agent (Continuation 6 HTTP path)")
 
-    open_used = quota_via_mcp(h.node1_ip, OPEN)
-    herm_used = quota_via_mcp(h.node2_ip, HERM)
+    def quota_via_http(node_ip: str, agent_id: str) -> int:
+        rc, resp = h.http_on(
+            node_ip, "POST", "/api/v1/quota/status",
+            body={"agent_id": agent_id}, agent_id=agent_id, include_status=True,
+        )
+        body = (resp or {}).get("body") if isinstance(resp, dict) else None
+        if not isinstance(body, dict):
+            log(f"  quota_status non-dict body for {agent_id}: rc={rc} resp={resp!r:.120s}")
+            return 0
+        # The HTTP endpoint returns the QuotaStatus serialized
+        # directly (no `quota` wrapper).
+        return int(body.get("current_memories_today") or 0)
+
+    open_used = quota_via_http(h.node1_ip, OPEN)
+    herm_used = quota_via_http(h.node2_ip, HERM)
 
     reasons: list[str] = []
     passed = True
     if successes < 700:
-        passed = False; reasons.append(f"openclaw successes={successes} (expected >=700 before throttle)")
+        passed = False
+        reasons.append(f"openclaw successes={successes} (expected >=700 before throttle)")
     if herm_code not in (200, 201):
-        passed = False; reasons.append(f"hermes write got {herm_code} (expected 201)")
+        passed = False
+        reasons.append(f"hermes write got {herm_code} (expected 201)")
     if open_used < 700:
-        passed = False; reasons.append(f"openclaw quota.used={open_used} (expected >=700)")
+        passed = False
+        reasons.append(f"openclaw quota.used={open_used} (expected >=700)")
     if herm_used > 50:
-        passed = False; reasons.append(f"hermes quota.used={herm_used} (expected <=50; isolated)")
+        passed = False
+        reasons.append(f"hermes quota.used={herm_used} (expected <=50; isolated)")
 
     h.emit(passed=passed, reason="; ".join(reasons),
            per_agent={
