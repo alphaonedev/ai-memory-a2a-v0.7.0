@@ -1,0 +1,25 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 5.6,
+  "pass": true,
+  "per_agent": {
+    "openclaw": {
+      "age_off": {
+        "find_paths": null,
+        "kg_invalidate_count": null,
+        "kg_query": null,
+        "kg_timeline": null
+      },
+      "age_on": {
+        "find_paths": null,
+        "kg_invalidate_count": null,
+        "kg_query": null,
+        "kg_timeline": null
+      }
+    }
+  },
+  "reasons": [],
+  "scenario": "71",
+  "skipped": false,
+  "tls_mode": "off"
+}

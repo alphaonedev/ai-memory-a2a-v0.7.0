@@ -1,0 +1,22 @@
+{
+  "agent_group": "openclaw_hermes",
+  "as_of_now": "2026-05-09T01:59:57Z",
+  "as_of_past": "<historical view via include_invalidated=true>",
+  "elapsed_sec": 15.9,
+  "invalidate_http_code": 200,
+  "m0_id": "4e28f650-3488-4719-8ffe-0bce6501904e",
+  "now_edges": 2,
+  "now_query_http_code": 200,
+  "pass": true,
+  "past_edges": 3,
+  "past_query_http_code": 200,
+  "reasons": [],
+  "scenario": "45",
+  "skipped": false,
+  "target_ids": [
+    "0082212f-5beb-4cfa-a1e7-d15986c70728",
+    "908d2b5b-6b5d-4329-b623-e0a8e3d07958",
+    "137feab4-495b-42d7-99bd-c2639d782065"
+  ],
+  "tls_mode": "off"
+}

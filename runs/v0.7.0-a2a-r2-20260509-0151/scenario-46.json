@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "chronological": true,
+  "elapsed_sec": 13.4,
+  "event_count": 2,
+  "m0_id": "3b8fbd89-e807-4e52-9ba5-585c7e934d79",
+  "pass": true,
+  "reasons": [],
+  "scenario": "46",
+  "skipped": false,
+  "timeline_http_code": 200,
+  "tls_mode": "off",
+  "types": [
+    "invalidated",
+    "added"
+  ]
+}

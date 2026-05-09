@@ -1,0 +1,13 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 8.0,
+  "forward_has_target": true,
+  "m1": "7f955e76-29a2-465c-8ab0-8cc543e4be50",
+  "m2": "e5299ae0-6acd-4745-bc97-3f6ff52ba63e",
+  "pass": true,
+  "reasons": [],
+  "reverse_has_source": true,
+  "scenario": "37",
+  "skipped": false,
+  "tls_mode": "off"
+}

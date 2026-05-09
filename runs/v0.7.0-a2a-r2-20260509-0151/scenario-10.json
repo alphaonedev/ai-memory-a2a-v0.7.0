@@ -1,0 +1,19 @@
+{
+  "agent_group": "openclaw_hermes",
+  "delete_http_code": 200,
+  "elapsed_sec": 25.9,
+  "m1_id": "42cbe213-e091-4a97-b24c-cb47ebbe4fee",
+  "pass": true,
+  "post_delete_hits": {
+    "node-2": 0,
+    "node-3": 0,
+    "node-4": 0
+  },
+  "post_delete_still_visible_peers": 0,
+  "pre_delete_visible_peers": 3,
+  "reasons": [],
+  "scenario": "10",
+  "skipped": false,
+  "tls_mode": "off",
+  "uuid": "d-71fcdb4a94784b4e9d98f6ba97d0678c"
+}

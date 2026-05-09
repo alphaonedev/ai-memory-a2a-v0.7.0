@@ -1,0 +1,36 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 13.5,
+  "namespaces": [
+    "scenario42-b01255-0",
+    "scenario42-b01255-1",
+    "scenario42-b01255-2"
+  ],
+  "pass": true,
+  "per_peer": {
+    "node_1": {
+      "scenario42-b01255-0": 2,
+      "scenario42-b01255-1": 2,
+      "scenario42-b01255-2": 2
+    },
+    "node_2": {
+      "scenario42-b01255-0": 2,
+      "scenario42-b01255-1": 2,
+      "scenario42-b01255-2": 2
+    },
+    "node_3": {
+      "scenario42-b01255-0": 2,
+      "scenario42-b01255-1": 2,
+      "scenario42-b01255-2": 2
+    },
+    "node_4": {
+      "scenario42-b01255-0": 2,
+      "scenario42-b01255-1": 2,
+      "scenario42-b01255-2": 2
+    }
+  },
+  "reasons": [],
+  "scenario": "42",
+  "skipped": false,
+  "tls_mode": "off"
+}

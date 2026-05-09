@@ -1,0 +1,18 @@
+{
+  "agent_group": "openclaw_hermes",
+  "child_ns": "scenario35-parent-99862c/child",
+  "clear_http_code": 200,
+  "elapsed_sec": 9.5,
+  "get_standard_http_code": 200,
+  "parent_ns": "scenario35-parent-99862c",
+  "pass": true,
+  "post_clear_has_child_rule": false,
+  "reasons": [],
+  "scenario": "35",
+  "sees_child_rule": true,
+  "sees_parent_rule": true,
+  "set_child_http_code": 201,
+  "set_parent_http_code": 201,
+  "skipped": false,
+  "tls_mode": "off"
+}

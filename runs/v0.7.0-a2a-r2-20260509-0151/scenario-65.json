@@ -1,0 +1,12 @@
+{
+  "agent_group": "openclaw_hermes",
+  "cycle_terminated": true,
+  "elapsed_sec": 24.5,
+  "pass": true,
+  "paths_full": 2,
+  "paths_shallow": 0,
+  "reasons": [],
+  "scenario": "65",
+  "skipped": false,
+  "tls_mode": "off"
+}

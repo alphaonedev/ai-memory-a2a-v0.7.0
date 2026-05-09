@@ -1,0 +1,26 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 27.5,
+  "pass": true,
+  "per_agent": {
+    "hermes": {
+      "anchor": 636,
+      "monotonic_after": "OK checked=1 last=637",
+      "post_restart_rc": 2,
+      "verify_rc": 2,
+      "workload_ok": 14
+    },
+    "openclaw": {
+      "anchor": 4315,
+      "monotonic_after": "OK checked=1 last=4316",
+      "post_restart_rc": 2,
+      "verify_rc": 2,
+      "workload_ok": 14
+    }
+  },
+  "reasons": [],
+  "scenario": "57",
+  "skipped": false,
+  "tamper_rc": 2,
+  "tls_mode": "off"
+}

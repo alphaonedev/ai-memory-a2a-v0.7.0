@@ -1,0 +1,610 @@
+{
+  "campaign_id": "v0.7.0-a2a-r2-20260509-0151",
+  "campaign_scope": "v0.7.0 A2A 2-agent (openclaw + hermes)",
+  "failed": 0,
+  "finished_utc": "2026-05-09T02:10:22+00:00",
+  "in_scope_failed": 0,
+  "in_scope_passed": 56,
+  "in_scope_total": 68,
+  "overall_pass": true,
+  "passed": 56,
+  "round": "Round 2 (post-fix)",
+  "scenarios": [
+    {
+      "elapsed_sec": 0,
+      "in_scope": false,
+      "pass": null,
+      "reason": "drive_agent.sh / MCP-stdio path is not installed on v0.7.0-alpha droplets; no HTTP equivalent of S1 (the HTTP analog is S1b which IS in scope)",
+      "scenario": "1",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 28.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "1b",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 18.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "2",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 32.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "4",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 23.2,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "5",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 11.9,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "6",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 14.7,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "9",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 25.9,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "10",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 14.9,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "11",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 11.9,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "12",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 18.1,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "13",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "in_scope": false,
+      "pass": null,
+      "reason": "S14 SIGSTOPs NODE3 daemon and SIGCONTs it; with NODE3==NODE2 alias this freezes hermes mid-test (proven in failed Round 1) \u2014 requires real third daemon",
+      "scenario": "14",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.7,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "15",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 14.2,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "16",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 22.1,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "17",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 5.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "18",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.1,
+      "in_scope": true,
+      "pass": null,
+      "reason": "scenario 20 only runs under tls_mode=mtls (actual: off)",
+      "scenario": "20",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.0,
+      "in_scope": true,
+      "pass": null,
+      "reason": "scenario 21 only runs under tls_mode=mtls (actual: off)",
+      "scenario": "21",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 5.8,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "22",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 2.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "23",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 5.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "24",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "in_scope": false,
+      "pass": null,
+      "reason": "S25 ssh-shifts NODE3 system clock by +300s; with NODE3==NODE2 this destructively skews hermes (corrupts federation timestamps) \u2014 requires real third node",
+      "scenario": "25",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.1,
+      "in_scope": true,
+      "pass": null,
+      "reason": "scenario 26 only runs under agent_group=mixed (actual: openclaw_hermes)",
+      "scenario": "26",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0,
+      "in_scope": false,
+      "pass": null,
+      "reason": "S27 invokes drive_agent.sh against the openclaw legacy MCP path; not installed at v0.7.0-alpha",
+      "scenario": "27",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 8.9,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "28",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 17.1,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "29",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 1.4,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "30",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 24.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "31",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 7.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "32",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 17.2,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "33",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 13.7,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "34",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 9.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "35",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 7.4,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "36",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 8.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "37",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 14.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "38",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0,
+      "in_scope": false,
+      "pass": null,
+      "reason": "S39 SIGSTOPs NODE3 daemon for delta-since test; with NODE3==NODE2 this freezes hermes \u2014 requires real third daemon",
+      "scenario": "39",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 60.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "40",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 11.2,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "41",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 13.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "42",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 1.2,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "43",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 32.1,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "44",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 15.9,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "45",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 13.4,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "46",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 5.9,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "47",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 6.8,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "48",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 36.9,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "49",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.4,
+      "in_scope": true,
+      "pass": null,
+      "reason": "sqlcipher feature not advertised in /api/v1/capabilities \u2014 daemon was not built with --features sqlcipher",
+      "scenario": "50",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.4,
+      "in_scope": true,
+      "pass": null,
+      "reason": "autonomous/smart tier not available on node-1 \u2014 tier='semantic' models={'cross_encoder': 'none', 'embedding': 'sentence-transformers/all-MiniLM-L6-v2', 'embedding_dim': 384, 'llm': 'none'}",
+      "scenario": "51",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 22.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "52",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 7.3,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "53",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "54",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 8.9,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "55",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 1.3,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "56",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 27.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "57",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 6.7,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "58",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.1,
+      "in_scope": true,
+      "pass": null,
+      "reason": "v0.7 SSRF guard rejects private-VPC webhook URLs by default; set `[subscriptions] allow_loopback_webhooks = true` on both daemons and export ALLOW_LOOPBACK_WEBHOOKS_VERIFIED=1 to run this scenario.",
+      "scenario": "59",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 4.7,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "60",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 62.1,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "61",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 83.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "62",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 7.3,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "63",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "64",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 24.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "65",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 6.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "66",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 151.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "67",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 37.5,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "68",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 100.0,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "69",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.4,
+      "in_scope": true,
+      "pass": null,
+      "reason": "v0.7.0-alpha pg adapter requires pgvector \u2014 not installed on the postgres-node bootstrap (only `age` available). Re-run after `apt install postgresql-16-pgvector` + `CREATE EXTENSION vector`.",
+      "scenario": "70",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 5.6,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "71",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.4,
+      "in_scope": true,
+      "pass": null,
+      "reason": "v0.7.0-alpha pg adapter requires pgvector; postgres-node has only `age`. Re-run after pgvector is installed + enabled.",
+      "scenario": "72",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 1.3,
+      "in_scope": true,
+      "pass": null,
+      "reason": "cargo not installed on runner droplet \u2014 install rustup or run S73 from a host with cargo. (See docs/coverage.md Postgres+AGE section for the SKIP-condition policy.)",
+      "scenario": "73",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.1,
+      "in_scope": true,
+      "pass": null,
+      "reason": "v0.7.0-alpha ai-memory CLI lacks `probe-capability`/`schema-init`; the SAL UnsupportedCapability error surface is reachable only via cargo-test on the binary. Re-enable when the probe CLI ships.",
+      "scenario": "74",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.4,
+      "in_scope": true,
+      "pass": null,
+      "reason": "v0.7.0-alpha pg adapter requires pgvector; postgres-node has only `age`. Schema-parity report is unreachable without it.",
+      "scenario": "75",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.5,
+      "in_scope": true,
+      "pass": null,
+      "reason": "v0.7.0-alpha pg adapter requires pgvector + schema-init CLI (neither shipped on this build); perf gate cannot run.",
+      "scenario": "76",
+      "skipped": true
+    }
+  ],
+  "skipped": 17,
+  "started_utc": "2026-05-09T01:51:18+00:00",
+  "subject_under_test": "ai-memory v0.7.0 (round-2-fixes @ e0d2086, post F1+F2 fixes)",
+  "topology": {
+    "agent_group": "openclaw_hermes",
+    "hermes": "142.93.72.46 (10.20.0.3)",
+    "openclaw": "104.236.52.203 (10.20.0.2)",
+    "postgres": "68.183.157.68 (10.20.0.4)",
+    "tls_mode": "off"
+  },
+  "total": 73,
+  "wall_seconds": 1143.7
+}

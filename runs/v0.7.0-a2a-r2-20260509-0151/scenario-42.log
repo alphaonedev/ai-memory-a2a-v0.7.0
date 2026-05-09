@@ -1,0 +1,6 @@
+alice writes into 3 distinct namespaces: ['scenario42-b01255-0', 'scenario42-b01255-1', 'scenario42-b01255-2']
+settle 10s for namespace index fanout
+  node-1 sees 3/3 target namespaces, counts: {'scenario42-b01255-0': 2, 'scenario42-b01255-1': 2, 'scenario42-b01255-2': 2}
+  node-2 sees 3/3 target namespaces, counts: {'scenario42-b01255-0': 2, 'scenario42-b01255-1': 2, 'scenario42-b01255-2': 2}
+  node-3 sees 3/3 target namespaces, counts: {'scenario42-b01255-0': 2, 'scenario42-b01255-1': 2, 'scenario42-b01255-2': 2}
+  node-4 sees 3/3 target namespaces, counts: {'scenario42-b01255-0': 2, 'scenario42-b01255-1': 2, 'scenario42-b01255-2': 2}

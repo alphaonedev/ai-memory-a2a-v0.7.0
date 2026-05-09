@@ -1,0 +1,10 @@
+phase A: drop+create aimemory_kgtest (destructive on AGE state)
+  AGE on -> rc=0
+  seeded; root=s71-e0
+phase B: capture KG ops with AGE on
+  age_on keys present: []
+phase C: DROP EXTENSION age CASCADE → CTE fallback
+  AGE off -> rc=0
+  age_off keys present: []
+phase D: restore AGE
+  AGE on -> rc=0

@@ -1,0 +1,11 @@
+{
+  "agent_group": "openclaw_hermes",
+  "cargo": "missing",
+  "elapsed_sec": 1.3,
+  "pass": null,
+  "reason": "cargo not installed on runner droplet \u2014 install rustup or run S73 from a host with cargo. (See docs/coverage.md Postgres+AGE section for the SKIP-condition policy.)",
+  "repo": "",
+  "scenario": "73",
+  "skipped": true,
+  "tls_mode": "off"
+}

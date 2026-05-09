@@ -1,0 +1,14 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 4.7,
+  "pass": true,
+  "per_agent": {
+    "hermes_inherit_false": 201,
+    "hermes_inherit_true": 403,
+    "openclaw_owner_deep": 201
+  },
+  "reasons": [],
+  "scenario": "60",
+  "skipped": false,
+  "tls_mode": "off"
+}

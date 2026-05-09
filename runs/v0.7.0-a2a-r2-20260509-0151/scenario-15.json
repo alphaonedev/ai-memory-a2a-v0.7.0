@@ -1,0 +1,11 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 0.7,
+  "pass": true,
+  "reasons": [],
+  "scenario": "15",
+  "skipped": false,
+  "tls_mode": "off",
+  "uuid": "ryw-abfa7b09c6184a34b4b8e8d40b231599",
+  "writer_sees_own_write": 1
+}
