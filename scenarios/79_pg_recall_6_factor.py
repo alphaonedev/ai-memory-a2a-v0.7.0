@@ -25,6 +25,21 @@ PASS criteria:
     recall-parity tolerance for the 6-factor reranker)
 
 Self-skips when A2A_BACKEND_KIND=sqlite.
+
+# v0.7.0 Continuation 6 — ref-set narrowing fix (2026-05-08)
+#
+# The original ref-set computed top-K candidates by unioning every
+# `seeded_by_subns[s]` for s in `sub_matches`, i.e. across **all**
+# sub-namespaces under the query root (`animals`, `lang`, `db`).
+# The actual recall query is namespace-scoped — it only hits
+# `f"{base_ns}-{first_sub}"` — so the candidate pools were
+# fundamentally different cardinalities and the Jaccard floor
+# (0.80) was unreachable by construction. The fix narrows the
+# candidate pool to only the FIRST matching sub-namespace, which
+# matches the namespace the actual recall query resolves to. This
+# preserves the test intent — exercising the 6-factor scoring across
+# the seeded corpus — while making the reference set comparable to
+# what the daemon actually surfaces.
 """
 import sys
 import pathlib
@@ -157,12 +172,20 @@ def main() -> None:
     for query, ns_root in QUERIES:
         # find the right sub-ns by scanning CLUSTERS prefixes
         sub_matches = [s for (s, _) in CLUSTERS if s.startswith(ns_root)]
-        # collect candidates across all sub_ns under this ns_root
-        candidates: dict[str, str] = {}
-        for s in sub_matches:
-            for mid, content in seeded_by_subns.get(s, []):
-                if mid:
-                    candidates[mid] = content
+        # Continuation 6 fix: narrow candidates to only the FIRST
+        # matching sub-namespace — the actual recall query is
+        # namespace-scoped (line below uses `first_sub` as the ns
+        # parameter), so unioning every sub_ns under `ns_root`
+        # produced a candidate pool that the daemon's response could
+        # never match. Reference set must mirror what the daemon
+        # actually queries against to keep the Jaccard score
+        # meaningful.
+        first_sub = sub_matches[0] if sub_matches else ns_root
+        candidates: dict[str, str] = {
+            mid: content
+            for mid, content in seeded_by_subns.get(first_sub, [])
+            if mid
+        }
         # reference ranking via lexical Jaccard
         qtokens = set(query.lower().split())
         ref_scored = sorted(
@@ -180,7 +203,6 @@ def main() -> None:
 
         # run actual recall against postgres daemon — pick first sub_ns
         # under this root for the path-bound ns parameter
-        first_sub = sub_matches[0] if sub_matches else ns_root
         actual_topk = _recall_topk(h, openclaw, query, base_ns, first_sub, TOP_K)
         if actual_topk:
             nonempty += 1
