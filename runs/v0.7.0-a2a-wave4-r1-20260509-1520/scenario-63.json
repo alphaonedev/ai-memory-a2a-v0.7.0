@@ -1,0 +1,16 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "consolidated_from_agents": [
+    "ai:s63-openclaw-2d43b5",
+    "ai:s63-hermes-2d43b5"
+  ],
+  "elapsed_sec": 7.2,
+  "id1": "6ba05564-de26-41e0-a90c-384d02b41d5c",
+  "id2": "0f273a82-4952-4c43-870b-7d2679b45812",
+  "pass": true,
+  "reasons": [],
+  "scenario": "63",
+  "skipped": false,
+  "tls_mode": "off"
+}

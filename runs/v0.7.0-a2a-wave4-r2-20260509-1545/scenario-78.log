@@ -1,0 +1,9 @@
+phase A: snapshot audit-log tail on both daemons
+  openclaw tail line=23852 seq=10793
+  hermes   tail line=3421 seq=1530
+phase B: write 3 audited events on each node
+settle 2s for audit fsync pre-restart
+phase C: restart postgres-backed daemons
+settle 10s for daemon restart settle (postgres backend)
+phase D: post-restart audited write + monotonicity check
+settle 2s for audit fsync post-restart

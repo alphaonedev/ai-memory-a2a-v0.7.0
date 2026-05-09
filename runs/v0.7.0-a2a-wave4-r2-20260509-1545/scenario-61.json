@@ -1,0 +1,24 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 36.1,
+  "pass": false,
+  "per_agent": {
+    "hermes": {
+      "http_code": 201,
+      "quota_used": 0
+    },
+    "openclaw": {
+      "quota_used": 0,
+      "successes": 800,
+      "throttled": 0
+    }
+  },
+  "reason": "openclaw quota.used=0 (expected >=700)",
+  "reasons": [
+    "openclaw quota.used=0 (expected >=700)"
+  ],
+  "scenario": "61",
+  "skipped": false,
+  "tls_mode": "off"
+}

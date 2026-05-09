@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 11.4,
+  "pass": true,
+  "peers_see": {
+    "node_2": 1,
+    "node_3": 1,
+    "node_4": 1
+  },
+  "reasons": [],
+  "register_http_code": 201,
+  "registered_agent": "ai:dave-probe-5a058ab5",
+  "scenario": "12",
+  "skipped": false,
+  "tls_mode": "off"
+}

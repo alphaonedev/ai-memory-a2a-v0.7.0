@@ -1,0 +1,14 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 8.0,
+  "forward_has_target": true,
+  "m1": "a61821c6-e78e-493c-bf37-e04beb6e943e",
+  "m2": "9318b01d-cc70-43fb-9454-b79a7e8a4cbe",
+  "pass": true,
+  "reasons": [],
+  "reverse_has_source": true,
+  "scenario": "37",
+  "skipped": false,
+  "tls_mode": "off"
+}

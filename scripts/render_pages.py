@@ -79,13 +79,20 @@ def find_round_run(runs: list[Path], label: str) -> Path | None:
     """Find the most recent run with the given round label (Round 1 or Round 2).
 
     Matches loosely on the canonical round token so labels like
-    `Round 1 (post-fix)` still resolve to the `Round 1` slot.
+    `Round 1 (post-fix)` and `Wave 4 Round 1` still resolve to the
+    `Round 1` slot. Looks for the ('round', N) token pair anywhere in
+    the round string, falling back to the legacy first-2-tokens match.
     """
     needle = label.lower().split()[0:2]  # ['round', '1'] or ['round', '2']
     for r in runs:
         s = load_summary(r)
-        actual = (s.get("round") or "").lower().split()
-        if actual[:2] == needle:
+        tokens = (s.get("round") or "").lower().split()
+        # Walk the tokens for any ('round', N) substring match.
+        for i in range(len(tokens) - 1):
+            if tokens[i:i + 2] == needle:
+                return r
+        # Legacy first-2-tokens path (preserves prior behavior).
+        if tokens[:2] == needle:
             return r
     return None
 

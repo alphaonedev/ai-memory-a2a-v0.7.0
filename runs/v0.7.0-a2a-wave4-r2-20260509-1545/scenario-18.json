@@ -1,0 +1,32 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "diag_list_alice_present": 1,
+  "diag_list_bob_present": 1,
+  "diag_node3_embedding_probe": "",
+  "elapsed_sec": 4.5,
+  "pass": false,
+  "query": "morning outdoor exercise routine",
+  "reason": "semantic query did not surface alice's memory; semantic query did not surface bob's memory",
+  "reasons": [
+    "semantic query did not surface alice's memory",
+    "semantic query did not surface bob's memory"
+  ],
+  "recall_mode": "hybrid",
+  "rows_in_recall": 0,
+  "scenario": "18",
+  "skipped": false,
+  "tls_mode": "off",
+  "writers": [
+    {
+      "agent": "ai:alice",
+      "marker": "alice-sunrise-4c2eb713",
+      "seen_by_charlie": 0
+    },
+    {
+      "agent": "ai:bob",
+      "marker": "bob-daybreak-d04ffc02",
+      "seen_by_charlie": 0
+    }
+  ]
+}

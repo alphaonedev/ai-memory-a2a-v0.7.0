@@ -1,0 +1,22 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 17.8,
+  "m1_id": "0a1edb85-6cc6-4913-8f34-faaf67b33bca",
+  "pass": true,
+  "peer_view": {
+    "node_1": "va-38debfcda9c749cea8d228946a968f88",
+    "node_2": "va-38debfcda9c749cea8d228946a968f88",
+    "node_3": "va-38debfcda9c749cea8d228946a968f88",
+    "node_4": "va-38debfcda9c749cea8d228946a968f88"
+  },
+  "reasons": [],
+  "scenario": "13",
+  "skipped": false,
+  "submitted": {
+    "v0": "v0-5cfa4a1dfe6e46fdbb5c581d578d8030",
+    "vA_alice": "va-38debfcda9c749cea8d228946a968f88",
+    "vB_bob": "vb-d64f2b45a934451586fee1acb43061d5"
+  },
+  "tls_mode": "off"
+}

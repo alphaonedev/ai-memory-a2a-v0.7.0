@@ -1,0 +1,9 @@
+{
+  "agent_group": "openclaw_hermes",
+  "campaign_scope": "v0.7.0 A2A 2-agent (openclaw + hermes)",
+  "elapsed_sec": 0,
+  "pass": null,
+  "scenario": "39",
+  "skip_reason": "S39 SIGSTOPs NODE3 daemon for delta-since test; with NODE3==NODE2 this freezes hermes \u2014 requires real third daemon",
+  "skipped": true
+}

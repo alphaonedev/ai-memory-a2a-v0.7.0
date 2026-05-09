@@ -1,0 +1,5 @@
+alice writes a row containing unique token=kwsearcha7c9462166
+settle 8s for search index populate + fanout
+bob + charlie call /api/v1/search with the exact token
+  node-2 keyword search returned 1 hits
+  node-3 keyword search returned 1 hits

@@ -1,0 +1,4 @@
+phase A: 2x200 concurrent stores (one burst per node)
+settle 8s for let final samples land
+  collected 14 doctor samples
+phase B: tools_verbose env ratio at end of load

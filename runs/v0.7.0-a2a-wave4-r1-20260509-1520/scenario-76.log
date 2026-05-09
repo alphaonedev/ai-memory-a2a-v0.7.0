@@ -1,0 +1,16 @@
+phase A: bootstrap disposable db aimemory_perf_r3 + memory_graph
+  bootstrap disposable db aimemory_perf_r3
+phase B: cargo bench --bench age_vs_cte
+  cargo bench rc=0
+  | | backend | iters | depth | p50 (ms) | p95 (ms) | p99 (ms) | min (ms) | max (ms) |
+  | |---|---:|---:|---:|---:|---:|---:|---:|
+  | | cte | 30 | 5 | 8.557 | 10.542 | 10.860 | 6.994 | 10.860 |
+  | 
+  | ## notes
+  | 
+  | - CTE measured against postgres://***@10.20.0.4:5432/aimemory_perf_r3 (root_id = j8-cte-90f3a908-af63-4fa4-ad35-3543c8964c7a-mem-0000)
+  | - skipped AGE half: kg_backend resolved to CTE (extension not installed at the AGE URL)
+  | 
+  | [age_vs_cte] wrote target/bench/age-vs-cte.json
+phase C: parse target/bench/age-vs-cte.json
+  bench status=skipped_no_age ratio=None cte_p95_us=10542 age_p95_us=None

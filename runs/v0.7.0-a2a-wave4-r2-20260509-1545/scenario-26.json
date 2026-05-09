@@ -1,0 +1,10 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 0.1,
+  "pass": null,
+  "reason": "scenario 26 only runs under agent_group=mixed (actual: openclaw_hermes)",
+  "scenario": "26",
+  "skipped": true,
+  "tls_mode": "off"
+}

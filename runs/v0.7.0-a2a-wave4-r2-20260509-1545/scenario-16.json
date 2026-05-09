@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "bob_sees_tier": "short",
+  "elapsed_sec": 14.2,
+  "m1_id": "b8f7fcf4-ab1e-46e3-b9f9-a4350f41ca45",
+  "pass": false,
+  "promote_http_code": 404,
+  "reason": "promote endpoint returned HTTP 404; bob sees tier=\"short\", expected \"long\"",
+  "reasons": [
+    "promote endpoint returned HTTP 404",
+    "bob sees tier=\"short\", expected \"long\""
+  ],
+  "scenario": "16",
+  "skipped": false,
+  "tls_mode": "off"
+}

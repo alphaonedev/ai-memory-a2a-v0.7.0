@@ -1,0 +1,16 @@
+{
+  "agent_group": "openclaw_hermes",
+  "alice_id": "9f53d8c3-02a2-4ca9-a4ab-f981163624de",
+  "backend_kind": "postgres",
+  "bob_id": "074305b6-27b4-4b9f-886d-67a423c7333e",
+  "charlie_sees_both_memories": true,
+  "charlie_sees_contradicts_link": true,
+  "detect_http_code": 200,
+  "elapsed_sec": 11.4,
+  "pass": true,
+  "reasons": [],
+  "scenario": "6",
+  "skipped": false,
+  "tls_mode": "off",
+  "topic": "sky-color-206ee3e4"
+}

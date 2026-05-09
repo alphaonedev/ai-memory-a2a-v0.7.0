@@ -1,0 +1,12 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 0.6,
+  "pass": true,
+  "reasons": [],
+  "scenario": "15",
+  "skipped": false,
+  "tls_mode": "off",
+  "uuid": "ryw-0e59894544d84f2fb802d6004ba022f1",
+  "writer_sees_own_write": 1
+}

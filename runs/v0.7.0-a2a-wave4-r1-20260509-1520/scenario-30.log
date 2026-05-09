@@ -1,0 +1,4 @@
+  node-1 capabilities: ['approval', 'compaction', 'features', 'hnsw', 'hooks', 'models', 'permissions', 'schema_version', 'storage_backend', 'summary', 'tier', 'to_describe_to_user', 'tools', 'transcripts', 'version', '_path']
+  node-2 capabilities: ['approval', 'compaction', 'features', 'hnsw', 'hooks', 'models', 'permissions', 'schema_version', 'storage_backend', 'summary', 'tier', 'to_describe_to_user', 'tools', 'transcripts', 'version', '_path']
+  node-3 capabilities: ['approval', 'compaction', 'features', 'hnsw', 'hooks', 'models', 'permissions', 'schema_version', 'storage_backend', 'summary', 'tier', 'to_describe_to_user', 'tools', 'transcripts', 'version', '_path']
+  node-4 capabilities: ['approval', 'compaction', 'features', 'hnsw', 'hooks', 'models', 'permissions', 'schema_version', 'storage_backend', 'summary', 'tier', 'to_describe_to_user', 'tools', 'transcripts', 'version', '_path']

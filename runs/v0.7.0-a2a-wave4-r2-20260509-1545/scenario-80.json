@@ -1,0 +1,18 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 4.9,
+  "pass": false,
+  "per_agent": {
+    "hermes_inherit_false": 201,
+    "hermes_inherit_true": 201,
+    "openclaw_owner_deep": 201
+  },
+  "reason": "hermes write to deep child got 201 (expected 403)",
+  "reasons": [
+    "hermes write to deep child got 201 (expected 403)"
+  ],
+  "scenario": "80",
+  "skipped": false,
+  "tls_mode": "off"
+}

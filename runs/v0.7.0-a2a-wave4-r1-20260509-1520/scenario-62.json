@@ -1,0 +1,28 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 50.6,
+  "namespace": "s62-074107",
+  "pass": true,
+  "reasons": [],
+  "recalls": {
+    "kafka": {
+      "rank_of_seed": 1,
+      "rc": 0,
+      "top_k": 1
+    },
+    "photosynthesis": {
+      "rank_of_seed": 1,
+      "rc": 0,
+      "top_k": 1
+    },
+    "relativity": {
+      "rank_of_seed": 1,
+      "rc": 0,
+      "top_k": 1
+    }
+  },
+  "scenario": "62",
+  "skipped": false,
+  "tls_mode": "off"
+}

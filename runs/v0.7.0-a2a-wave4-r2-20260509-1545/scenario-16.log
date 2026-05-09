@@ -1,0 +1,7 @@
+alice writes M1 tier=short on node-1
+  M1 id=b8f7fcf4-ab1e-46e3-b9f9-a4350f41ca45
+settle 5s for pre-promote replication
+alice promotes M1 to tier=long
+  promote returned HTTP 404
+settle 8s for promotion fanout
+  bob sees tier=short (expected long)

@@ -1,0 +1,33 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 2.6,
+  "pass": true,
+  "payloads": {
+    "html": {
+      "input_bytes": 66,
+      "roundtrip_bytes": 66,
+      "write_http": 201
+    },
+    "oversize": {
+      "input_bytes": 1048576,
+      "roundtrip_bytes": 0,
+      "write_http": 400
+    },
+    "sql": {
+      "input_bytes": 61,
+      "roundtrip_bytes": 61,
+      "write_http": 201
+    },
+    "unicode": {
+      "input_bytes": 19,
+      "roundtrip_bytes": 19,
+      "write_http": 201
+    }
+  },
+  "payloads_note": "accept+faithful OR 4xx reject both acceptable for oversize",
+  "reasons": [],
+  "scenario": "23",
+  "skipped": false,
+  "tls_mode": "off"
+}

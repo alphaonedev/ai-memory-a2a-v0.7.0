@@ -1,0 +1,24 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 1.4,
+  "pass": true,
+  "per_agent": {
+    "hermes": {
+      "default_bytes": 10924,
+      "default_tools": 51,
+      "verbose_bytes": 15853,
+      "verbose_tools": 51
+    },
+    "openclaw": {
+      "default_bytes": 10924,
+      "default_tools": 51,
+      "verbose_bytes": 15853,
+      "verbose_tools": 51
+    }
+  },
+  "reasons": [],
+  "scenario": "56",
+  "skipped": false,
+  "tls_mode": "off"
+}

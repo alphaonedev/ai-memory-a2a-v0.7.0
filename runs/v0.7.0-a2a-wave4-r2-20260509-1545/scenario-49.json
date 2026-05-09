@@ -1,0 +1,50 @@
+{
+  "agent_group": "openclaw_hermes",
+  "audit": {
+    "access": {
+      "access_count": 3
+    },
+    "archive": {
+      "http_code": 200,
+      "in_archive_listing": true
+    },
+    "consolidate": {
+      "consolidated_id": "9ceca99d-1d08-491b-be48-e600e9369f91",
+      "http_code": 201,
+      "sibling_count": 3
+    },
+    "expire": {
+      "http_code": 200,
+      "marker_set": false,
+      "still_visible": true
+    },
+    "promote": {
+      "http_code": 404,
+      "tier_after": "long"
+    },
+    "purge": {
+      "http_code": 200,
+      "still_in_archive": false
+    },
+    "restore": {
+      "active_after_restore": true,
+      "http_code": 200
+    },
+    "store": {
+      "exists": true,
+      "tier": "mid"
+    }
+  },
+  "backend_kind": "postgres",
+  "elapsed_sec": 36.7,
+  "m1_id": "9ceca99d-1d08-491b-be48-e600e9369f91",
+  "namespace": "scenario49-lifecycle-752b06",
+  "pass": false,
+  "reason": "promote: HTTP 404",
+  "reasons": [
+    "promote: HTTP 404"
+  ],
+  "scenario": "49",
+  "skipped": false,
+  "tls_mode": "off"
+}

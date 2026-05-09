@@ -1,0 +1,9 @@
+phase A: drop+create aimemory_s70 on postgres-node, seed sqlite
+  seeded 1000/1000 into /tmp/s70-seed-0e31b1.sqlite
+  seed content sha256=ae651fa4d776a4ef...
+phase B: forward migrate sqlite → postgres
+  forward migrate report={'batches': 1, 'dry_run': False, 'errors': [], 'from_url': 'sqlite:///tmp/s70-seed-0e31b1.sqlite', 'memories_read': 1000, 'memories_written': 1000, 'to_url': 'postgres://aimemory:reBkxzZo2uP8Xo9IkAa%2Bav4P0cJhz7AeYHfGTVs%2B4ME%3D@10.20.0.4:5432/aimemory_s70'} pg_count=1000
+phase C: idempotent rerun
+  rerun report={'batches': 1, 'dry_run': False, 'errors': [], 'from_url': 'sqlite:///tmp/s70-seed-0e31b1.sqlite', 'memories_read': 1000, 'memories_written': 1000, 'to_url': 'postgres://aimemory:reBkxzZo2uP8Xo9IkAa%2Bav4P0cJhz7AeYHfGTVs%2B4ME%3D@10.20.0.4:5432/aimemory_s70'} pg_count=1000
+phase D: reverse migrate postgres → fresh sqlite
+  reverse migrate report={'batches': 1, 'dry_run': False, 'errors': [], 'from_url': 'postgres://aimemory:reBkxzZo2uP8Xo9IkAa%2Bav4P0cJhz7AeYHfGTVs%2B4ME%3D@10.20.0.4:5432/aimemory_s70', 'memories_read': 1000, 'memories_written': 1000, 'to_url': 'sqlite:///tmp/s70-return-70751f.sqlite'} sqlite_count=1000

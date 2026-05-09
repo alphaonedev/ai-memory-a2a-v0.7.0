@@ -1,0 +1,10 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 0.1,
+  "pass": null,
+  "reason": "v0.7 SSRF guard rejects private-VPC webhook URLs by default; set `[subscriptions] allow_loopback_webhooks = true` on both daemons and export ALLOW_LOOPBACK_WEBHOOKS_VERIFIED=1 to run this scenario.",
+  "scenario": "59",
+  "skipped": true,
+  "tls_mode": "off"
+}

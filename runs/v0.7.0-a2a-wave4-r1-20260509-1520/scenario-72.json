@@ -1,0 +1,23 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 26.4,
+  "pass": true,
+  "path_b": true,
+  "per_agent": {
+    "hermes": {
+      "memories_converged": 10
+    },
+    "openclaw": {
+      "cargo_rc": 0,
+      "memories_seeded": 10,
+      "namespace": "s72-kg-ed5fd4",
+      "summary_line": "test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.19s",
+      "validator": "tests/sal_contract.rs"
+    }
+  },
+  "reasons": [],
+  "scenario": "72",
+  "skipped": false,
+  "tls_mode": "off"
+}

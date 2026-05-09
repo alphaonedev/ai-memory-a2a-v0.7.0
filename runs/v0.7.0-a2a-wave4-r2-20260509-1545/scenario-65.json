@@ -1,0 +1,16 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "cycle_terminated": true,
+  "elapsed_sec": 9.8,
+  "pass": false,
+  "paths_full": 0,
+  "paths_shallow": 0,
+  "reason": "max_depth=10 found no path A\u2192E",
+  "reasons": [
+    "max_depth=10 found no path A\u2192E"
+  ],
+  "scenario": "65",
+  "skipped": false,
+  "tls_mode": "off"
+}

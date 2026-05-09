@@ -1,0 +1,22 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 19.5,
+  "pass": true,
+  "per_agent": {
+    "hermes": {
+      "anchor_line": 3421,
+      "anchor_seq": 1530,
+      "monotonic_after": "OK checked=4 last=1534"
+    },
+    "openclaw": {
+      "anchor_line": 23852,
+      "anchor_seq": 10793,
+      "monotonic_after": "OK checked=4 last=10797"
+    }
+  },
+  "reasons": [],
+  "scenario": "78",
+  "skipped": false,
+  "tls_mode": "off"
+}

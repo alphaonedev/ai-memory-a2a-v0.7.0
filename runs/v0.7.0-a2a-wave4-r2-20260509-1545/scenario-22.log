@@ -1,0 +1,6 @@
+test 1: header-only X-Agent-Id=ai:alice
+settle 2s for read-settle
+  stored metadata.agent_id for header-only write: ai:alice (expected ai:alice)
+test 2: body.metadata.agent_id=ai:body-wins vs X-Agent-Id=ai:attacker
+settle 2s for read-settle
+  stored metadata.agent_id for body+header conflict: ai:attacker

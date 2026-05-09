@@ -1,0 +1,1532 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 1.4,
+  "pass": true,
+  "peer_views": {
+    "node_1": {
+      "_path": "/api/v1/capabilities",
+      "approval": {
+        "pending_requests": 0
+      },
+      "compaction": {
+        "enabled": false,
+        "planned": true,
+        "version": "v0.8+"
+      },
+      "features": {
+        "auto_consolidation": false,
+        "auto_tagging": false,
+        "contradiction_analysis": false,
+        "cross_encoder_reranking": false,
+        "embedder_loaded": true,
+        "hybrid_recall": true,
+        "keyword_search": true,
+        "memory_reflection": {
+          "enabled": false,
+          "planned": true,
+          "version": "v0.7+"
+        },
+        "query_expansion": false,
+        "recall_mode_active": "hybrid",
+        "reranker_active": "off",
+        "semantic_search": true
+      },
+      "hnsw": {
+        "evicted_recently": false,
+        "evictions_total": 0
+      },
+      "hooks": {
+        "registered_count": 0,
+        "webhook_events": [
+          "memory_store",
+          "memory_promote",
+          "memory_delete",
+          "memory_link_created",
+          "memory_link_invalidated",
+          "memory_consolidated",
+          "approval_requested"
+        ]
+      },
+      "models": {
+        "cross_encoder": "none",
+        "embedding": "sentence-transformers/all-MiniLM-L6-v2",
+        "embedding_dim": 384,
+        "llm": "none"
+      },
+      "permissions": {
+        "active_rules": 0,
+        "decision_counts": {
+          "advisory": 0,
+          "enforce": 64,
+          "off": 0
+        },
+        "inheritance": "enforced",
+        "mode": "enforce"
+      },
+      "schema_version": "3",
+      "storage_backend": "postgres",
+      "summary": "7 of 50 memory tools are advertised in tools/list under the current profile (core). The other 43 are listed in this manifest but NOT directly callable. To use any unloaded tool, choose one of: (a) restart the server with --profile <family> or --profile full, (b) call memory_load_family(family=<name>) \u2014 preferred, (c) call memory_smart_load(intent='<plain language>') \u2014 easiest, (d) call the tool by name and recover from JSON-RPC -32601.",
+      "tier": "semantic",
+      "to_describe_to_user": "I can directly use 7 memory tools right now (store, recall, list, get, search, ...). 43 more (update, delete, forget, gc, etc.) are available on demand \u2014 I can load them if you ask for something that needs them, or you can restart the server with a different profile.",
+      "tools": [
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_store"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_recall"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_list"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_get"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_search"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_load_family"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_smart_load"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_update"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_delete"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_forget"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_gc"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_promote"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_query"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_timeline"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_invalidate"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_link"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_get_links"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_entity_register"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_entity_get_by_alias"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_get_taxonomy"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_replay"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_verify"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_find_paths"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_list"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_approve"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_reject"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_set_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_get_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_clear_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_subscribe"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_unsubscribe"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_consolidate"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_detect_contradiction"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_check_duplicate"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_auto_tag"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_expand_query"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_inbox"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_subscription_replay"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_subscription_dlq_list"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_quota_status"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_capabilities"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_agent_register"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_agent_list"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_session_start"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_stats"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_list"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_purge"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_restore"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_stats"
+        },
+        {
+          "callable_now": false,
+          "family": "other",
+          "loaded": false,
+          "name": "memory_list_subscriptions"
+        },
+        {
+          "callable_now": false,
+          "family": "other",
+          "loaded": false,
+          "name": "memory_notify"
+        }
+      ],
+      "transcripts": {
+        "enabled": false,
+        "planned": true,
+        "version": "v0.7+"
+      },
+      "version": "0.7.0"
+    },
+    "node_2": {
+      "_path": "/api/v1/capabilities",
+      "approval": {
+        "pending_requests": 0
+      },
+      "compaction": {
+        "enabled": false,
+        "planned": true,
+        "version": "v0.8+"
+      },
+      "features": {
+        "auto_consolidation": false,
+        "auto_tagging": false,
+        "contradiction_analysis": false,
+        "cross_encoder_reranking": false,
+        "embedder_loaded": true,
+        "hybrid_recall": true,
+        "keyword_search": true,
+        "memory_reflection": {
+          "enabled": false,
+          "planned": true,
+          "version": "v0.7+"
+        },
+        "query_expansion": false,
+        "recall_mode_active": "hybrid",
+        "reranker_active": "off",
+        "semantic_search": true
+      },
+      "hnsw": {
+        "evicted_recently": false,
+        "evictions_total": 0
+      },
+      "hooks": {
+        "registered_count": 0,
+        "webhook_events": [
+          "memory_store",
+          "memory_promote",
+          "memory_delete",
+          "memory_link_created",
+          "memory_link_invalidated",
+          "memory_consolidated",
+          "approval_requested"
+        ]
+      },
+      "models": {
+        "cross_encoder": "none",
+        "embedding": "sentence-transformers/all-MiniLM-L6-v2",
+        "embedding_dim": 384,
+        "llm": "none"
+      },
+      "permissions": {
+        "active_rules": 0,
+        "decision_counts": {
+          "advisory": 0,
+          "enforce": 100,
+          "off": 0
+        },
+        "inheritance": "enforced",
+        "mode": "enforce"
+      },
+      "schema_version": "3",
+      "storage_backend": "postgres",
+      "summary": "7 of 50 memory tools are advertised in tools/list under the current profile (core). The other 43 are listed in this manifest but NOT directly callable. To use any unloaded tool, choose one of: (a) restart the server with --profile <family> or --profile full, (b) call memory_load_family(family=<name>) \u2014 preferred, (c) call memory_smart_load(intent='<plain language>') \u2014 easiest, (d) call the tool by name and recover from JSON-RPC -32601.",
+      "tier": "semantic",
+      "to_describe_to_user": "I can directly use 7 memory tools right now (store, recall, list, get, search, ...). 43 more (update, delete, forget, gc, etc.) are available on demand \u2014 I can load them if you ask for something that needs them, or you can restart the server with a different profile.",
+      "tools": [
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_store"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_recall"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_list"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_get"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_search"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_load_family"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_smart_load"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_update"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_delete"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_forget"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_gc"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_promote"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_query"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_timeline"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_invalidate"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_link"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_get_links"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_entity_register"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_entity_get_by_alias"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_get_taxonomy"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_replay"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_verify"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_find_paths"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_list"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_approve"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_reject"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_set_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_get_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_clear_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_subscribe"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_unsubscribe"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_consolidate"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_detect_contradiction"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_check_duplicate"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_auto_tag"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_expand_query"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_inbox"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_subscription_replay"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_subscription_dlq_list"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_quota_status"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_capabilities"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_agent_register"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_agent_list"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_session_start"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_stats"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_list"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_purge"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_restore"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_stats"
+        },
+        {
+          "callable_now": false,
+          "family": "other",
+          "loaded": false,
+          "name": "memory_list_subscriptions"
+        },
+        {
+          "callable_now": false,
+          "family": "other",
+          "loaded": false,
+          "name": "memory_notify"
+        }
+      ],
+      "transcripts": {
+        "enabled": false,
+        "planned": true,
+        "version": "v0.7+"
+      },
+      "version": "0.7.0"
+    },
+    "node_3": {
+      "_path": "/api/v1/capabilities",
+      "approval": {
+        "pending_requests": 0
+      },
+      "compaction": {
+        "enabled": false,
+        "planned": true,
+        "version": "v0.8+"
+      },
+      "features": {
+        "auto_consolidation": false,
+        "auto_tagging": false,
+        "contradiction_analysis": false,
+        "cross_encoder_reranking": false,
+        "embedder_loaded": true,
+        "hybrid_recall": true,
+        "keyword_search": true,
+        "memory_reflection": {
+          "enabled": false,
+          "planned": true,
+          "version": "v0.7+"
+        },
+        "query_expansion": false,
+        "recall_mode_active": "hybrid",
+        "reranker_active": "off",
+        "semantic_search": true
+      },
+      "hnsw": {
+        "evicted_recently": false,
+        "evictions_total": 0
+      },
+      "hooks": {
+        "registered_count": 0,
+        "webhook_events": [
+          "memory_store",
+          "memory_promote",
+          "memory_delete",
+          "memory_link_created",
+          "memory_link_invalidated",
+          "memory_consolidated",
+          "approval_requested"
+        ]
+      },
+      "models": {
+        "cross_encoder": "none",
+        "embedding": "sentence-transformers/all-MiniLM-L6-v2",
+        "embedding_dim": 384,
+        "llm": "none"
+      },
+      "permissions": {
+        "active_rules": 0,
+        "decision_counts": {
+          "advisory": 0,
+          "enforce": 100,
+          "off": 0
+        },
+        "inheritance": "enforced",
+        "mode": "enforce"
+      },
+      "schema_version": "3",
+      "storage_backend": "postgres",
+      "summary": "7 of 50 memory tools are advertised in tools/list under the current profile (core). The other 43 are listed in this manifest but NOT directly callable. To use any unloaded tool, choose one of: (a) restart the server with --profile <family> or --profile full, (b) call memory_load_family(family=<name>) \u2014 preferred, (c) call memory_smart_load(intent='<plain language>') \u2014 easiest, (d) call the tool by name and recover from JSON-RPC -32601.",
+      "tier": "semantic",
+      "to_describe_to_user": "I can directly use 7 memory tools right now (store, recall, list, get, search, ...). 43 more (update, delete, forget, gc, etc.) are available on demand \u2014 I can load them if you ask for something that needs them, or you can restart the server with a different profile.",
+      "tools": [
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_store"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_recall"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_list"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_get"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_search"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_load_family"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_smart_load"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_update"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_delete"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_forget"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_gc"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_promote"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_query"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_timeline"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_invalidate"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_link"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_get_links"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_entity_register"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_entity_get_by_alias"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_get_taxonomy"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_replay"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_verify"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_find_paths"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_list"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_approve"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_reject"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_set_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_get_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_clear_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_subscribe"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_unsubscribe"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_consolidate"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_detect_contradiction"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_check_duplicate"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_auto_tag"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_expand_query"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_inbox"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_subscription_replay"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_subscription_dlq_list"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_quota_status"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_capabilities"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_agent_register"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_agent_list"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_session_start"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_stats"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_list"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_purge"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_restore"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_stats"
+        },
+        {
+          "callable_now": false,
+          "family": "other",
+          "loaded": false,
+          "name": "memory_list_subscriptions"
+        },
+        {
+          "callable_now": false,
+          "family": "other",
+          "loaded": false,
+          "name": "memory_notify"
+        }
+      ],
+      "transcripts": {
+        "enabled": false,
+        "planned": true,
+        "version": "v0.7+"
+      },
+      "version": "0.7.0"
+    },
+    "node_4": {
+      "_path": "/api/v1/capabilities",
+      "approval": {
+        "pending_requests": 0
+      },
+      "compaction": {
+        "enabled": false,
+        "planned": true,
+        "version": "v0.8+"
+      },
+      "features": {
+        "auto_consolidation": false,
+        "auto_tagging": false,
+        "contradiction_analysis": false,
+        "cross_encoder_reranking": false,
+        "embedder_loaded": true,
+        "hybrid_recall": true,
+        "keyword_search": true,
+        "memory_reflection": {
+          "enabled": false,
+          "planned": true,
+          "version": "v0.7+"
+        },
+        "query_expansion": false,
+        "recall_mode_active": "hybrid",
+        "reranker_active": "off",
+        "semantic_search": true
+      },
+      "hnsw": {
+        "evicted_recently": false,
+        "evictions_total": 0
+      },
+      "hooks": {
+        "registered_count": 0,
+        "webhook_events": [
+          "memory_store",
+          "memory_promote",
+          "memory_delete",
+          "memory_link_created",
+          "memory_link_invalidated",
+          "memory_consolidated",
+          "approval_requested"
+        ]
+      },
+      "models": {
+        "cross_encoder": "none",
+        "embedding": "sentence-transformers/all-MiniLM-L6-v2",
+        "embedding_dim": 384,
+        "llm": "none"
+      },
+      "permissions": {
+        "active_rules": 0,
+        "decision_counts": {
+          "advisory": 0,
+          "enforce": 100,
+          "off": 0
+        },
+        "inheritance": "enforced",
+        "mode": "enforce"
+      },
+      "schema_version": "3",
+      "storage_backend": "postgres",
+      "summary": "7 of 50 memory tools are advertised in tools/list under the current profile (core). The other 43 are listed in this manifest but NOT directly callable. To use any unloaded tool, choose one of: (a) restart the server with --profile <family> or --profile full, (b) call memory_load_family(family=<name>) \u2014 preferred, (c) call memory_smart_load(intent='<plain language>') \u2014 easiest, (d) call the tool by name and recover from JSON-RPC -32601.",
+      "tier": "semantic",
+      "to_describe_to_user": "I can directly use 7 memory tools right now (store, recall, list, get, search, ...). 43 more (update, delete, forget, gc, etc.) are available on demand \u2014 I can load them if you ask for something that needs them, or you can restart the server with a different profile.",
+      "tools": [
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_store"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_recall"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_list"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_get"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_search"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_load_family"
+        },
+        {
+          "callable_now": true,
+          "family": "core",
+          "loaded": true,
+          "name": "memory_smart_load"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_update"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_delete"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_forget"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_gc"
+        },
+        {
+          "callable_now": false,
+          "family": "lifecycle",
+          "loaded": false,
+          "name": "memory_promote"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_query"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_timeline"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_kg_invalidate"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_link"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_get_links"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_entity_register"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_entity_get_by_alias"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_get_taxonomy"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_replay"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_verify"
+        },
+        {
+          "callable_now": false,
+          "family": "graph",
+          "loaded": false,
+          "name": "memory_find_paths"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_list"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_approve"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_pending_reject"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_set_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_get_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_namespace_clear_standard"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_subscribe"
+        },
+        {
+          "callable_now": false,
+          "family": "governance",
+          "loaded": false,
+          "name": "memory_unsubscribe"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_consolidate"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_detect_contradiction"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_check_duplicate"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_auto_tag"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_expand_query"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_inbox"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_subscription_replay"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_subscription_dlq_list"
+        },
+        {
+          "callable_now": false,
+          "family": "power",
+          "loaded": false,
+          "name": "memory_quota_status"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_capabilities"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_agent_register"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_agent_list"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_session_start"
+        },
+        {
+          "callable_now": false,
+          "family": "meta",
+          "loaded": false,
+          "name": "memory_stats"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_list"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_purge"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_restore"
+        },
+        {
+          "callable_now": false,
+          "family": "archive",
+          "loaded": false,
+          "name": "memory_archive_stats"
+        },
+        {
+          "callable_now": false,
+          "family": "other",
+          "loaded": false,
+          "name": "memory_list_subscriptions"
+        },
+        {
+          "callable_now": false,
+          "family": "other",
+          "loaded": false,
+          "name": "memory_notify"
+        }
+      ],
+      "transcripts": {
+        "enabled": false,
+        "planned": true,
+        "version": "v0.7+"
+      },
+      "version": "0.7.0"
+    }
+  },
+  "reasons": [],
+  "scenario": "30",
+  "skipped": false,
+  "tls_mode": "off"
+}

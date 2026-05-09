@@ -1,0 +1,19 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 63.0,
+  "pass": true,
+  "path_b": true,
+  "per_agent": {
+    "openclaw": {
+      "cargo_rc": 0,
+      "summary_line": "test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.66s",
+      "test_db": "aimemory_kg71",
+      "validator": "tests/age_cte_equivalence.rs"
+    }
+  },
+  "reasons": [],
+  "scenario": "71",
+  "skipped": false,
+  "tls_mode": "off"
+}

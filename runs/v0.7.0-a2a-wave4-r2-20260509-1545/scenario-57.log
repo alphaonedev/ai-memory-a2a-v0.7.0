@@ -1,0 +1,11 @@
+phase A: audit-dir is enabled at boot via AI_MEMORY_AUDIT_DIR
+  104.236.52.203: Environment=AI_MEMORY_AUTO_MIGRATE=1 AI_MEMORY_AGENT_ID=daemon AI_MEMORY_AUDIT_DIR=/var/log/ai-memory/audit RUST_LOG=ai_memory=info
+  142.93.72.46: Environment=AI_MEMORY_AUTO_MIGRATE=1 AI_MEMORY_AGENT_ID=daemon AI_MEMORY_AUDIT_DIR=/var/log/ai-memory/audit RUST_LOG=ai_memory=info
+phase B: drive 5+5+5 ops on each node
+  openclaw_ops_ok=14  hermes_ops_ok=14
+phase C: ai-memory audit verify
+  audit prior tail: openclaw=line21826/seq8768 hermes=line3212/seq1321
+phase D: tamper test — append a bad line; verify must exit non-zero
+phase E: restart continuity — restart daemon, then drive 1 op per node
+settle 10s for daemon restart settle
+settle 2s for audit fsync

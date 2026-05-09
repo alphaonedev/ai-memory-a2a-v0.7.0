@@ -1,0 +1,21 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 17.1,
+  "m1_delivered": 1,
+  "namespace": "scenario33-pubsub-8fe64f",
+  "ns_in_subs_after": false,
+  "ns_in_subs_before": false,
+  "pass": false,
+  "reason": "bob's subscription list did not include the subscribed namespace",
+  "reasons": [
+    "bob's subscription list did not include the subscribed namespace"
+  ],
+  "scenario": "33",
+  "skipped": false,
+  "subscribe_http_code": 201,
+  "subscriptions_after_count": 0,
+  "subscriptions_before_count": 0,
+  "tls_mode": "off",
+  "unsubscribe_http_code": 200
+}

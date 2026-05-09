@@ -1,0 +1,7 @@
+constructing 500-row bulk payload
+POST /api/v1/memories/bulk via harness http_on (auto stdin-pipe for >64KB)
+  bulk POST returned HTTP 200 (rc=0)
+settle 20s for bulk fanout across 3 peers + aggregator
+  node-2 count=500 (expected 500)
+  node-3 count=500 (expected 500)
+  node-4 count=500 (expected 500)

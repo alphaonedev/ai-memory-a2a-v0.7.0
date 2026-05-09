@@ -2,6 +2,8 @@
 
 | Campaign | Round | Pass | Fail | Total | Verdict |
 |---|---|---|---|---|---|
+| [v0.7.0-a2a-wave4-r2-20260509-1545](./v0.7.0-a2a-wave4-r2-20260509-1545.md) | Wave 4 Round 2 | 44 | 22 | 79 | FAIL |
+| [v0.7.0-a2a-wave4-r1-20260509-1520](./v0.7.0-a2a-wave4-r1-20260509-1520.md) | Wave 4 Round 1 | 46 | 20 | 79 | FAIL |
 | [v0.7.0-a2a-r2-20260509-0151](./v0.7.0-a2a-r2-20260509-0151.md) | Round 2 (post-fix) | 56 | 0 | 73 | PASS |
 | [v0.7.0-a2a-r2-20260509-0007](./v0.7.0-a2a-r2-20260509-0007.md) | Round 2 | 56 | 0 | 73 | PASS |
 | [v0.7.0-a2a-r2-20260508-2350](./v0.7.0-a2a-r2-20260508-2350.md) | Round 2 | 55 | 1 | 73 | FAIL |
@@ -9,6 +11,11 @@
 | [v0.7.0-a2a-r1-20260508-2330](./v0.7.0-a2a-r1-20260508-2330.md) | Round 1 | 56 | 0 | 73 | PASS |
 | [v0.7.0-a2a-r1-20260508-2152](./v0.7.0-a2a-r1-20260508-2152.md) | Round 1 | 28 | 34 | 73 | FAIL |
 | [v0.7.0-a2a-r1-20260508-2058](./v0.7.0-a2a-r1-20260508-2058.md) | Round 1 | 1 | 11 | 73 | FAIL |
+| [v0.7.0-a2a-pgvec-r3-20260509-0312](./v0.7.0-a2a-pgvec-r3-20260509-0312.md) | pgvector R3 (F6 Path B) | 5 | 0 | 6 | PASS |
+| [v0.7.0-a2a-pgvec-r2-20260509-0255](./v0.7.0-a2a-pgvec-r2-20260509-0255.md) | pgvector R2 | 2 | 0 | 6 | PASS |
+| [v0.7.0-a2a-pgvec-20260509-0236](./v0.7.0-a2a-pgvec-20260509-0236.md) | pgvector coverage extension | 1 | 3 | 5 | FAIL |
+| [test-wave4-prep-pg](./test-wave4-prep-pg.md) | smoke-pg | 0 | 1 | 1 | FAIL |
+| [test-wave4-prep](./test-wave4-prep.md) | smoke | 0 | 0 | 6 | PASS |
 | [smoke-test-round1](./smoke-test-round1.md) | Smoke | 1 | 0 | 1 | PASS |
 | [smoke-test-r1](./smoke-test-r1.md) | Smoke | 2 | 1 | 3 | FAIL |
 | [smoke-s61b](./smoke-s61b.md) | Smoke | 0 | 1 | 1 | FAIL |

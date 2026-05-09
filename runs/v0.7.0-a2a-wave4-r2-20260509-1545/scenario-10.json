@@ -1,0 +1,20 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "delete_http_code": 200,
+  "elapsed_sec": 25.8,
+  "m1_id": "5c5cb376-b2be-4c9a-99ab-6200530a47a1",
+  "pass": true,
+  "post_delete_hits": {
+    "node-2": 0,
+    "node-3": 0,
+    "node-4": 0
+  },
+  "post_delete_still_visible_peers": 0,
+  "pre_delete_visible_peers": 3,
+  "reasons": [],
+  "scenario": "10",
+  "skipped": false,
+  "tls_mode": "off",
+  "uuid": "d-0cd4c981c88b4f4e8c993516225274a9"
+}

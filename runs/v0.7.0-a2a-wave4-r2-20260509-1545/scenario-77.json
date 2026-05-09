@@ -1,0 +1,22 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 1.4,
+  "pass": true,
+  "per_agent": {
+    "hermes": {
+      "cmdline_tail": "0cJhz7AeYHfGTVs+4ME=@10.20.0.4:5432/aimemory_w4_live --quorum-writes 2 --quorum-peers http://10.20.0.2:19077 --quorum-timeout-ms 5000 --catchup-interval-secs 30",
+      "node_backend": "postgres",
+      "storage_backend": "postgres"
+    },
+    "openclaw": {
+      "cmdline_tail": "0cJhz7AeYHfGTVs+4ME=@10.20.0.4:5432/aimemory_w4_live --quorum-writes 2 --quorum-peers http://10.20.0.3:19077 --quorum-timeout-ms 5000 --catchup-interval-secs 30",
+      "node_backend": "postgres",
+      "storage_backend": "postgres"
+    }
+  },
+  "reasons": [],
+  "scenario": "77",
+  "skipped": false,
+  "tls_mode": "off"
+}

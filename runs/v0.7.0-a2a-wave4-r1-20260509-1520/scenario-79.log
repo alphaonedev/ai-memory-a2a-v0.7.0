@@ -1,0 +1,13 @@
+phase A: seed 50 memories on openclaw (postgres-backed)
+  seeded 50/50
+phase B: run 10 recall queries on postgres daemon
+  q='dog field' ref=['e730c9cc-7ed8-4eb7-bbbe-e9d2f46e7859', 'e41c864b-9241-44ef-9259-5d2814a53d91', 'a7bac1e7-9f62-4e76-9720-2009a80b3813'] actual=[] J=0.00
+  q='cat sleeping' ref=['de927cca-e67e-4a44-9de4-81e8d22a80fc', 'd3ed8fe7-9b7d-44a6-8079-02b273bafa26', 'd1d6fb59-01d6-4848-9382-b626bcb79ca6'] actual=[] J=0.00
+  q='python list' ref=['f5990acb-6258-4544-957f-39dd5964c02b', 'a767fdbf-1cd7-40b9-b3a5-55b92c372a43', '8e3cffbe-666f-4ebd-8606-c5c0e6711975'] actual=[] J=0.00
+  q='rust ownership' ref=['e74dfad7-5be1-41e4-8a48-899bfa8ec153', 'b81930f8-6a94-4407-88cd-badabcf803e6', 'ae6494c0-7540-4b07-bb3c-5a1862ed98fc'] actual=[] J=0.00
+  q='sql join' ref=['cd6fa2bc-57ac-4b35-a62f-071172166f46', 'bd13a766-5b5d-489c-b8b9-5daae602b5af', '93765635-b7a4-46e2-aad9-4125e2f289ac'] actual=[] J=0.00
+  q='compile time safety' ref=['e74dfad7-5be1-41e4-8a48-899bfa8ec153', 'b81930f8-6a94-4407-88cd-badabcf803e6', 'ae6494c0-7540-4b07-bb3c-5a1862ed98fc'] actual=[] J=0.00
+  q='brown animal' ref=['e730c9cc-7ed8-4eb7-bbbe-e9d2f46e7859', 'e41c864b-9241-44ef-9259-5d2814a53d91', 'a7bac1e7-9f62-4e76-9720-2009a80b3813'] actual=[] J=0.00
+  q='sleeping pet' ref=['e730c9cc-7ed8-4eb7-bbbe-e9d2f46e7859', 'e41c864b-9241-44ef-9259-5d2814a53d91', 'de927cca-e67e-4a44-9de4-81e8d22a80fc'] actual=[] J=0.00
+  q='comprehension syntax' ref=['f5990acb-6258-4544-957f-39dd5964c02b', 'e74dfad7-5be1-41e4-8a48-899bfa8ec153', 'b81930f8-6a94-4407-88cd-badabcf803e6'] actual=[] J=0.00
+  q='table query' ref=['cd6fa2bc-57ac-4b35-a62f-071172166f46', 'bd13a766-5b5d-489c-b8b9-5daae602b5af', '93765635-b7a4-46e2-aad9-4125e2f289ac'] actual=[] J=0.00

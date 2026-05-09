@@ -1,0 +1,26 @@
+==1==
+generated keypair for ai:s54-test-ecdc0787
+  key_dir = /tmp/s54-keys-dc633914
+  pub_b64 = I6UEQtz1BgvM2griZqkVcsSxQeBoJR2SmEroJfqK_NI
+==1rc==0
+==2==
+ai-memory: loaded config from /root/.config/ai-memory/config.toml
+Error: keypair for ai:s54-test-ecdc0787 already exists at /tmp/s54-keys-dc633914/ai:s54-test-ecdc0787.pub (pass --force to rotate; refused by default to prevent accidental key overwrite)
+==2rc==1
+==3==
+ai-memory: loaded config from /root/.config/ai-memory/config.toml
+generated keypair for ai:s54-test-ecdc0787
+  key_dir = /tmp/s54-keys-dc633914
+  pub_b64 = upJoxCUiv8twgP4E8NFvG6YKz1gM1akfiM7r4sPuSbE
+==3rc==0
+==4==
+ai-memory: loaded config from /root/.config/ai-memory/config.toml
+generated keypair for ai:s54-fresh-7650554c
+  key_dir = /tmp/s54-keys-dc633914
+  pub_b64 = vgIeRjw_fK0pKzBYA5HVApe8iKaq7qiDlo7On1yP_kw
+==4rc==0
+ai:s54-fresh-7650554c.priv
+ai:s54-fresh-7650554c.pub
+ai:s54-test-ecdc0787.priv
+ai:s54-test-ecdc0787.pub
+

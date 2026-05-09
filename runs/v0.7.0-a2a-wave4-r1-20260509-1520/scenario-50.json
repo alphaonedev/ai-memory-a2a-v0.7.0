@@ -1,0 +1,28 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "capabilities_features": {
+    "auto_consolidation": false,
+    "auto_tagging": false,
+    "contradiction_analysis": false,
+    "cross_encoder_reranking": false,
+    "embedder_loaded": true,
+    "hybrid_recall": true,
+    "keyword_search": true,
+    "memory_reflection": {
+      "enabled": false,
+      "planned": true,
+      "version": "v0.7+"
+    },
+    "query_expansion": false,
+    "recall_mode_active": "hybrid",
+    "reranker_active": "off",
+    "semantic_search": true
+  },
+  "elapsed_sec": 0.3,
+  "pass": null,
+  "reason": "sqlcipher feature not advertised in /api/v1/capabilities \u2014 daemon was not built with --features sqlcipher",
+  "scenario": "50",
+  "skipped": true,
+  "tls_mode": "off"
+}

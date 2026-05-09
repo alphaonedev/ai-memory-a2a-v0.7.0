@@ -1,0 +1,5 @@
+phase A: openclaw -> memory_notify ai:hermes
+  notify rc=0 resp={'body': {'id': 'c00aa2f7-2a15-4c53-8e75-03cd5fecb6db', 'namespace': '_inbox/ai:hermes@nyc3:droplet-2', 'storage_backend': 'postgres', 'target_agent_id': 'ai:hermes@nyc3:droplet-2'}, 'http_code': 201}
+settle 6s for notify fanout
+phase B: hermes -> memory_inbox
+  inbox entries=0 matched=0

@@ -1,0 +1,37 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 14.0,
+  "namespaces": [
+    "scenario42-9a57cd-0",
+    "scenario42-9a57cd-1",
+    "scenario42-9a57cd-2"
+  ],
+  "pass": true,
+  "per_peer": {
+    "node_1": {
+      "scenario42-9a57cd-0": -1,
+      "scenario42-9a57cd-1": -1,
+      "scenario42-9a57cd-2": -1
+    },
+    "node_2": {
+      "scenario42-9a57cd-0": -1,
+      "scenario42-9a57cd-1": -1,
+      "scenario42-9a57cd-2": -1
+    },
+    "node_3": {
+      "scenario42-9a57cd-0": -1,
+      "scenario42-9a57cd-1": -1,
+      "scenario42-9a57cd-2": -1
+    },
+    "node_4": {
+      "scenario42-9a57cd-0": -1,
+      "scenario42-9a57cd-1": -1,
+      "scenario42-9a57cd-2": -1
+    }
+  },
+  "reasons": [],
+  "scenario": "42",
+  "skipped": false,
+  "tls_mode": "off"
+}

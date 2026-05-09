@@ -1,0 +1,49 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 1.7,
+  "pass": true,
+  "per_peer": {
+    "node_1": {
+      "missing_v1": [],
+      "missing_v2": [],
+      "responded": true,
+      "schema_version": "3"
+    },
+    "node_2": {
+      "missing_v1": [],
+      "missing_v2": [],
+      "responded": true,
+      "schema_version": "3"
+    },
+    "node_3": {
+      "missing_v1": [],
+      "missing_v2": [],
+      "responded": true,
+      "schema_version": "3"
+    },
+    "node_4": {
+      "missing_v1": [],
+      "missing_v2": [],
+      "responded": true,
+      "schema_version": "3"
+    }
+  },
+  "reasons": [],
+  "scenario": "43",
+  "skipped": false,
+  "tls_mode": "off",
+  "v1_fields": [
+    "tier",
+    "version",
+    "features",
+    "models"
+  ],
+  "v2_blocks": [
+    "permissions",
+    "hooks",
+    "compaction",
+    "approval",
+    "transcripts"
+  ]
+}

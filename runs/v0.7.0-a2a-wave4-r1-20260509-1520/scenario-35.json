@@ -1,0 +1,24 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "child_ns": "scenario35-parent-d27f90/child",
+  "clear_http_code": 200,
+  "elapsed_sec": 9.9,
+  "get_standard_http_code": 501,
+  "parent_ns": "scenario35-parent-d27f90",
+  "pass": false,
+  "post_clear_has_child_rule": false,
+  "reason": "get-standard returned HTTP 501; parent rule not layered into child's standard view; child rule missing from standard view",
+  "reasons": [
+    "get-standard returned HTTP 501",
+    "parent rule not layered into child's standard view",
+    "child rule missing from standard view"
+  ],
+  "scenario": "35",
+  "sees_child_rule": false,
+  "sees_parent_rule": false,
+  "set_child_http_code": 201,
+  "set_parent_http_code": 201,
+  "skipped": false,
+  "tls_mode": "off"
+}

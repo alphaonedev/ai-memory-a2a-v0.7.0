@@ -1,0 +1,15 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "charlie_sees_link": 1,
+  "elapsed_sec": 19.8,
+  "link_http_code": 201,
+  "m1_id": "6f03e3f2-9ae8-43a3-9b42-75f668e78463",
+  "m2_id": "393f9576-1320-4daa-a2a6-06c311e585a5",
+  "pass": true,
+  "reasons": [],
+  "relation": "related_to",
+  "scenario": "11",
+  "skipped": false,
+  "tls_mode": "off"
+}

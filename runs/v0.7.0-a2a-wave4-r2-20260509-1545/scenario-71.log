@@ -1,0 +1,17 @@
+phase A: bootstrap disposable db aimemory_kg71
+  bootstrap disposable db aimemory_kg71
+phase B: invoke cargo test --test age_cte_equivalence on openclaw
+  cargo test rc=0
+  |     Finished `test` profile [unoptimized + debuginfo] target(s) in 0.49s
+  |      Running tests/age_cte_equivalence.rs (target/debug/deps/age_cte_equivalence-0968b8d86a1dbf2b)
+  | 
+  | running 3 tests
+  | test kg_invalidate_equivalence ... skip AGE half: failed to project fixture into memory_graph: error returned from database: third argument of cypher function must be a parameter
+  | ok
+  | test kg_query_equivalence ... skip AGE half: failed to project fixture into memory_graph: error returned from database: third argument of cypher function must be a parameter
+  | ok
+  | test kg_timeline_equivalence ... skip AGE half: failed to project fixture into memory_graph: error returned from database: third argument of cypher function must be a parameter
+  | ok
+  | 
+  | test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.75s
+  | 

@@ -1,0 +1,22 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 6.7,
+  "pass": false,
+  "per_agent": {
+    "openclaw": {
+      "actual_path_len": 0,
+      "expected_path_len": 4,
+      "node_set_match": false,
+      "seeded": 10
+    }
+  },
+  "reason": "kg_query returned http_code=0; kg_query returned no path between chain endpoints",
+  "reasons": [
+    "kg_query returned http_code=0",
+    "kg_query returned no path between chain endpoints"
+  ],
+  "scenario": "82",
+  "skipped": false,
+  "tls_mode": "off"
+}

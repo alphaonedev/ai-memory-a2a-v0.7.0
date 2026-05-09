@@ -1,0 +1,19 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "bob_inbox_count": 0,
+  "bob_sees_marker": false,
+  "charlie_inbox_count": 0,
+  "charlie_sees_marker": false,
+  "elapsed_sec": 7.0,
+  "marker": "inb-ee34b0c9709a4f51a693fb3aef362114",
+  "notify_http_code": 201,
+  "pass": false,
+  "reason": "bob's inbox did not deliver alice's notify",
+  "reasons": [
+    "bob's inbox did not deliver alice's notify"
+  ],
+  "scenario": "32",
+  "skipped": false,
+  "tls_mode": "off"
+}

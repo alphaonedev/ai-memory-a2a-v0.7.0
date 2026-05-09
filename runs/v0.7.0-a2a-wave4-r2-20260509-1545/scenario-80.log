@@ -1,0 +1,7 @@
+phase A: openclaw seeds standard memory + sets inherit=true,write=owner on s80-parent-104f33
+  parent anchor id=92e7ad3f-b122-4ea4-928d-a71fcfcb96c8
+  set_standard rc=0 resp={'body': {'namespace': 's80-parent-104f33', 'parent': None, 'standard_id': '92e7ad3f-b122-4ea4-928d-a71fcfcb96c8', 'storage_backend': 'postgres'}, 'http_code': 201}
+settle 3s for policy propagate (postgres backend)
+phase B: openclaw writes to deep child s80-parent-104f33/sub/deep (expect 201)
+phase C: hermes writes to deep child s80-parent-104f33/sub/deep (expect 403)
+phase D: hermes writes to unrelated namespace s80-other-104f33 (expect 201)

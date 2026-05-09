@@ -1,0 +1,5 @@
+payload sql: 61 bytes
+payload html: 66 bytes
+payload oversize: 1048576 bytes
+  oversize: server rejected oversize with HTTP 400 (acceptable)
+payload unicode: 19 bytes

@@ -1,0 +1,10 @@
+  topology: openclaw=postgres hermes=postgres (campaign-kind=postgres)
+phase A: openclaw (postgres) seeds 5 → hermes (postgres) converge
+settle 8s for federation fanout openclaw->hermes
+  hermes saw 5/5 of openclaw's writes
+phase B: hermes (postgres) seeds 5 → openclaw (postgres) converge
+settle 8s for federation fanout hermes->openclaw
+  openclaw saw 5/5 of hermes's writes
+phase C: per-node capabilities + storage_backend probe
+  openclaw storage_backend='postgres'
+  hermes   storage_backend='postgres'

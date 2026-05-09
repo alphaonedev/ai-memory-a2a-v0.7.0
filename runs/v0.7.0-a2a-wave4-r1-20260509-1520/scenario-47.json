@@ -1,0 +1,43 @@
+{
+  "agent_group": "openclaw_hermes",
+  "alias_resolutions": {
+    "a1-project": {
+      "entity_id": "",
+      "http_code": 200
+    },
+    "alpha1-proj": {
+      "entity_id": "ae816eb4-1c0e-464e-ac2c-e4c4d0b5c77c",
+      "http_code": 200
+    },
+    "alphaone-proj": {
+      "entity_id": "",
+      "http_code": 200
+    },
+    "ao-project": {
+      "entity_id": "ae816eb4-1c0e-464e-ac2c-e4c4d0b5c77c",
+      "http_code": 200
+    }
+  },
+  "aliases_on_entity": [
+    "alpha1-proj",
+    "ao-project"
+  ],
+  "backend_kind": "postgres",
+  "canonical": "AlphaOne-Project-73491a",
+  "elapsed_sec": 5.9,
+  "first_entity_id": "ae816eb4-1c0e-464e-ac2c-e4c4d0b5c77c",
+  "first_register_http_code": 201,
+  "namespace": "scenario47-ent-73491a",
+  "pass": false,
+  "reason": "second register did not surface union aliases; missing ['alphaone-proj', 'a1-project']; by-alias('a1-project') resolved to '', expected 'ae816eb4-1c0e-464e-ac2c-e4c4d0b5c77c'; by-alias('alphaone-proj') resolved to '', expected 'ae816eb4-1c0e-464e-ac2c-e4c4d0b5c77c'",
+  "reasons": [
+    "second register did not surface union aliases; missing ['alphaone-proj', 'a1-project']",
+    "by-alias('a1-project') resolved to '', expected 'ae816eb4-1c0e-464e-ac2c-e4c4d0b5c77c'",
+    "by-alias('alphaone-proj') resolved to '', expected 'ae816eb4-1c0e-464e-ac2c-e4c4d0b5c77c'"
+  ],
+  "scenario": "47",
+  "second_entity_id": "ae816eb4-1c0e-464e-ac2c-e4c4d0b5c77c",
+  "second_register_http_code": 201,
+  "skipped": false,
+  "tls_mode": "off"
+}

@@ -1,0 +1,145 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 20.3,
+  "pass": false,
+  "per_agent": {
+    "openclaw": {
+      "floor": 0.8,
+      "mean_jaccard_topk": 0.0,
+      "nonempty": 0,
+      "queries": 10,
+      "seeded": 50
+    }
+  },
+  "per_query": [
+    {
+      "actual_topk": [],
+      "jaccard": 0.0,
+      "query": "dog field",
+      "ref_topk": [
+        "fb21ab06-2765-4c0a-81b6-2ab945188055",
+        "e39d61e8-29f1-42f4-8345-8c94f1d3d10a",
+        "97e699ad-cf80-4651-9617-9ea8b107f572",
+        "645797b9-f7b5-4d87-b346-f3263b583928",
+        "41f1ab4c-c6cd-4f49-ac53-8b89f5a1eff8"
+      ]
+    },
+    {
+      "actual_topk": [],
+      "jaccard": 0.0,
+      "query": "cat sleeping",
+      "ref_topk": [
+        "f128d706-1582-4324-963e-e29c4c9c96d6",
+        "ecd496a1-3915-4014-8001-b294fab7813e",
+        "eb46ee9e-daf1-4071-bcb3-4552c7cd8d7f",
+        "e1ef978c-8bcf-4e9f-834c-b997808f968b",
+        "cf1c3b76-5d7b-4033-b32c-f2c59b2dcd48"
+      ]
+    },
+    {
+      "actual_topk": [],
+      "jaccard": 0.0,
+      "query": "python list",
+      "ref_topk": [
+        "f7dec620-981e-4825-b680-3d45ab6a88e6",
+        "e9739169-34be-4464-9cdf-fc7094e9e47e",
+        "c958dbae-d96a-4abb-9e80-ce4f1715db14",
+        "bb461d06-8b9a-4e54-8b23-4e416d0670a0",
+        "ae6fa7e9-bc81-4f1e-b1c5-fe8f8ccd4e31"
+      ]
+    },
+    {
+      "actual_topk": [],
+      "jaccard": 0.0,
+      "query": "rust ownership",
+      "ref_topk": [
+        "fc6065cd-42bb-4303-9859-c1a1389213f4",
+        "f1a7181d-75b0-42da-92ca-1f32187a8f95",
+        "c7a9565b-d160-4984-b42a-7a65fa4abf80",
+        "b949f215-f7d9-4eaf-ad90-454d0b33c184",
+        "a067cbc9-af1a-43a8-bd78-5fca3fc3f934"
+      ]
+    },
+    {
+      "actual_topk": [],
+      "jaccard": 0.0,
+      "query": "sql join",
+      "ref_topk": [
+        "de8c123e-c9dc-48fb-88c2-5ad6c77e30c5",
+        "8cfe7111-3a13-4402-b676-ee89ddbe0f39",
+        "877c0547-5b79-4740-802f-a02c63ab8284",
+        "74ca00ea-1ea6-40aa-9ba9-e6f4d6cd36c3",
+        "6c0da4bb-91d7-4399-b13d-20f0341ffa6c"
+      ]
+    },
+    {
+      "actual_topk": [],
+      "jaccard": 0.0,
+      "query": "compile time safety",
+      "ref_topk": [
+        "fc6065cd-42bb-4303-9859-c1a1389213f4",
+        "f1a7181d-75b0-42da-92ca-1f32187a8f95",
+        "c7a9565b-d160-4984-b42a-7a65fa4abf80",
+        "b949f215-f7d9-4eaf-ad90-454d0b33c184",
+        "a067cbc9-af1a-43a8-bd78-5fca3fc3f934"
+      ]
+    },
+    {
+      "actual_topk": [],
+      "jaccard": 0.0,
+      "query": "brown animal",
+      "ref_topk": [
+        "fb21ab06-2765-4c0a-81b6-2ab945188055",
+        "e39d61e8-29f1-42f4-8345-8c94f1d3d10a",
+        "97e699ad-cf80-4651-9617-9ea8b107f572",
+        "645797b9-f7b5-4d87-b346-f3263b583928",
+        "41f1ab4c-c6cd-4f49-ac53-8b89f5a1eff8"
+      ]
+    },
+    {
+      "actual_topk": [],
+      "jaccard": 0.0,
+      "query": "sleeping pet",
+      "ref_topk": [
+        "fb21ab06-2765-4c0a-81b6-2ab945188055",
+        "f128d706-1582-4324-963e-e29c4c9c96d6",
+        "ecd496a1-3915-4014-8001-b294fab7813e",
+        "eb46ee9e-daf1-4071-bcb3-4552c7cd8d7f",
+        "e39d61e8-29f1-42f4-8345-8c94f1d3d10a"
+      ]
+    },
+    {
+      "actual_topk": [],
+      "jaccard": 0.0,
+      "query": "comprehension syntax",
+      "ref_topk": [
+        "fc6065cd-42bb-4303-9859-c1a1389213f4",
+        "f7dec620-981e-4825-b680-3d45ab6a88e6",
+        "f1a7181d-75b0-42da-92ca-1f32187a8f95",
+        "e9739169-34be-4464-9cdf-fc7094e9e47e",
+        "c958dbae-d96a-4abb-9e80-ce4f1715db14"
+      ]
+    },
+    {
+      "actual_topk": [],
+      "jaccard": 0.0,
+      "query": "table query",
+      "ref_topk": [
+        "de8c123e-c9dc-48fb-88c2-5ad6c77e30c5",
+        "8cfe7111-3a13-4402-b676-ee89ddbe0f39",
+        "877c0547-5b79-4740-802f-a02c63ab8284",
+        "74ca00ea-1ea6-40aa-9ba9-e6f4d6cd36c3",
+        "6c0da4bb-91d7-4399-b13d-20f0341ffa6c"
+      ]
+    }
+  ],
+  "reason": "10/10 queries returned empty top-K; mean top-5 Jaccard 0.00 < floor 0.80",
+  "reasons": [
+    "10/10 queries returned empty top-K",
+    "mean top-5 Jaccard 0.00 < floor 0.80"
+  ],
+  "scenario": "79",
+  "skipped": false,
+  "tls_mode": "off"
+}

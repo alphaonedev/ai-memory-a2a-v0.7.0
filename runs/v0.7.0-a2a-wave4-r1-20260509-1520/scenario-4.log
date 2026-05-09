@@ -1,0 +1,9 @@
+phase A: launching concurrent 30-row bursts from 3 agents
+  ai:alice burst ok=30/30
+  ai:bob burst ok=30/30
+  ai:charlie burst ok=30/30
+settle 20s for W=2 fanout convergence
+phase B: querying node-4 aggregator for per-agent counts
+  ai:alice: count=30 (expected 30) wrong_agent_id=0
+  ai:bob: count=30 (expected 30) wrong_agent_id=0
+  ai:charlie: count=30 (expected 30) wrong_agent_id=0

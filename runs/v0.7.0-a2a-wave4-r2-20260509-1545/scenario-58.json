@@ -1,0 +1,16 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 6.7,
+  "inbox_size": 0,
+  "marker": "s58-03ff34bdc2d54aad9d6d4a5f344c003f",
+  "matched": 0,
+  "pass": false,
+  "reason": "hermes did not see notify with marker=s58-03ff34bdc2d54aad9d6d4a5f344c003f",
+  "reasons": [
+    "hermes did not see notify with marker=s58-03ff34bdc2d54aad9d6d4a5f344c003f"
+  ],
+  "scenario": "58",
+  "skipped": false,
+  "tls_mode": "off"
+}

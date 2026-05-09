@@ -1,0 +1,13 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 7.3,
+  "pass": true,
+  "reasons": [],
+  "scenario": "36",
+  "session_id": "dea7d9d2-a704-404c-b52b-9d39ed72c55f",
+  "session_tagged_rows_on_bob": 2,
+  "skipped": false,
+  "start_http_code": 200,
+  "tls_mode": "off"
+}

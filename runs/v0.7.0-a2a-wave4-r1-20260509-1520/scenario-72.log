@@ -1,0 +1,23 @@
+phase A: openclaw seeds 10 entities + 20 links via HTTP API
+  seeding 10 memories + 20 links in ns=s72-kg-ed5fd4
+  links ok: 0/20
+phase B: hermes convergence over federation
+  settle 8s for federation convergence
+phase C: bootstrap aimemory_sal72 + run cargo test --test sal_contract
+  bootstrap disposable db aimemory_sal72
+  sal_contract cargo test rc=0
+  | test sqlite_contract::agent_registration_roundtrip ... ok
+  | test sqlite_contract::delete_by_id ... ok
+  | test sqlite_contract::concurrent_writes_no_data_loss ... ok
+  | test sqlite_contract::fts_search_finds_inserted ... ok
+  | test sqlite_contract::double_delete_is_not_found ... ok
+  | test sqlite_contract::link_signed_roundtrip ... ok
+  | test sqlite_contract::insert_and_get ... ok
+  | test sqlite_contract::links_crud_roundtrip ... ok
+  | test sqlite_contract::list_respects_limit ... ok
+  | test sqlite_contract::update_preserves_id ... ok
+  | test sqlite_contract::namespace_filter_isolates ... ok
+  | test sqlite_contract::verify_returns_report ... ok
+  | 
+  | test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.19s
+  | 

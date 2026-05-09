@@ -1,0 +1,15 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 8.9,
+  "pass": true,
+  "peer_hits": {
+    "node_2": 1,
+    "node_3": 1
+  },
+  "reasons": [],
+  "scenario": "28",
+  "skipped": false,
+  "tls_mode": "off",
+  "token": "kwsearch6f533e3c28"
+}

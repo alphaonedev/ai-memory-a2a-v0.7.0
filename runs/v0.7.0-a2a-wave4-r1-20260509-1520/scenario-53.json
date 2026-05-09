@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 7.1,
+  "enforce_delta": 3,
+  "intruder_http_code": 201,
+  "namespace": "scenario53-d2be7d",
+  "owner_http_code": 201,
+  "pass": false,
+  "reason": "intruder got 201 (expected 403)",
+  "reasons": [
+    "intruder got 201 (expected 403)"
+  ],
+  "scenario": "53",
+  "skipped": false,
+  "tls_mode": "off"
+}

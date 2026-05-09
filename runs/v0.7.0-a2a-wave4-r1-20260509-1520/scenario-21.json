@@ -1,0 +1,10 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 0.0,
+  "pass": null,
+  "reason": "scenario 21 only runs under tls_mode=mtls (actual: off)",
+  "scenario": "21",
+  "skipped": true,
+  "tls_mode": "off"
+}

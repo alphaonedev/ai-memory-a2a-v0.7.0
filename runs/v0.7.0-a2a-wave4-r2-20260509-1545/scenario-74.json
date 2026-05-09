@@ -1,0 +1,10 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 0.1,
+  "pass": null,
+  "reason": "v0.7.0-alpha ai-memory CLI lacks `probe-capability`/`schema-init`; the SAL UnsupportedCapability error surface is reachable only via cargo-test on the binary. Re-enable when the probe CLI ships.",
+  "scenario": "74",
+  "skipped": true,
+  "tls_mode": "off"
+}

@@ -1,0 +1,4 @@
+phase A: seed 10-node chain on openclaw (postgres-backed)
+  seeded 10 chain nodes
+phase B: kg_query find_paths from=7a720575... to=ae125782... max_depth=4
+  http_code=0 actual_path_nodes=[]

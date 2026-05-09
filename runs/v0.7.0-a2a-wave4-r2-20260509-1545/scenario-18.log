@@ -1,0 +1,10 @@
+alice writes A on node-1
+bob writes B on node-2
+polling node-3 for both writes to propagate (max 30 s)
+  both writes visible after 1 s
+settle 3s for embedder + HNSW catch-up
+  node-3 DB embedding probe: ''
+charlie queries on node-3 with semantically-related prompt
+  recall mode=hybrid returned 0 rows
+  charlie sees alice's memory: 0 (expected >=1)
+  charlie sees bob's memory: 0 (expected >=1)

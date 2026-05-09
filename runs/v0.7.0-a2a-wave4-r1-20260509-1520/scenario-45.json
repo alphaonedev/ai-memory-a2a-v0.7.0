@@ -1,0 +1,30 @@
+{
+  "agent_group": "openclaw_hermes",
+  "as_of_now": "2026-05-09T15:28:42Z",
+  "as_of_past": "<historical view via include_invalidated=true>",
+  "backend_kind": "postgres",
+  "elapsed_sec": 15.1,
+  "invalidate_http_code": 503,
+  "m0_id": "07c46b87-b319-4772-994f-27d92b6e7401",
+  "now_edges": 0,
+  "now_query_http_code": 503,
+  "pass": false,
+  "past_edges": 0,
+  "past_query_http_code": 503,
+  "reason": "kg_query(past) returned HTTP 503; kg_query(now) returned HTTP 503; kg_invalidate returned HTTP 503; as_of=past missing edges; expected all 3 targets, got 0; as_of=now expected 2 edges, got 0",
+  "reasons": [
+    "kg_query(past) returned HTTP 503",
+    "kg_query(now) returned HTTP 503",
+    "kg_invalidate returned HTTP 503",
+    "as_of=past missing edges; expected all 3 targets, got 0",
+    "as_of=now expected 2 edges, got 0"
+  ],
+  "scenario": "45",
+  "skipped": false,
+  "target_ids": [
+    "db9d7f6a-35cc-4440-8811-3cfa743878d8",
+    "e3279a09-5a66-4dc0-bcad-44997fff416f",
+    "b815cc4c-1169-4160-ba78-a223b1fa949f"
+  ],
+  "tls_mode": "off"
+}

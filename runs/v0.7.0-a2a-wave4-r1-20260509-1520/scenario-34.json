@@ -1,0 +1,22 @@
+{
+  "agent_group": "openclaw_hermes",
+  "approve_http_code": 200,
+  "backend_kind": "postgres",
+  "charlie_sees": {
+    "approved": 0,
+    "rejected": 0
+  },
+  "elapsed_sec": 13.8,
+  "namespace": "scenario34-pending-2f019a",
+  "pass": false,
+  "pending_queue_count": 0,
+  "reason": "charlie did not see approved row",
+  "reasons": [
+    "charlie did not see approved row"
+  ],
+  "reject_http_code": 200,
+  "scenario": "34",
+  "set_standard_http_code": 201,
+  "skipped": false,
+  "tls_mode": "off"
+}

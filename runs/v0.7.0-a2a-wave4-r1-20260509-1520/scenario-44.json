@@ -1,0 +1,20 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "children_returned": 0,
+  "elapsed_sec": 17.7,
+  "memories_written": 30,
+  "pass": false,
+  "reason": "could not locate scenario44-1fcbc6/alphaone in taxonomy response; root node missing subtree_count field \u2014 v0.6.3 should expose it",
+  "reasons": [
+    "could not locate scenario44-1fcbc6/alphaone in taxonomy response",
+    "root node missing subtree_count field \u2014 v0.6.3 should expose it"
+  ],
+  "root": "scenario44-1fcbc6/alphaone",
+  "root_subtree_count": null,
+  "scenario": "44",
+  "skipped": false,
+  "sum_children_counts": 0,
+  "taxonomy_http_code": 200,
+  "tls_mode": "off"
+}

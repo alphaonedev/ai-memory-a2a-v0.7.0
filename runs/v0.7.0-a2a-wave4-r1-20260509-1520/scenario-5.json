@@ -1,0 +1,17 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "consolidate_http_code": 201,
+  "consolidated_from_agents": [
+    "ai:charlie",
+    "ai:bob",
+    "ai:alice"
+  ],
+  "consolidated_id": "058dc59a-c31f-4053-9528-d657d0e233bd",
+  "elapsed_sec": 23.0,
+  "pass": true,
+  "reasons": [],
+  "scenario": "5",
+  "skipped": false,
+  "tls_mode": "off"
+}

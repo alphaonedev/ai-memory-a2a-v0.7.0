@@ -1,0 +1,4 @@
+phase A: link openclaw→hermes signed by openclaw daemon
+  {'from': '526776d5-5f29-469a-a72d-c4bc2fda4649', 'to': '0f09234c-0ecc-40b4-9b10-29b17a18a19b', 'attest_level': 'self_signed', 'signature_verified': False, 'observed_by': None, 'rc': 0}
+phase B: link hermes→openclaw signed by hermes daemon
+  {'from': '91e9bde6-1197-4075-997c-712028341241', 'to': '94200cdd-50ce-421c-b8ce-834536a50498', 'attest_level': 'self_signed', 'signature_verified': False, 'observed_by': None, 'rc': 0}

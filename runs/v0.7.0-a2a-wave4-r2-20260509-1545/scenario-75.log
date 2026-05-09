@@ -1,0 +1,8 @@
+phase A: read pg schema_version
+  postgres schema_version = 28
+phase B: read sqlite schema_version (openclaw local)
+  sqlite   schema_version = 28
+phase C: compute missing-migration set
+  missing migrations on pg: []
+phase D: missing-feature roster
+  features not exercisable on pg: {}

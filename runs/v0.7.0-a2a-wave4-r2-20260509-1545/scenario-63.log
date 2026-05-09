@@ -1,0 +1,4 @@
+phase A: openclaw + hermes both store the same fact
+settle 6s for replication
+phase B: hermes calls memory_consolidate on the two stored ids
+  consolidate -> rc=0 body={'consolidated': 2, 'id': '16662415-f966-4668-8a54-6ad63213f0df', 'storage_backend': 'postgres'}

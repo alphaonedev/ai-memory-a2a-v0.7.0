@@ -1,0 +1,18 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "charlie_view": {
+    "agent_id": "ai:alice",
+    "content": "v2-469cb5aa76af4fbfb346bd3cd0c3c0f5"
+  },
+  "elapsed_sec": 14.6,
+  "m1_id": "816cb916-8198-4571-bfa9-247b9368fa51",
+  "pass": true,
+  "put_http_code": 200,
+  "reasons": [],
+  "scenario": "9",
+  "skipped": false,
+  "tls_mode": "off",
+  "v1_uuid": "v1-de11d8289dc54c3999f851232d7d4c3f",
+  "v2_uuid": "v2-469cb5aa76af4fbfb346bd3cd0c3c0f5"
+}

@@ -1,0 +1,18 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "dst_ns": "scenario38-dst-ea7c3e",
+  "elapsed_sec": 14.0,
+  "expected_rows": 5,
+  "export_http_code": 200,
+  "import_http_code": 200,
+  "markers_preserved": 5,
+  "pass": true,
+  "reasons": [],
+  "rows_exported": 5,
+  "rows_in_destination": 5,
+  "scenario": "38",
+  "skipped": false,
+  "src_ns": "scenario38-src-ea7c3e",
+  "tls_mode": "off"
+}

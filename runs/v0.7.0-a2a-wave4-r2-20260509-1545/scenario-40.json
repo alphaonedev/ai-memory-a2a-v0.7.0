@@ -1,0 +1,18 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "bulk_http_code": 200,
+  "bulk_size": 500,
+  "elapsed_sec": 22.4,
+  "namespace": "scenario40-bulk-49b51d",
+  "pass": true,
+  "per_peer_count": {
+    "node_2": 500,
+    "node_3": 500,
+    "node_4": 500
+  },
+  "reasons": [],
+  "scenario": "40",
+  "skipped": false,
+  "tls_mode": "off"
+}

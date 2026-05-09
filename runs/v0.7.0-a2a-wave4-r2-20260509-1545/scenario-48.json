@@ -1,0 +1,20 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "check_http_code": 200,
+  "elapsed_sec": 6.7,
+  "match_count": 0,
+  "original_id": "4f67cbd7-ef70-4e01-abda-e255901be664",
+  "original_in_matches": false,
+  "pass": false,
+  "reason": "check_duplicate returned 0 matches for a near-identical input; original memory (4f67cbd7-ef70-4e01-abda-e255901be664) absent from matches; match did not carry a similarity score field",
+  "reasons": [
+    "check_duplicate returned 0 matches for a near-identical input",
+    "original memory (4f67cbd7-ef70-4e01-abda-e255901be664) absent from matches",
+    "match did not carry a similarity score field"
+  ],
+  "scenario": "48",
+  "similarity_score": null,
+  "skipped": false,
+  "tls_mode": "off"
+}

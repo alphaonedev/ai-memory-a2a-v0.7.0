@@ -1,0 +1,4 @@
+phase A: openclaw stores M with agent_id A
+settle 4s for replication
+phase B: hermes attempts memory_update on 2c9e1919-8c2e-40c2-90aa-588d263f6faf with metadata.agent_id=HERM
+phase C: re-fetch and verify metadata.agent_id is still A

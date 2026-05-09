@@ -1,0 +1,26 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 21.5,
+  "pass": true,
+  "per_agent": {
+    "hermes": {
+      "saw_peer_writes": 5,
+      "seeded": 5,
+      "storage_backend": "postgres"
+    },
+    "openclaw": {
+      "saw_peer_writes": 5,
+      "seeded": 5,
+      "storage_backend": "postgres"
+    }
+  },
+  "reasons": [],
+  "scenario": "81",
+  "skipped": false,
+  "tls_mode": "off",
+  "topology": {
+    "hermes": "postgres",
+    "openclaw": "postgres"
+  }
+}

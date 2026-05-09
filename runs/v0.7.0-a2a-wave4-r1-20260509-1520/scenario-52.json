@@ -1,0 +1,34 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 3.6,
+  "pass": false,
+  "per_agent": {
+    "hermes_side": {
+      "attest_level": "self_signed",
+      "from": "446fe3b1-cf29-4705-ad54-371a20cefd74",
+      "observed_by": null,
+      "rc": 0,
+      "signature_verified": false,
+      "to": "1f56f55f-7809-4ae6-9936-1a796ca7bac6"
+    },
+    "openclaw_side": {
+      "attest_level": "self_signed",
+      "from": "59b62689-0376-435c-bf62-8bd43436162e",
+      "observed_by": null,
+      "rc": 0,
+      "signature_verified": false,
+      "to": "50e35609-37ba-42a2-948d-96c670a02d68"
+    }
+  },
+  "reason": "openclaw_side: signature_verified=False (expected True); openclaw_side: observed_by=None (expected daemon); hermes_side: signature_verified=False (expected True); hermes_side: observed_by=None (expected daemon)",
+  "reasons": [
+    "openclaw_side: signature_verified=False (expected True)",
+    "openclaw_side: observed_by=None (expected daemon)",
+    "hermes_side: signature_verified=False (expected True)",
+    "hermes_side: observed_by=None (expected daemon)"
+  ],
+  "scenario": "52",
+  "skipped": false,
+  "tls_mode": "off"
+}

@@ -1,0 +1,19 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 74.2,
+  "max_trimmed": {
+    "hermes": 439,
+    "openclaw": 439
+  },
+  "pass": true,
+  "reasons": [],
+  "samples_collected": 14,
+  "scenario": "69",
+  "skipped": false,
+  "tls_mode": "off",
+  "verbose_ratios": {
+    "hermes": 1.45120834859026,
+    "openclaw": 1.45120834859026
+  }
+}

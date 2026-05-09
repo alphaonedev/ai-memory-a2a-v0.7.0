@@ -1,0 +1,21 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "chronological": true,
+  "elapsed_sec": 13.8,
+  "event_count": 0,
+  "m0_id": "73e1d423-7bd3-45e4-ac3c-3ce613373bd3",
+  "pass": false,
+  "reason": "timeline endpoint returned HTTP 503; expected >=2 edge events (M0->T1 invalidated + M0->T2 live), got 0; no live edge in timeline; no invalidated edge in timeline (valid_until missing)",
+  "reasons": [
+    "timeline endpoint returned HTTP 503",
+    "expected >=2 edge events (M0->T1 invalidated + M0->T2 live), got 0",
+    "no live edge in timeline",
+    "no invalidated edge in timeline (valid_until missing)"
+  ],
+  "scenario": "46",
+  "skipped": false,
+  "timeline_http_code": 503,
+  "tls_mode": "off",
+  "types": []
+}

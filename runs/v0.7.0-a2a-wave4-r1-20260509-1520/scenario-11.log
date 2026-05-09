@@ -1,0 +1,9 @@
+alice writes M1 on node-1
+bob writes M2 on node-2
+  M1=6f03e3f2-9ae8-43a3-9b42-75f668e78463 M2=393f9576-1320-4daa-a2a6-06c311e585a5
+settle 5s for pre-link replication
+alice links M1 -> M2 with relation=related_to
+  link POST returned HTTP 201
+settle 8s for link fanout
+charlie queries links of M1 on node-3
+  charlie sees M1->M2 link: 1 (expected >=1)

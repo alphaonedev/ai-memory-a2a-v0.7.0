@@ -1,0 +1,6 @@
+phase A: capabilities surface on both daemons
+  openclaw storage_backend='postgres'
+  hermes   storage_backend='postgres'
+phase B: process command-line check (--store-url postgres)
+  openclaw cmdline tail: gres://aimemory:***@10.20.0.4:5432/aimemory_w4_live --quorum-writes 2 --quorum-peers http://10.20.0.3:19077 --quorum-timeout-ms 5000 --catchup-interval-secs 30
+  hermes   cmdline tail: gres://aimemory:***@10.20.0.4:5432/aimemory_w4_live --quorum-writes 2 --quorum-peers http://10.20.0.2:19077 --quorum-timeout-ms 5000 --catchup-interval-secs 30

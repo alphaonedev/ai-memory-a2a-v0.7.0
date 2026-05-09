@@ -1,0 +1,13 @@
+{
+  "agent_group": "openclaw_hermes",
+  "backend_kind": "postgres",
+  "elapsed_sec": 36.8,
+  "memory_id": "7d6bf370-677f-4736-852b-7717bcbba38f",
+  "orig_reasoning_chars": 712,
+  "pass": true,
+  "reasons": [],
+  "recalled_reasoning_chars": 712,
+  "scenario": "68",
+  "skipped": false,
+  "tls_mode": "off"
+}
