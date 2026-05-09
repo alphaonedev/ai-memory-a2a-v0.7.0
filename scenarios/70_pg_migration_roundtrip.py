@@ -13,6 +13,7 @@ v0.7.0-alpha postgres surface is migration-only (`ai-memory serve
 PASS iff all four phases agree.
 """
 import sys, pathlib, json, shlex
+from datetime import datetime, timezone
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent / "scripts"))
 from a2a_harness import Harness, log, new_uuid
 
@@ -34,37 +35,59 @@ def _pg_count(h: Harness, pg_url: str) -> int:
 
 
 def _seed_local_sqlite(h: Harness, sqlite_path: str) -> int:
-    """Seed openclaw's local sqlite with SEED_COUNT memories. Returns the
-    actual count written (so the assertion catches partial seeding)."""
-    rows: list[dict] = []
+    """Seed `sqlite_path` with SEED_COUNT memories via `ai-memory import`.
+
+    F3 fix (2026-05-09): the v0.7.0 import CLI does NOT take `--format`
+    or `--input` flags and does NOT respect `AI_MEMORY_STORE_URL`. The
+    canonical surface (per `cli/io.rs::ImportArgs`) is:
+
+        cat payload.json | ai-memory import --db <path> --json
+
+    where `payload.json` is `{"memories":[<full Memory>...], "links":[...]}`
+    matching `models::Memory` (id, tier, namespace, title, content, tags,
+    priority, confidence, source, access_count, created_at, updated_at,
+    metadata). A bare `[{...}, ...]` list is silently rejected as 0
+    memories deserialized.
+    """
+    now = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    memories: list[dict] = []
     for i in range(SEED_COUNT):
         ns = NAMESPACES[i % len(NAMESPACES)]
-        rows.append({
+        memories.append({
+            "id": new_uuid(),
+            "tier": ("short", "mid", "long")[i % 3],
             "namespace": ns,
             "title": f"s70-{i:04d}-{new_uuid()[:6]}",
             "content": f"s70-content-{i}-marker={new_uuid()}",
-            "tier": ("hot", "mid", "cold")[i % 3],
+            "tags": [],
             "priority": (i % 9) + 1,
+            "confidence": 1.0,
+            "source": "import",
+            "access_count": 0,
+            "created_at": now,
+            "updated_at": now,
             "metadata": {"agent_id": "ai:openclaw", "scenario": "70", "seq": i},
         })
-    payload = json.dumps(rows)
-    stage = (
-        f"cat > /tmp/s70-seed.json <<'__SEED_EOF__'\n{payload}\n__SEED_EOF__"
-    )
-    h.ssh_exec(h.node1_ip, stage, timeout=60)
-    # Use the bundled `ai-memory import` CLI which writes directly to the
-    # store backing the local daemon. AI_MEMORY_STORE_URL points at the
-    # local sqlite explicitly so we don't perturb the running daemon's db.
-    cmd = (
-        f"AI_MEMORY_STORE_URL=sqlite://{shlex.quote(sqlite_path)} "
-        f"ai-memory import --format json --input /tmp/s70-seed.json --json"
-    )
-    r = h.ssh_exec(h.node1_ip, cmd, timeout=120)
-    try:
-        rep = json.loads(r.stdout or "{}")
-        return int(rep.get("imported", 0))
-    except (ValueError, TypeError):
+    payload = json.dumps({"memories": memories, "links": []})
+    # 1000-memory payload is ~500KB; ssh argv-inlined heredocs hit
+    # ARG_MAX on darwin clients. Pipe the JSON through ssh stdin
+    # straight into `ai-memory import --db <path> --json` — the import
+    # CLI reads stdin, no intermediate file needed.
+    cmd = f"ai-memory import --db {shlex.quote(sqlite_path)} --json"
+    r = h.ssh_exec(h.node1_ip, cmd, timeout=180, stdin=payload)
+    out = (r.stdout or "").strip()
+    if not out:
         return 0
+    # ai-memory may print a config-load line on stderr/stdout before JSON.
+    for line in reversed(out.splitlines()):
+        line = line.strip()
+        if line.startswith("{") and line.endswith("}"):
+            try:
+                rep = json.loads(line)
+                return int(rep.get("imported", 0))
+            except (ValueError, TypeError):
+                continue
+    return 0
 
 
 def _content_hash_sqlite(h: Harness, sqlite_path: str) -> str:
@@ -179,16 +202,23 @@ def main() -> None:
         passed = False; reasons.append(f"seed wrote {seed_n}/{SEED_COUNT}")
     if fwd_count != SEED_COUNT:
         passed = False; reasons.append(f"forward landed {fwd_count} in pg (expected {SEED_COUNT})")
-    rerun_new = (rerun_report.get("inserted") if isinstance(rerun_report, dict) else None) or 0
-    rerun_err = (rerun_report.get("errors") if isinstance(rerun_report, dict) else None) or 0
-    if rerun_new != 0:
-        passed = False; reasons.append(f"idempotent rerun reported {rerun_new} net new (expected 0)")
+    # v0.7 migrate report shape: {memories_read, memories_written, errors:[],
+    # batches, dry_run}. Idempotency means rerun must end with the same
+    # row count + zero errors; `memories_written` may legitimately be == read
+    # since adapters upsert on memory id.
+    rerun_err_list = rerun_report.get("errors") if isinstance(rerun_report, dict) else None
+    rerun_err = len(rerun_err_list) if isinstance(rerun_err_list, list) else 1
+    rerun_written = (rerun_report.get("memories_written")
+                     if isinstance(rerun_report, dict) else None) or 0
     if rerun_err != 0:
-        passed = False; reasons.append(f"idempotent rerun reported {rerun_err} errors")
+        passed = False; reasons.append(
+            f"idempotent rerun reported {rerun_err} errors: {rerun_err_list[:3]}")
     if rerun_count != SEED_COUNT:
-        passed = False; reasons.append(f"pg row count after rerun = {rerun_count} (expected {SEED_COUNT})")
+        passed = False; reasons.append(
+            f"pg row count after rerun = {rerun_count} (expected {SEED_COUNT})")
     if return_count != SEED_COUNT:
-        passed = False; reasons.append(f"reverse landed {return_count} in sqlite (expected {SEED_COUNT})")
+        passed = False; reasons.append(
+            f"reverse landed {return_count} in sqlite (expected {SEED_COUNT})")
     if seed_hash and return_hash and seed_hash != return_hash:
         passed = False
         reasons.append(f"content sha256 mismatch seed={seed_hash[:16]} return={return_hash[:16]}")
@@ -199,7 +229,7 @@ def main() -> None:
             "openclaw": {
                 "seeded": seed_n,
                 "fwd_pg_count": fwd_count,
-                "rerun_inserted": rerun_new,
+                "rerun_written": rerun_written,
                 "rerun_errors": rerun_err,
                 "rev_sqlite_count": return_count,
                 "seed_hash": seed_hash[:16],

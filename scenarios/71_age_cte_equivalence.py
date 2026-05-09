@@ -144,21 +144,33 @@ def main() -> None:
         h.skip(f"postgres password unavailable: {e}")
         return
 
-    log("phase A: drop+create aimemory_kgtest (destructive on AGE state)")
-    h.ssh_exec(h.node1_ip, (
-        f"psql {shlex.quote(admin_url)} -c "
-        "'DROP DATABASE IF EXISTS aimemory_kgtest'"
-    ), timeout=20)
-    h.ssh_exec(h.node1_ip, (
-        f"psql {shlex.quote(admin_url)} -c "
-        "'CREATE DATABASE aimemory_kgtest OWNER aimemory'"
-    ), timeout=20)
-
-    # Bring up schema + AGE.
-    h.ssh_exec(h.node1_ip, (
-        f"ai-memory schema-init --store-url {shlex.quote(pg_url)}"
-    ), timeout=60)
-    _set_age(h, pg_url, on=True)
+    # F6 RCA (2026-05-09 R2): AGE/CTE equivalence requires the SAL
+    # adapter to route reads through `kg_query_cypher` (AGE branch) vs
+    # `kg_query_cte` (CTE branch). That dispatcher lives inside
+    # `PostgresStore` (src/store/postgres.rs:411) and is reachable only
+    # from the running daemon — but v0.7.0 daemon refuses
+    # `--store-url postgres://...` (deferred to v0.7.1). The campaign
+    # CANNOT exercise the AGE Cypher path via direct psql because:
+    #   1. v0.7.0 does not ship an `ai-memory schema-init` CLI.
+    #   2. The `memory_graph` AGE projection is created lazily by
+    #      `kg_query_cypher`'s LOAD/SET path and depends on per-session
+    #      state.
+    #   3. The campaign-authored `kg_query_view` / `kg_timeline_view` /
+    #      `kg_find_paths_view` SQL views are NOT part of
+    #      postgres_schema.sql.
+    # The cargo test `tests/age_cte_equivalence.rs` already covers the
+    # equivalence assertion against a live postgres URL with AGE
+    # installed; that's where the verification belongs in v0.7.0.
+    # Re-enable as a campaign scenario in v0.7.1 when daemon
+    # `--store-url postgres://` lands.
+    h.skip(
+        "AGE/CTE equivalence requires SAL routing through PostgresStore "
+        "(src/store/postgres.rs::kg_query → kg_query_cypher | kg_query_cte) "
+        "which is reachable only from a daemon running --store-url postgres://, "
+        "deferred to v0.7.1. The cargo test tests/age_cte_equivalence.rs "
+        "already covers this assertion against a live AGE URL. F6 finding."
+    )
+    return
 
     src_root = _seed_kg(h, pg_url)
     log(f"  seeded; root={src_root}")

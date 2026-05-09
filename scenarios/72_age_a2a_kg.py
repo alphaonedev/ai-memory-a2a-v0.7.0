@@ -65,25 +65,49 @@ def _seed_local_kg(h: Harness, sqlite_path: str, agent: str) -> tuple[list[str],
 
 
 def _kg_fingerprint(h: Harness, ssh_node_ip: str, pg_url: str, root_id: str) -> dict:
-    """Run kg_query / kg_timeline / find_paths from the given droplet's
-    psql against the shared postgres. Each result reduced to a sorted-id
-    fingerprint stable across AGE vs CTE backends."""
+    """Run KG-shaped queries from the given droplet's psql against the
+    shared postgres. Each result reduced to a sorted-id fingerprint.
+
+    F4-extension (2026-05-09): the original scenario expected
+    `kg_query_view` / `kg_timeline_view` / `kg_find_paths_view` SQL
+    views but v0.7.0-alpha postgres adapter does NOT ship those views
+    (only `memories`, `memory_links`, etc — see postgres_schema.sql).
+    For the A2A-migration verification this scenario actually wants
+    ("did migration land + does another node see the same data?") we
+    fingerprint via the same recursive-CTE shape `kg_query_cte` uses
+    internally on `memory_links`. AGE-vs-CTE divergence is the concern
+    of S71/S76; S72 cares about cross-agent visibility through
+    postgres, not which graph backend served the read."""
     out: dict[str, object] = {}
-    queries = {
-        "kg_query": (
-            "SELECT json_agg(target_id ORDER BY target_id) FROM kg_query_view "
-            f"WHERE source_id = '{root_id}'"
-        ),
-        "kg_timeline": (
-            "SELECT json_agg(target_id ORDER BY event_ts, target_id) "
-            f"FROM kg_timeline_view WHERE source_id = '{root_id}'"
-        ),
-        "find_paths": (
-            "SELECT json_agg(json_build_object('depth',depth,'dst',dst_id) "
-            f"ORDER BY depth, dst_id) FROM kg_find_paths_view "
-            f"WHERE src_id = '{root_id}' AND depth <= 8"
-        ),
-    }
+    # 1. Direct edges (depth=1). Mirrors the kg_query CTE base case.
+    q_edges = (
+        "SELECT json_agg(target_id ORDER BY target_id, relation) "
+        "FROM memory_links "
+        f"WHERE source_id = '{root_id}'"
+    )
+    # 2. Timeline — created_at ordered. memory_links has created_at.
+    q_timeline = (
+        "SELECT json_agg(target_id ORDER BY created_at, target_id) "
+        "FROM memory_links "
+        f"WHERE source_id = '{root_id}'"
+    )
+    # 3. Recursive reachability — replicates kg_query_cte from
+    # store/postgres.rs:543. Capped at depth 8 to bound traversal.
+    q_paths = (
+        "WITH RECURSIVE traversal(target_id, depth, path) AS ("
+        "  SELECT ml.target_id, 1, ml.source_id || '->' || ml.target_id "
+        f" FROM memory_links ml WHERE ml.source_id = '{root_id}' "
+        "  UNION ALL "
+        "  SELECT ml.target_id, t.depth + 1, t.path || '->' || ml.target_id "
+        "  FROM memory_links ml JOIN traversal t ON ml.source_id = t.target_id "
+        "  WHERE t.depth < 8 "
+        "    AND position(('->' || ml.target_id) IN t.path) = 0 "
+        "    AND position((ml.target_id || '->') IN t.path) = 0"
+        ") "
+        "SELECT json_agg(json_build_object('depth',depth,'dst',target_id) "
+        "ORDER BY depth, target_id) FROM traversal"
+    )
+    queries = {"kg_query": q_edges, "kg_timeline": q_timeline, "find_paths": q_paths}
     for op, sql in queries.items():
         cmd = f"psql {shlex.quote(pg_url)} -tA -c {shlex.quote(sql)}"
         r = h.ssh_exec(ssh_node_ip, cmd, timeout=45)
@@ -127,6 +151,27 @@ def main() -> None:
         )
         return
 
+    # F6 RCA (2026-05-09 R2): even with pgvector + AGE installed, v0.7.0
+    # `ai-memory migrate` only iterates memories, not memory_links (see
+    # src/migrate.rs:101 — the page comes from `from.list(...)` and only
+    # `to.store(...)` is called per memory; there is no link-iteration
+    # path). The A2A KG migration this scenario tests requires links to
+    # land on the postgres side, which v0.7.0 cannot do. Additionally,
+    # the scenario's psql probes (`kg_query_view`, `kg_timeline_view`,
+    # `kg_find_paths_view`) reference SQL views that are NOT part of
+    # postgres_schema.sql — they were authored against a hypothetical
+    # surface. Skip cleanly with full RCA so coverage telemetry is
+    # honest; re-enable when v0.7.1 ships migrate-links + the kg_* views.
+    h.skip(
+        "v0.7.0 `ai-memory migrate` does not iterate memory_links "
+        "(src/migrate.rs only walks memories) and the campaign's psql "
+        "probes target kg_*_view SQL views that are absent from "
+        "postgres_schema.sql. A2A KG migration is unreachable on this "
+        "build; re-enable in v0.7.1 when migrate-links + kg_* views ship. "
+        "F6 finding."
+    )
+    return
+
     log("phase A: openclaw seeds 10-entity KG on its local sqlite")
     seed_db = f"/tmp/s72-seed-{new_uuid()[:6]}.sqlite"
     h.ssh_exec(h.node1_ip, f"rm -f {seed_db}", timeout=10)
@@ -145,8 +190,12 @@ def main() -> None:
     h.ssh_exec(h.node1_ip, (
         f"psql {shlex.quote(admin_url)} -c 'CREATE DATABASE aimemory_s72 OWNER aimemory'"
     ), timeout=20)
-    # Pull openclaw's running sqlite path from env, fall back to /var/lib.
-    openclaw_db = "/var/lib/ai-memory/store.db"
+    # F4 fix (2026-05-09): the running daemon's --db path is not
+    # `/var/lib/ai-memory/store.db` — v0.7.0 A2A bootstrap names the
+    # sqlite per-agent (openclaw.db / hermes.db). Discover it at run
+    # time by parsing `pgrep -af 'ai-memory serve'` on the live droplet.
+    openclaw_db = h.node_db_path(h.node1_ip)
+    log(f"  openclaw daemon db path: {openclaw_db}")
     fwd_cmd = (
         f"ai-memory migrate "
         f"--from sqlite://{shlex.quote(openclaw_db)} "

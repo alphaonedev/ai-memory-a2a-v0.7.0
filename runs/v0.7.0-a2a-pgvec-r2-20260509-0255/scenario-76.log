@@ -1,0 +1,1 @@
+skipped — v0.7.0 ships neither the kg_find_paths_view SQL view nor an `ai-memory schema-init` CLI; the AGE perf gate is unreachable from the campaign harness. The internal `cargo bench --bench age_vs_cte` against a live AGE URL is the canonical perf surface for v0.7.0; this scenario re-enables in v0.7.1 when daemon `--store-url postgres://` lands. F6 finding.

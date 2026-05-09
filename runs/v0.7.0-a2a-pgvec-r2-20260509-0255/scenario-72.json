@@ -1,0 +1,9 @@
+{
+  "agent_group": "openclaw_hermes",
+  "elapsed_sec": 0.4,
+  "pass": null,
+  "reason": "v0.7.0 `ai-memory migrate` does not iterate memory_links (src/migrate.rs only walks memories) and the campaign's psql probes target kg_*_view SQL views that are absent from postgres_schema.sql. A2A KG migration is unreachable on this build; re-enable in v0.7.1 when migrate-links + kg_* views ship. F6 finding.",
+  "scenario": "72",
+  "skipped": true,
+  "tls_mode": "off"
+}

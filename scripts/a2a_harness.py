@@ -78,6 +78,9 @@ class Harness:
     agent_group: str = "ironclaw"
     tls_mode: str = "off"
     scenario_id: str = ""
+    # F4 fix: per-node db-path cache for `node_db_path()`. Populated lazily
+    # on first call; never invalidated within a scenario run.
+    _db_path_cache: dict[str, str] = field(default_factory=dict)
 
     @staticmethod
     def new_uuid(prefix: str = "") -> str:
@@ -192,6 +195,38 @@ class Harness:
         back to the default droplet IP from /tmp/v07-a2a-droplets.json.
         """
         return os.environ.get("POSTGRES_NODE_IP", "68.183.157.68")
+
+    # -------- daemon db-path discovery (v0.7.0 F4 fix) --------
+
+    def node_db_path(self, node_ip: str, *, default: str = "/var/lib/ai-memory/store.db") -> str:
+        """Discover the running daemon's `--db` path on `node_ip`.
+
+        Parses the live `ai-memory serve` command line via pgrep + sed.
+        Caches per-node so repeat calls are free. Falls back to `default`
+        when the daemon is not running or the flag is absent.
+
+        Why this exists: v0.7.0 A2A bootstrap names each droplet's sqlite
+        after the agent (e.g. `/var/lib/ai-memory/openclaw.db`,
+        `/var/lib/ai-memory/hermes.db`), not the legacy `store.db`.
+        Hardcoding `store.db` causes scenarios that read the live db
+        (S70 Phase A reuse, S72 Phase B migrate-from) to operate on an
+        empty file and silently report `0` rows. F4 RCA, 2026-05-09.
+        """
+        if not node_ip:
+            return default
+        if node_ip in self._db_path_cache:
+            return self._db_path_cache[node_ip]
+        cmd = (
+            "pgrep -af 'ai-memory serve' "
+            r"| sed -n 's/.*--db \([^ ]\+\).*/\1/p' "
+            "| head -n1"
+        )
+        r = self.ssh_exec(node_ip, cmd, timeout=10)
+        path = (r.stdout or "").strip()
+        if not path:
+            path = default
+        self._db_path_cache[node_ip] = path
+        return path
 
     # -------- ssh primitives --------
 

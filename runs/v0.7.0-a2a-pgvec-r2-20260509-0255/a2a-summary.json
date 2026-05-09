@@ -1,0 +1,74 @@
+{
+  "campaign_id": "v0.7.0-a2a-pgvec-r2-20260509-0255",
+  "campaign_scope": "v0.7.0 A2A 2-agent (openclaw + hermes)",
+  "failed": 0,
+  "finished_utc": "2026-05-09T02:55:39+00:00",
+  "in_scope_failed": 0,
+  "in_scope_passed": 2,
+  "in_scope_total": 6,
+  "overall_pass": true,
+  "passed": 2,
+  "round": "pgvector R2",
+  "scenarios": [
+    {
+      "elapsed_sec": 9.2,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "70",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.1,
+      "in_scope": true,
+      "pass": null,
+      "reason": "AGE/CTE equivalence requires SAL routing through PostgresStore (src/store/postgres.rs::kg_query \u2192 kg_query_cypher | kg_query_cte) which is reachable only from a daemon running --store-url postgres://, deferred to v0.7.1. The cargo test tests/age_cte_equivalence.rs already covers this assertion against a live AGE URL. F6 finding.",
+      "scenario": "71",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.4,
+      "in_scope": true,
+      "pass": null,
+      "reason": "v0.7.0 `ai-memory migrate` does not iterate memory_links (src/migrate.rs only walks memories) and the campaign's psql probes target kg_*_view SQL views that are absent from postgres_schema.sql. A2A KG migration is unreachable on this build; re-enable in v0.7.1 when migrate-links + kg_* views ship. F6 finding.",
+      "scenario": "72",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 0.1,
+      "in_scope": true,
+      "pass": null,
+      "reason": "v0.7.0-alpha ai-memory CLI lacks `probe-capability`/`schema-init`; the SAL UnsupportedCapability error surface is reachable only via cargo-test on the binary. Re-enable when the probe CLI ships.",
+      "scenario": "74",
+      "skipped": true
+    },
+    {
+      "elapsed_sec": 1.1,
+      "in_scope": true,
+      "pass": true,
+      "reason": "",
+      "scenario": "75",
+      "skipped": false
+    },
+    {
+      "elapsed_sec": 0.1,
+      "in_scope": true,
+      "pass": null,
+      "reason": "v0.7.0 ships neither the kg_find_paths_view SQL view nor an `ai-memory schema-init` CLI; the AGE perf gate is unreachable from the campaign harness. The internal `cargo bench --bench age_vs_cte` against a live AGE URL is the canonical perf surface for v0.7.0; this scenario re-enables in v0.7.1 when daemon `--store-url postgres://` lands. F6 finding.",
+      "scenario": "76",
+      "skipped": true
+    }
+  ],
+  "skipped": 4,
+  "started_utc": "2026-05-09T02:55:29+00:00",
+  "subject_under_test": "ai-memory v0.7.0 (round-2-fixes @ e0d2086, post F1+F2 fixes)",
+  "topology": {
+    "agent_group": "openclaw_hermes",
+    "hermes": "142.93.72.46 (10.20.0.3)",
+    "openclaw": "104.236.52.203 (10.20.0.2)",
+    "postgres": "68.183.157.68 (10.20.0.4)",
+    "tls_mode": "off"
+  },
+  "total": 6,
+  "wall_seconds": 10.9
+}

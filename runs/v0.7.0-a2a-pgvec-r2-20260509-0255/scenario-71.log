@@ -1,0 +1,1 @@
+skipped — AGE/CTE equivalence requires SAL routing through PostgresStore (src/store/postgres.rs::kg_query → kg_query_cypher | kg_query_cte) which is reachable only from a daemon running --store-url postgres://, deferred to v0.7.1. The cargo test tests/age_cte_equivalence.rs already covers this assertion against a live AGE URL. F6 finding.
