@@ -94,9 +94,17 @@ for any deltas under watch.
 
 ## Postgres + Apache AGE substrate (S70–S76)
 
-These scenarios exercise the v0.7.0-alpha postgres surface, which is
-**NOT** the live storage backend yet — `ai-memory serve --store-url
-postgres://...` is deferred to v0.7.1. What v0.7.0-alpha actually ships:
+> **UPDATED 2026-05-09.** Per operator directive, the v0.7.0 release scope
+> is expanded to land daemon-level adapter selection (`ai-memory serve
+> --store-url postgres://…`) plus the postgres+AGE schema parity port and
+> CLI surfaces — originally deferred to v0.7.1. The block below is
+> preserved as the **v0.7.0-alpha** snapshot; the **v0.7.0 ship** matrix
+> is in the new "Postgres+AGE with live daemon (v0.7.0 expanded scope)"
+> section after the schema-parity gap table.
+
+These scenarios exercise the v0.7.0-alpha postgres surface, which was
+**NOT** the live storage backend at v0.7.0-alpha — `ai-memory serve --store-url
+postgres://...` was deferred to v0.7.1. What v0.7.0-alpha actually shipped:
 
 **In scope for v0.7.0:**
 - One-shot migration tool: `ai-memory migrate --from sqlite://X --to postgres://Y`
@@ -154,6 +162,72 @@ features which are therefore **not exercisable on postgres in v0.7.0**:
 
 If the postgres adapter advances past v15 inside the v0.7.0 release
 window, S75 fails — that's the trip-wire we want.
+
+## Postgres+AGE with live daemon (v0.7.0 expanded scope)
+
+> **In flight as of 2026-05-09.** This section captures the v0.7.0
+> ship matrix as the operator-directed expanded scope lands. Cards
+> are marked WAVE-N status and flip to validated as commits land on
+> `round-2-fixes` (PR #643). The Wave 4 acceptance gate is two
+> consecutive 100% GREEN rounds with both droplets pointed at a
+> shared postgres+AGE backend instead of per-droplet sqlite.
+
+### What the v0.7.0 ship adds beyond v0.7.0-alpha
+
+| Surface | v0.7.0-alpha | v0.7.0 ship (expanded scope) |
+|---------|--------------|------------------------------|
+| Live daemon on postgres | ✗ deferred | ✓ Wave 3 — `ai-memory serve --store-url postgres://…` |
+| Schema parity | postgres@v15, sqlite@v28 | ✓ Wave 2 — both at v28 |
+| `PostgresStore::link()` | `UnsupportedCapability` | ✓ Wave 1 Stream A |
+| `PostgresStore::register_agent()` | `UnsupportedCapability` | ✓ Wave 1 Stream A |
+| Recall 6-factor scoring on postgres | HNSW similarity only (1 of 6) | ✓ Wave 1 Stream A — full parity |
+| `migrate.rs` link-walk | nodes only, no edges | ✓ Wave 1 Stream A |
+| SQL view aliases for off-process inspection | absent | ✓ Wave 1 Stream A |
+| `ai-memory schema-init` CLI verb | absent | ✓ Wave 1 Stream B |
+| AGE 1.5 + PG 16 cypher-binding harness | red | ✓ Wave 1 Stream C (test-side; production never hit it) |
+| Live A2A on postgres re-cert | n/a | ✓ Wave 4 (acceptance gate) |
+
+### Per-surface validation evidence (v0.7.0 ship)
+
+| Wave | Surface | Test fixture | Status |
+|------|---------|--------------|--------|
+| Wave 1 — Stream A | SAL contract on postgres | `tests/sal_contract.rs` | IN FLIGHT (extends 20/20 baseline with link + register_agent) |
+| Wave 1 — Stream A | Recall 6-factor parity | `tests/recall_scoring_parity.rs` | IN FLIGHT |
+| Wave 1 — Stream A | Migrate links round-trip | `tests/migrate_links_roundtrip.rs` | IN FLIGHT |
+| Wave 1 — Stream B | `schema-init` CLI verb | `tests/cli_schema_init.rs` | IN FLIGHT |
+| Wave 1 — Stream C | AGE / CTE equivalence | `tests/age_cte_equivalence.rs` | IN FLIGHT (binding fix test-side) |
+| Wave 2 | Schema parity v15→v28 | `tests/postgres_schema_parity.rs` (new, Wave 2) | PENDING WAVE 1 |
+| Wave 3 | `serve --store-url postgres://` end-to-end | `tests/serve_postgres_e2e.rs` (new, Wave 3) | PENDING WAVE 2 |
+| Wave 4 | Live A2A on postgres | this campaign re-run, both droplets shared store | PENDING WAVE 3 |
+
+### Re-cert acceptance criterion
+
+The Wave 4 cert is **two consecutive 100% GREEN A2A rounds** against
+the v0.7.0 binary built from `round-2-fixes` (post Wave 1+2+3) with
+**both droplets pointed at a shared postgres+AGE backend** rather than
+per-droplet sqlite. S70-S76 flip from "PASS via Path B in-tree
+validators" to "PASS via live daemon-on-postgres" — that's the green
+gate that closes the v0.7.0 expanded-scope tag-cut criterion.
+
+If a Wave 4 round goes RED on a postgres-only path that sqlite-mode
+also covers, that's a regression in the adapter or the schema parity
+port; if it goes RED on a postgres-only path that sqlite-mode does
+not cover (an AGE-Cypher-only feature, e.g. `find_paths` at depth
+≥ 7), file as a Wave 5 follow-up rather than blocking tag-cut.
+
+### F6 closure (issue #646)
+
+The three concrete gaps F6 enumerates against v0.7.0-alpha all close
+in Wave 1:
+
+| Gap | Wave 1 Stream | Status |
+|-----|---------------|--------|
+| SQL views absent (`kg_query_view` etc.) | Stream A | IN FLIGHT |
+| `migrate.rs` doesn't iterate `memory_links` | Stream A | IN FLIGHT |
+| no `ai-memory schema-init` CLI verb | Stream B | IN FLIGHT |
+
+Issue #646 stays **OPEN** until Wave 1 commits land + integration
+tests confirm; closing on Wave 1 merge is the issue-closure gate.
 
 ## v0.7.1+ reserve (S77–S95)
 
