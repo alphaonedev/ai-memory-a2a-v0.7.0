@@ -3,7 +3,7 @@
 !!! warning "Status: TABLED — research & exploratory only"
     This roadmap is **on the radar but not committed to any release schedule**. It captures the multi-vendor GPU integration analysis (Apple MLX, NVIDIA CUDA, AMD ROCm, cloud DO multi-vendor, Enterprise swarm/hive scale, ULTRA-1 latency budget) so the work can be picked up coherently when prioritized.
     No engineering effort is allocated against this document at present. Schedule, scope, and dependencies will be revisited when the operator decides to activate the work — likely after v0.7.1 (Plan C) closes and DigitalOcean GPU access materializes.
-    Issue tracking: [`alphaonedev/ai-memory-mcp#651`](https://github.com/alphaonedev/ai-memory-mcp/issues/651) (architecture RFC) + the dedicated GPU integration tracking issue (linked below).
+    Issue tracking: [`alphaonedev/ai-memory-mcp#651`](https://github.com/alphaonedev/ai-memory-mcp/issues/651) (architecture RFC) + [`alphaonedev/ai-memory-mcp#652`](https://github.com/alphaonedev/ai-memory-mcp/issues/652) (GPU integration tracking, TABLED).
 
 > **Living document — research/exploratory.** Tracks ai-memory's path from Ollama-only inference to platform-native multi-vendor GPU acceleration spanning single-node, multi-node, swarm, and hive Enterprise AI Agent architectures.
 
