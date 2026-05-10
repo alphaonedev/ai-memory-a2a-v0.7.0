@@ -266,7 +266,7 @@ def _bucketize(items: list[dict], key: str) -> dict[str, int]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--track", required=True, choices=("A1", "A2"))
+    ap.add_argument("--track", required=True, choices=("A1", "A2", "CPU", "Q"))
     ap.add_argument("--r1-dir", required=True, type=pathlib.Path)
     ap.add_argument("--r2-dir", required=True, type=pathlib.Path)
     ap.add_argument("--out", required=True, type=pathlib.Path)
