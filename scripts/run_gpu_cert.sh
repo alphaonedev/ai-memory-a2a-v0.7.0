@@ -8,8 +8,8 @@
 #
 # Phases (each reports duration; failure aborts subsequent phases):
 #   P0  Pre-flight (doctl auth, TLS material, scripts)
-#   P1  Provision droplets (5× gpu-4000adax1-20gb)
-#   P2  Bootstrap postgres+AGE+pgvector
+#   P1  Provision droplets (4× gpu-4000adax1-20gb + 1× s-4vcpu-16gb-amd pg)
+#   P2  Bootstrap postgres+AGE+pgvector (auto-tunes for host RAM)
 #   P3  Bootstrap 4× openclaw (Ollama + gemma + ai-memory autonomous)
 #   P4  Schema-init via openclaw-1
 #   P5  Wire mTLS + 4-node federation
@@ -40,7 +40,7 @@ DRY_RUN=0
 AUTO_TEARDOWN=1
 LLM_MODEL="${LLM_MODEL:-gemma4:e4b}"
 RUN_DIR_BASE="${RUN_DIR_BASE:-runs}"
-HOURLY_RATE="${HOURLY_RATE:-3.80}"
+HOURLY_RATE="${HOURLY_RATE:-3.165}"  # 4× $0.76 GPU + 1× $0.125 CPU pg
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -141,7 +141,8 @@ p0_preflight() {
   doctl auth list 2>/dev/null | grep -q current || { log "doctl not authenticated"; phase_end 4; }
   [[ -d /tmp/a2a-v07-tls-gpu ]] || { log "TLS material missing at /tmp/a2a-v07-tls-gpu"; phase_end 4; }
   [[ -f /tmp/a2a-v07-tls-gpu/mtls-allowlist.txt ]] || { log "mtls allowlist missing"; phase_end 4; }
-  for s in provision_gpu_droplets.sh bootstrap_postgres_gpu.sh \
+  for s in provision_gpu_droplets.sh provision_postgres_cpu.sh \
+           bootstrap_postgres_gpu.sh \
            bootstrap_gpu_droplets.sh wire_mtls_quad.sh \
            validate_baseline.sh validate_autonomous_tier.sh \
            render_gpu_results.py teardown_gpu_droplets.sh \
@@ -154,12 +155,16 @@ p0_preflight() {
 
 p1_provision() {
   should_run_phase P1 || return 0
-  phase_start P1 "provision 5× gpu-4000adax1-20gb"
+  phase_start P1 "provision 4× gpu-4000adax1-20gb + 1× s-4vcpu-16gb-amd postgres"
   if [[ "$DRY_RUN" -eq 1 ]]; then
     bash "$SCRIPT_DIR/provision_gpu_droplets.sh" --track "$TRACK" --dry-run 2>&1 | tee -a "$LOG"
+    bash "$SCRIPT_DIR/provision_postgres_cpu.sh" --dry-run 2>&1 | tee -a "$LOG"
     phase_end 0; return
   fi
-  if bash "$SCRIPT_DIR/provision_gpu_droplets.sh" --track "$TRACK" 2>&1 | tee -a "$LOG"; then
+  if ! bash "$SCRIPT_DIR/provision_gpu_droplets.sh" --track "$TRACK" 2>&1 | tee -a "$LOG"; then
+    phase_end 1; return
+  fi
+  if bash "$SCRIPT_DIR/provision_postgres_cpu.sh" 2>&1 | tee -a "$LOG"; then
     phase_end 0
   else phase_end 1; fi
 }
@@ -320,8 +325,17 @@ p11_render() {
 
 p12_teardown() {
   should_run_phase P12 || return 0
-  phase_start P12 "teardown — release the \$3.80/hr"
+  phase_start P12 "teardown — release GPU + CPU postgres droplets"
   teardown
+  # Also tear down CPU postgres
+  if [[ "$DRY_RUN" -eq 0 ]]; then
+    PG_ID=$(doctl compute droplet list --tag-name a2a-v07-pg \
+      --format ID --no-header 2>/dev/null | head -1)
+    if [[ -n "$PG_ID" ]]; then
+      log "  also tearing down CPU postgres droplet id=$PG_ID"
+      doctl compute droplet delete "$PG_ID" --force 2>&1 | tee -a "$LOG"
+    fi
+  fi
   phase_end 0
 }
 
