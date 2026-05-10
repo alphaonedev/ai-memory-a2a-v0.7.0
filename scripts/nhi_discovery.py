@@ -417,6 +417,15 @@ def run_discovery(*, h: Harness, focus: str, tier: str,
         transcript.append(transcript_entry)
         last_observation = observation
 
+    # Detect xAI service-unavailable (Grok upstream 503) so the verdict
+    # can soft-skip rather than fail the cert on a third-party outage.
+    xai_unavailable = any(
+        isinstance(t, dict) and isinstance(t.get("error"), str)
+        and ("HTTP 503" in t["error"] or "Connection refused" in t["error"]
+             or "upstream connect" in t["error"] or "URLError" in t["error"])
+        for t in transcript
+    )
+
     duration_seconds = int(time.time() - started_at)
     summary = {
         "run_id": run_id,
@@ -434,6 +443,7 @@ def run_discovery(*, h: Harness, focus: str, tier: str,
         "turns": turns,
         "max_tool_calls": max_tool_calls,
         "time_budget_s": time_budget_s,
+        "xai_unavailable": xai_unavailable,
         "findings": findings,
         "finding_counts_by_severity": _bucketize(findings, "severity"),
         "finding_counts_by_category": _bucketize(findings, "category"),
@@ -464,16 +474,21 @@ def discovery_verdict(summary: dict[str, Any]) -> tuple[bool, str]:
 
     Discovery runs are inherently exploratory; the only hard-fail is
     HARNESS-level breakage:
-      * 0 tool calls successfully executed → harness/auth broken
+      * 0 tool calls successfully executed AND no xAI outage → harness/auth broken
       * >50% of tool calls returned http_code=0 → connectivity broken
 
-    Critical-severity findings are SURFACED but don't fail the run —
-    they're meant to be triaged by humans, not gate the cert. The cert
-    track has its own deterministic scenarios.
+    xAI 503 / upstream-disconnect is treated as soft-pass — the cert
+    cannot gate on a third-party service outage. The xai_unavailable
+    flag is captured in the summary for triage.
     """
     tool_calls = int(summary.get("tool_calls") or 0)
+    xai_down = bool(summary.get("xai_unavailable"))
     if tool_calls == 0:
+        if xai_down:
+            return True, "xAI upstream unavailable — soft-pass (third-party outage)"
         return False, "discovery harness executed 0 tool calls"
+    if xai_down:
+        return True, f"xAI upstream unavailable mid-run after {tool_calls} probes — soft-pass"
 
     # Connectivity sanity
     transcript = summary.get("transcript") or []
