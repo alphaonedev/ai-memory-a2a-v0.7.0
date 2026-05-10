@@ -29,14 +29,18 @@ theme:
 
 nav:
   - Home: index.md
+  - "✅ v0.7.0 cert (CLOSED)":
+      - Results & 3-audience analysis: cpu-cert.md
+      - Cert evidence: cert-evidence.md
+      - NHI discovery findings: nhi-findings.md
   - Methodology: methodology.md
   - Coverage matrix: coverage.md
   - Reproducing: reproducing.md
   - Security: security.md
   - Soak (gated): soak.md
-  - GPU cert (v0.7.0):
+  - "v0.7.1 GPU cert track (queued)":
       - Track brief: v0.7.0-gpu-autonomous-track.md
-      - Results & 3-audience analysis: gpu-cert.md
+      - Template page: gpu-cert.md
   - Campaign runs: runs/
 
 markdown_extensions:
