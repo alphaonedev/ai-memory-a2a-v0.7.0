@@ -86,10 +86,20 @@ else
 fi
 
 if [ $B1_OK -eq 1 ]; then
+  # Track-aware tag selection: GPU "Q" tracks tag droplets as "track-Q"
+  # via provision_gpu_droplets.sh. CPU tracks use a single shared tag
+  # "a2a-v07-cpu" for cohort discovery (provision_cpu_cert.sh).
+  case "$TRACK" in
+    Q|Q-*|A1)  CERT_TAG="track-$TRACK" ;;
+    CPU)       CERT_TAG="a2a-v07-cpu" ;;
+    *)         CERT_TAG="${TRACK_TAG:-track-$TRACK}" ;;
+  esac
   DROPLETS=()
   while IFS= read -r line; do
-    [ -n "$line" ] && DROPLETS+=("$line")
-  done < <(doctl compute droplet list --tag-name "track-$TRACK" \
+    # Exclude the postgres droplet from per-DAEMON checks (it has no
+    # ai-memory daemon to probe).
+    [ -n "$line" ] && [[ "$line" != *"-pg-"* ]] && DROPLETS+=("$line")
+  done < <(doctl compute droplet list --tag-name "$CERT_TAG" \
     --format Name,PublicIPv4,PrivateIPv4 --no-header 2>/dev/null)
 else
   DROPLETS=()
@@ -475,16 +485,30 @@ done
 emit_check U3 pass "total prior audit rows=$TOTAL_PRIOR (delta will be measured at cert end)" \
   "$(jq -nc --arg n "$TOTAL_PRIOR" '{prior_total:($n|tonumber)}')"
 
-# --------------------------------------------------------------- A: autonomous-tier per-node
+# --------------------------------------------------------------- A: per-tier validation
 echo
-echo "=== A: autonomous-tier per-droplet validation ==="
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-if "${SCRIPT_DIR}/validate_autonomous_tier.sh" --track "$TRACK"; then
-  emit_check A-overall pass "validate_autonomous_tier.sh PASS for all droplets"
-else
-  emit_check A-overall fail "validate_autonomous_tier.sh FAIL — see per-droplet output above"
-  fail_track
-fi
+CERT_TIER="${CERT_TIER:-autonomous}"
+case "$CERT_TIER" in
+  semantic)
+    echo "=== A: semantic-tier per-droplet validation ==="
+    if "${SCRIPT_DIR}/validate_semantic_tier.sh"; then
+      emit_check A-overall pass "validate_semantic_tier.sh PASS for all droplets"
+    else
+      emit_check A-overall fail "validate_semantic_tier.sh FAIL — see output above"
+      fail_track
+    fi
+    ;;
+  autonomous|*)
+    echo "=== A: autonomous-tier per-droplet validation ==="
+    if "${SCRIPT_DIR}/validate_autonomous_tier.sh" --track "$TRACK"; then
+      emit_check A-overall pass "validate_autonomous_tier.sh PASS for all droplets"
+    else
+      emit_check A-overall fail "validate_autonomous_tier.sh FAIL — see per-droplet output above"
+      fail_track
+    fi
+    ;;
+esac
 
 # --------------------------------------------------------------- finalize report
 jq --arg track "$TRACK" --arg t "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
