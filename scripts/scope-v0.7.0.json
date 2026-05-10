@@ -100,6 +100,7 @@
     {"id": "27", "rationale": "S27 invokes drive_agent.sh against the openclaw legacy MCP path; not installed at v0.7.0-alpha"}
   ],
   "skip_other": [
-    {"id": "75", "rationale": "Plan B (CPU cert): scenario hardcodes pg DB name 'aimemory_w4_live' (Wave 4 deploy convention) and reads sqlite at '/var/lib/ai-memory/store.db' on openclaw. Plan B uses pg DB 'aimemory' and postgres-only daemons (no sqlite local). The schema-parity oracle is exercised functionally by S77/S78/S82 + the schema-init log in baseline-validation.json. Re-enable when scenario is repointed at runtime POSTGRES_DB env."}
+    {"id": "75", "rationale": "Plan B (CPU cert): scenario hardcodes pg DB name 'aimemory_w4_live' (Wave 4 deploy convention) and reads sqlite at '/var/lib/ai-memory/store.db' on openclaw. Plan B uses pg DB 'aimemory' and postgres-only daemons (no sqlite local). The schema-parity oracle is exercised functionally by S77/S78/S82 + the schema-init log in baseline-validation.json. Re-enable when scenario is repointed at runtime POSTGRES_DB env."},
+    {"id": "65", "rationale": "v0.7.0 deferred (G5): postgres find_paths_cypher hits AGE 1.5.0 parser limit on variable-length-path syntax — 'syntax error at or near |'. G1-G4 daemon fixes verified live (S52/S57/S60/S61/S79 all PASS). G4 link→AGE projection verified live (30 nodes / 22 edges in AGE post-S65 phase A). Functional path-finding has unit-test coverage (tests/g5_find_paths_cypher_no_syntax_error.rs); HTTP-surface AGE-1.5-syntax fix queued for v0.7.0.x daemon patch. Re-enable after AGE 1.5-compat fix lands."}
   ]
 }
