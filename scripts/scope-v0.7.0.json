@@ -99,5 +99,7 @@
     {"id": "1",  "rationale": "drive_agent.sh / MCP-stdio path is not installed on v0.7.0-alpha droplets; no HTTP equivalent of S1 (the HTTP analog is S1b which IS in scope)"},
     {"id": "27", "rationale": "S27 invokes drive_agent.sh against the openclaw legacy MCP path; not installed at v0.7.0-alpha"}
   ],
-  "skip_other": []
+  "skip_other": [
+    {"id": "75", "rationale": "Plan B (CPU cert): scenario hardcodes pg DB name 'aimemory_w4_live' (Wave 4 deploy convention) and reads sqlite at '/var/lib/ai-memory/store.db' on openclaw. Plan B uses pg DB 'aimemory' and postgres-only daemons (no sqlite local). The schema-parity oracle is exercised functionally by S77/S78/S82 + the schema-init log in baseline-validation.json. Re-enable when scenario is repointed at runtime POSTGRES_DB env."}
+  ]
 }
