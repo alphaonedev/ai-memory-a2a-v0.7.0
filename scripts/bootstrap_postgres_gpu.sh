@@ -149,10 +149,11 @@ sed -i.bak \
   -e "s|^#*listen_addresses.*|listen_addresses = 'localhost,${PRIV_IP}'|" \
   "$PG_CONF"
 
-echo "--- step 5: pg_hba.conf — allow VPC CIDR with md5 + SCRAM ---"
-# Append our CIDR rule if not already present
+echo "--- step 5: pg_hba.conf — allow VPC CIDR with md5 + SCRAM (ALL DBs) ---"
+# Append the CIDR rule for ALL databases (not just aimemory) so disposable
+# databases like aimemory_perf_r3 created by S76 cargo bench can also auth.
 grep -q '10\.20\.0\.0/24' "$PG_HBA" || \
-  echo "host    aimemory    aimemory    10.20.0.0/24    scram-sha-256" >> "$PG_HBA"
+  echo "host    all         aimemory    10.20.0.0/24    scram-sha-256" >> "$PG_HBA"
 
 systemctl restart postgresql
 sleep 3
