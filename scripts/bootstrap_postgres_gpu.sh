@@ -51,18 +51,16 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Locate the postgres droplet — search for either the GPU postgres tag
-# (track-Q with name a2a-v07-gpu-postgres-*) or the CPU postgres tag
-# (track-Q-pg with name a2a-v07-pg-cpu-*). Whichever exists.
-PG_LINE=$(doctl compute droplet list --tag-name "a2a-v07-pg" \
-  --format Name,PublicIPv4,PrivateIPv4 --no-header 2>/dev/null \
-  | awk '/a2a-v07-pg-cpu/{print; exit}')
-if [[ -z "$PG_LINE" ]]; then
-  PG_LINE=$(doctl compute droplet list --tag-name "track-$TRACK" \
+# Locate the postgres droplet — try multiple known tag/name patterns
+PG_LINE=""
+for filter in "a2a-v07-cpu:a2a-v07-cpu-pg" "a2a-v07-pg:a2a-v07-pg-cpu" "track-$TRACK:a2a-v07-gpu-postgres"; do
+  tag="${filter%%:*}"; pat="${filter##*:}"
+  PG_LINE=$(doctl compute droplet list --tag-name "$tag" \
     --format Name,PublicIPv4,PrivateIPv4 --no-header 2>/dev/null \
-    | awk '/a2a-v07-gpu-postgres/{print; exit}')
-fi
-[[ -n "$PG_LINE" ]] || { echo "no postgres droplet found (looked for tag a2a-v07-pg or track-$TRACK with name a2a-v07-gpu-postgres-*) — provision first via provision_postgres_cpu.sh or provision_gpu_droplets.sh" >&2; exit 3; }
+    | awk -v p="$pat" '$1 ~ p {print; exit}')
+  [[ -n "$PG_LINE" ]] && break
+done
+[[ -n "$PG_LINE" ]] || { echo "no postgres droplet found — provision first" >&2; exit 3; }
 read -r PG_NAME PG_PUB PG_PRIV <<<"$PG_LINE"
 
 # Generate a fresh password if none exists
