@@ -52,6 +52,39 @@ The canonical AI-on-Mac pattern is host-native Ollama + containerized
 clients pointing at `host.docker.internal:11434`. The 2 ai-memory
 containers share the same Ollama instance on the host.
 
+### Inference backend on Mac — Ollama 0.23+ auto-uses MLX
+
+Probed on the operator's M4 Mac Mini (FROSTYi.local) 2026-05-10:
+
+```
+$ lsof -p $(pgrep -x ollama) | grep mlx
+ollama  ... /Applications/Ollama.app/Contents/Resources/mlx_metal_v4/libmlx.dylib
+ollama  ... /Applications/Ollama.app/Contents/Resources/mlx_metal_v4/libmlxc.dylib
+ollama  ... /Applications/Ollama.app/Contents/Resources/mlx_metal_v4/libjaccl.dylib
+```
+
+Ollama **0.19+ ships MLX backend**; **0.23.1 (this Mac) auto-selects
+MLX on Metal-4-capable Apple Silicon (M3/M4)**. The legacy
+GGUF/llama.cpp.metal path is now the fallback; MLX is the default on
+modern Apple chips. ai-memory's existing autonomous-tier flow
+(`ollama_base_url` HTTP) gets MLX acceleration **for free** — no
+daemon-side architectural change required.
+
+Cross-platform inference matrix (informational; doesn't affect Plan C):
+
+| Platform              | Plan C path             | What's under the hood          |
+|-----------------------|-------------------------|---------------------------------|
+| **macOS M3/M4**       | Ollama 0.23+ HTTP       | MLX via Metal 4 (auto)         |
+| macOS M1/M2           | Ollama 0.23+ HTTP       | MLX via Metal 3 (`mlx_metal_v3`) |
+| Linux NVIDIA CUDA     | Ollama 0.23+ HTTP       | llama.cpp.cuda (default)       |
+| Linux AMD ROCm        | Ollama 0.23+ HTTP       | llama.cpp.rocm                 |
+| Windows               | Ollama, LM Studio, Jan.ai TensorRT-LLM | platform-specific |
+
+Future v0.8+ direction (out of scope for v0.7.1 Plan C): pluggable
+in-process inference trait with cargo features for `candle`,
+`mistralrs`, `mlx-rs`, `llama-cpp-rs` — eliminates HTTP per-call
+overhead. Not on Plan C critical path.
+
 ## What Plan C unlocks vs Plan B
 
 | Capability                                  | Plan B (CPU cloud)         | Plan C (LAN GPU)                      |
