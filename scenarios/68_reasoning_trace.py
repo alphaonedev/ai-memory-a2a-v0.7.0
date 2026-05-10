@@ -43,6 +43,14 @@ def main() -> None:
         return
     if out.get("error"):
         log(f"  grok error: {out['error']}")
+        # xAI 503 / upstream-disconnect → soft-skip (third-party outage)
+        err = out["error"]
+        if any(s in err for s in (
+            "HTTP 503", "Connection refused", "upstream connect",
+            "URLError", "remote connection failure", "delayed connect",
+        )):
+            h.skip(f"xAI upstream unavailable: {err[:160]}")
+            return
 
     log("phase B: store with metadata.reasoning")
     _, doc = h.write_memory(

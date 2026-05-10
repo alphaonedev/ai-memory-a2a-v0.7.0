@@ -35,6 +35,17 @@ def grok_chat(*args, **kwargs):
             "usage": {}, "error": f"unreachable: {last_err}"}
 
 
+def _is_xai_outage(err: str) -> bool:
+    """Detect transient xAI service outage so the scenario soft-skips
+    rather than failing the cert on a third-party 503 / connection refused."""
+    if not err:
+        return False
+    return any(s in err for s in (
+        "HTTP 503", "Connection refused", "upstream connect",
+        "URLError", "remote connection failure", "delayed connect",
+    ))
+
+
 def main() -> None:
     h = Harness.from_env(SCENARIO_ID)
     suffix = new_uuid()[:6]
@@ -42,6 +53,13 @@ def main() -> None:
     HERM = f"ai:s67-hermes-{suffix}"
     ns = f"s67-{suffix}"
     correlation = new_uuid("dlg-")
+
+    # Pre-flight xAI health probe — soft-skip if service is unavailable.
+    pre = grok_chat(prompt="reply: pong", system_msg="Be concise.",
+                   max_tokens=8, temperature=0.0)
+    if _is_xai_outage(pre.get("error", "")):
+        h.skip(f"xAI upstream unavailable: {pre.get('error', '')[:160]}")
+        return
 
     # Seed M on hermes for the question to refer to.
     log("phase A: seed memory M on hermes")
