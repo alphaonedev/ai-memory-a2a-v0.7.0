@@ -1,0 +1,83 @@
+name: ai-memory-plan-c
+
+services:
+  openclaw-1:
+    build:
+      context: .
+      args:
+        REPO_REF: round-2-fixes
+        CARGO_FEATURES: sal-postgres
+    image: ai-memory-plan-c:fda9e64
+    container_name: openclaw-1
+    hostname: openclaw-1
+    restart: on-failure
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      AI_MEMORY_AGENT_ID: "ai:openclaw-1@plan-c"
+      AI_MEMORY_TIER: autonomous
+      AI_MEMORY_LISTEN_HOST: "0.0.0.0"
+      AI_MEMORY_LISTEN_PORT: "19077"
+      AI_MEMORY_STORE_URL: "${AI_MEMORY_STORE_URL}"
+      OLLAMA_BASE_URL: "http://host.docker.internal:11434"
+      AI_MEMORY_LLM_MODEL: "gemma4:e4b"
+      AI_MEMORY_EMBED_MODEL: "nomic-embed-text"
+      AI_MEMORY_PEER_URLS: "http://openclaw-2:19077"
+      RUST_LOG: ai_memory=info
+    volumes:
+      - openclaw-1-keys:/root/.config/ai-memory/keys
+      - openclaw-1-audit:/var/log/ai-memory/audit
+    ports:
+      - "19077:19077"
+    networks:
+      - lan-mesh
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-sS", "--max-time", "3", "http://127.0.0.1:19077/api/v1/capabilities"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+  openclaw-2:
+    image: ai-memory-plan-c:fda9e64
+    container_name: openclaw-2
+    hostname: openclaw-2
+    restart: on-failure
+    depends_on:
+      - openclaw-1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      AI_MEMORY_AGENT_ID: "ai:openclaw-2@plan-c"
+      AI_MEMORY_TIER: autonomous
+      AI_MEMORY_LISTEN_HOST: "0.0.0.0"
+      AI_MEMORY_LISTEN_PORT: "19077"
+      AI_MEMORY_STORE_URL: "${AI_MEMORY_STORE_URL}"
+      OLLAMA_BASE_URL: "http://host.docker.internal:11434"
+      AI_MEMORY_LLM_MODEL: "gemma4:e4b"
+      AI_MEMORY_EMBED_MODEL: "nomic-embed-text"
+      AI_MEMORY_PEER_URLS: "http://openclaw-1:19077"
+      RUST_LOG: ai_memory=info
+    volumes:
+      - openclaw-2-keys:/root/.config/ai-memory/keys
+      - openclaw-2-audit:/var/log/ai-memory/audit
+    ports:
+      - "19078:19077"
+    networks:
+      - lan-mesh
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-sS", "--max-time", "3", "http://127.0.0.1:19077/api/v1/capabilities"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+volumes:
+  openclaw-1-keys:
+  openclaw-1-audit:
+  openclaw-2-keys:
+  openclaw-2-audit:
+
+networks:
+  lan-mesh:
+    driver: bridge
