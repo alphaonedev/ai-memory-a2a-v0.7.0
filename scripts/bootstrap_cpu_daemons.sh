@@ -93,7 +93,7 @@ git fetch --all --quiet
 git checkout "$AI_MEMORY_REF"
 git pull --ff-only origin "$AI_MEMORY_REF" || true
 git log --oneline -3
-cargo build --release 2>&1 | tail -8
+cargo build --release --features sal-postgres 2>&1 | tail -8
 install -m0755 target/release/ai-memory /usr/local/bin/ai-memory
 /usr/local/bin/ai-memory --version
 
