@@ -36,7 +36,10 @@ done
 
 # Discover droplet metadata sorted by name (so node-1, -2, -3, -4 line up
 # with the cert numbering)
-mapfile -t DROPLETS < <(doctl compute droplet list --tag-name "track-$TRACK" \
+DROPLETS=()
+while IFS= read -r line; do
+  [ -n "$line" ] && DROPLETS+=("$line")
+done < <(doctl compute droplet list --tag-name "track-$TRACK" \
   --format Name,PublicIPv4,PrivateIPv4 --no-header | sort -k1,1)
 
 [[ ${#DROPLETS[@]} -eq 4 ]] || {

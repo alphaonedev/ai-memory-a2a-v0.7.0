@@ -32,7 +32,10 @@ else
   exit 2
 fi
 
-mapfile -t IDS < <(doctl compute droplet list --tag-name "$TAG_FILTER" \
+IDS=()
+while IFS= read -r line; do
+  [ -n "$line" ] && IDS+=("$line")
+done < <(doctl compute droplet list --tag-name "$TAG_FILTER" \
   --format ID,Name --no-header | awk '{print $1":"$2}')
 
 if [[ ${#IDS[@]} -eq 0 ]]; then

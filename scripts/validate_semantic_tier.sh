@@ -22,7 +22,10 @@ set -uo pipefail
 SSH_OPTS=(-o StrictHostKeyChecking=no -o ConnectTimeout=10)
 PG_PRIV="${PG_PRIV:-10.20.0.4}"
 
-mapfile -t DROPLETS < <(doctl compute droplet list --tag-name "a2a-v07-cpu" \
+DROPLETS=()
+while IFS= read -r line; do
+  [ -n "$line" ] && DROPLETS+=("$line")
+done < <(doctl compute droplet list --tag-name "a2a-v07-cpu" \
   --format Name,PublicIPv4,PrivateIPv4 --no-header 2>/dev/null \
   | awk '!/-pg-/{print}')
 

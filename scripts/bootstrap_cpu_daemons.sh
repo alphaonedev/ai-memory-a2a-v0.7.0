@@ -32,22 +32,18 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# Discover droplets + postgres
-mapfile -t OC_LINE < <(doctl compute droplet list --tag-name "a2a-v07-cpu" \
-  --format Name,PublicIPv4,PrivateIPv4 --no-header 2>/dev/null \
-  | awk '/openclaw/{print}')
-mapfile -t HM_LINE < <(doctl compute droplet list --tag-name "a2a-v07-cpu" \
-  --format Name,PublicIPv4,PrivateIPv4 --no-header 2>/dev/null \
-  | awk '/hermes/{print}')
-PG_LINE=$(doctl compute droplet list --tag-name "a2a-v07-cpu" \
-  --format Name,PublicIPv4,PrivateIPv4 --no-header 2>/dev/null \
-  | awk '/-pg-/{print; exit}')
+# Discover droplets + postgres (portable: avoid bash 4 mapfile)
+ALL_CPU=$(doctl compute droplet list --tag-name "a2a-v07-cpu" \
+  --format Name,PublicIPv4,PrivateIPv4 --no-header 2>/dev/null)
+OC_LINE=$(echo "$ALL_CPU" | awk '/openclaw/{print; exit}')
+HM_LINE=$(echo "$ALL_CPU" | awk '/hermes/{print; exit}')
+PG_LINE=$(echo "$ALL_CPU" | awk '/-pg-/{print; exit}')
 
-[[ ${#OC_LINE[@]} -ge 1 ]] || { echo "openclaw droplet not found" >&2; exit 3; }
-[[ ${#HM_LINE[@]} -ge 1 ]] || { echo "hermes droplet not found" >&2; exit 3; }
+[[ -n "$OC_LINE" ]] || { echo "openclaw droplet not found" >&2; exit 3; }
+[[ -n "$HM_LINE" ]] || { echo "hermes droplet not found" >&2; exit 3; }
 [[ -n "$PG_LINE" ]] || { echo "postgres droplet not found" >&2; exit 3; }
-read -r OC_NAME OC_PUB OC_PRIV <<<"${OC_LINE[0]}"
-read -r HM_NAME HM_PUB HM_PRIV <<<"${HM_LINE[0]}"
+read -r OC_NAME OC_PUB OC_PRIV <<<"$OC_LINE"
+read -r HM_NAME HM_PUB HM_PRIV <<<"$HM_LINE"
 read -r _PG_NAME _PG_PUB PG_PRIV <<<"$PG_LINE"
 
 PG_PWD_PATH="${PG_PASSWORD_PATH:-/tmp/v07-a2a-pg-password.txt}"
@@ -80,7 +76,7 @@ AI_MEMORY_REPO="$7"; AI_MEMORY_REF="$8"
 echo "--- step 1: apt deps + Rust ---"
 apt-get update -qq
 apt-get install -y -qq build-essential pkg-config libssl-dev curl git jq sqlite3 \
-                       postgresql-client-16 netcat-openbsd 2>&1 | tail -5
+                       postgresql-client netcat-openbsd 2>&1 | tail -5
 if ! command -v cargo >/dev/null; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable
   source "$HOME/.cargo/env"

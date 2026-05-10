@@ -43,7 +43,10 @@ done
 
 [[ -n "$TRACK" ]] || { echo "must pass --track Q" >&2; exit 2; }
 
-mapfile -t DROPLETS < <(doctl compute droplet list --tag-name "track-$TRACK" \
+DROPLETS=()
+while IFS= read -r line; do
+  [ -n "$line" ] && DROPLETS+=("$line")
+done < <(doctl compute droplet list --tag-name "track-$TRACK" \
   --format Name,PublicIPv4,PrivateIPv4 --no-header)
 
 [[ ${#DROPLETS[@]} -gt 0 ]] || { echo "no droplets tagged track-$TRACK" >&2; exit 3; }

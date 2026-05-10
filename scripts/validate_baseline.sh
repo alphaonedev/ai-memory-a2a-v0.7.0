@@ -86,7 +86,10 @@ else
 fi
 
 if [ $B1_OK -eq 1 ]; then
-  mapfile -t DROPLETS < <(doctl compute droplet list --tag-name "track-$TRACK" \
+  DROPLETS=()
+  while IFS= read -r line; do
+    [ -n "$line" ] && DROPLETS+=("$line")
+  done < <(doctl compute droplet list --tag-name "track-$TRACK" \
     --format Name,PublicIPv4,PrivateIPv4 --no-header 2>/dev/null)
 else
   DROPLETS=()
