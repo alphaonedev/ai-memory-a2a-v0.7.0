@@ -40,6 +40,8 @@ nav:
   - Soak (gated): soak.md
   - "Plan C — LAN GPU cert track (planning)":
       - Plan C brief: plan-c-lan-gpu-track.md
+  - "GPU integration roadmap (TABLED — exploratory)":
+      - Roadmap: GPU-INTEGRATION-ROADMAP.md
   - "v0.7.0 cloud GPU plan (denied by DO)":
       - Track brief: v0.7.0-gpu-autonomous-track.md
       - Template page: gpu-cert.md
