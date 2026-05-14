@@ -12,6 +12,51 @@ SHARED_TARGET="${SHARED_TARGET:-/Users/fate/v07/v07-fixes/.cargo-shared-target}"
 IRONCLAW_TAR="${IRONCLAW_TAR:-/Users/fate/v07/v07-fixes/.local-runs/ironclaw-install/ironclaw-aarch64-apple-darwin}"
 NAMES=(alice bob charlie dave)
 
+# Step 0 — connectivity probe (#704). Verify FED_PG_HOST is reachable
+# from a non-Apple-signed binary (Homebrew psql or plain TCP via Rust).
+# On macOS + Tailscale, LAN IPs return EHOSTUNREACH from unsigned
+# processes even though `nc`/`ssh` work fine — see
+# ai-memory-mcp/docs/integrations/networking.md and the README's
+# "Networking gotcha" section. We do NOT auto-rewrite FED_PG_HOST;
+# we surface a clear suggestion and let the operator decide.
+if [ -n "${FED_PG_HOST:-}" ] && [ -n "${FED_PG_PORT:-}" ]; then
+  # `nc -z` exits 0 on a successful connect, non-zero on EHOSTUNREACH /
+  # connection refused / timeout. `nc` itself is Apple-signed on macOS
+  # so it sees the host fine; the failure we're trying to detect is
+  # that ai-memory and Homebrew psql (non-Apple-signed) hit
+  # EHOSTUNREACH on the SAME address. We use `psql --version`-style
+  # connect-only via /dev/tcp as a non-Apple-signed probe:
+  if command -v psql >/dev/null && [ -x /opt/homebrew/opt/postgresql@16/bin/psql ]; then
+    HOMEBREW_PSQL=/opt/homebrew/opt/postgresql@16/bin/psql
+  elif command -v psql >/dev/null; then
+    HOMEBREW_PSQL=$(command -v psql)
+  else
+    HOMEBREW_PSQL=""
+  fi
+  if [ -n "${HOMEBREW_PSQL}" ]; then
+    if ! PGCONNECT_TIMEOUT=4 "${HOMEBREW_PSQL}" \
+         -h "${FED_PG_HOST}" -p "${FED_PG_PORT}" \
+         -U "${FED_PG_USER:-postgres}" \
+         -d "${FED_PG_DB:-postgres}" \
+         -c 'SELECT 1' >/dev/null 2>&1; then
+      echo "[plan-d-mac] WARN — non-Apple-signed psql could not reach"
+      echo "             FED_PG_HOST=${FED_PG_HOST}:${FED_PG_PORT}."
+      echo "             On macOS + Tailscale this usually means the"
+      echo "             LAN IP is intercepted by the Tailscale"
+      echo "             NetworkExtension and EHOSTUNREACH'd for"
+      echo "             unsigned binaries (#704)."
+      echo ""
+      echo "             Suggested fallback: set FED_PG_HOST to the"
+      echo "             tailnet address shown by 'tailscale status'"
+      echo "             (CGNAT range 100.x.y.z) in ~/.env and re-run."
+      echo ""
+      echo "             See docs/integrations/networking.md in the"
+      echo "             ai-memory-mcp repo for the full diagnosis."
+      echo "             (Continuing; not auto-rewriting FED_PG_HOST.)"
+    fi
+  fi
+fi
+
 # Step 1 — build ai-memory release with sal + sal-postgres.
 if [ ! -x "${GRAND_SLAM}/target/release/ai-memory" ] || [ ! -x "${SHARED_TARGET}/release/ai-memory" ]; then
   echo "[plan-d-mac] building ai-memory release"

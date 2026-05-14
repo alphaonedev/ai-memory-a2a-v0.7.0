@@ -68,17 +68,53 @@ curl -sS --cacert $TLS/ca.pem --cert $TLS/node-alice.pem --key $TLS/node-alice.k
 | `teardown.sh`            | kill tmux sessions, drop f2 DB, wipe Mac Mini test-cell dir    |
 | `tls/.gitignore`         | refuse to commit `*.key` / `*.pem` (private material)          |
 
-## Hard caveats (operator must know)
+## Networking gotcha — macOS Tailscale per-app intercept
 
-* **Tailscale per-app intercept** — the macOS Tailscale system-extension
-  routes non-Apple-signed binaries differently from `nc`/`ssh`. The LAN
-  IP `192.168.50.1` returns `EHOSTUNREACH` from Homebrew `psql` and Rust
-  binaries; the tailnet IP `100.70.167.11` works. `setup-f2.sh` keeps
-  `listen_addresses = '*'` and adds pg_hba entries for both
-  `192.168.50.100/32` and `100.64.0.0/10` so either interface works.
-  Operator can ignore this once Tailscale is reconfigured to leave
-  `192.168.50.0/24` alone, but until then **use `FED_PG_HOST=100.70.167.11`**
-  in `~/.env`.
+Filed as issue #704 against `ai-memory-mcp` after the Phase B test
+cell hit it repeatedly. Documented here for operator awareness — this
+is **not** a substrate guarantee, it's a known third-party-VPN
+behaviour the operator must work around.
+
+**Symptom.** Outbound TCP from Homebrew `psql`, the Rust `ai-memory`
+binary, and other non-Apple-signed processes to the f2 LAN IP
+(`192.168.50.1`) fails with `EHOSTUNREACH`. The same address responds
+fine from `nc(1)`, `ssh(1)`, and Safari, so it looks at first glance
+like an `ai-memory` regression rather than a routing-table issue.
+
+**Diagnosis.** `tailscale status` shows the tailnet-assigned address
+(`100.70.167.11` on this cell) alongside the LAN address. macOS
+Tailscale installs a system-level NetworkExtension that performs
+per-app interception of LAN-range packets; Apple-signed binaries
+bypass the extension, non-Apple-signed binaries route through it,
+and the extension returns `EHOSTUNREACH` for LAN destinations it
+hasn't been instructed to allow. The behaviour is documented at the
+NEAR AI / Apple / Tailscale notarization layer and is not actionable
+from inside `ai-memory`.
+
+**Workaround.** Use the tailnet address instead of the LAN address
+for any non-Apple-signed binary that needs to talk to f2. On this
+cell:
+
+```bash
+# In ~/.env on the Mac Mini
+FED_PG_HOST=100.70.167.11    # tailnet (works for Homebrew psql + ai-memory)
+# FED_PG_HOST=192.168.50.1   # LAN (works for nc/ssh, fails for psql/ai-memory)
+```
+
+`setup-f2.sh` keeps `listen_addresses = '*'` and adds `pg_hba.conf`
+entries for both `192.168.50.100/32` (Mac Mini LAN) and
+`100.64.0.0/10` (CGNAT tailnet range) so either interface works
+once Postgres is reached.
+
+**Long-term.** No substrate-level fix. The NEAR AI / Apple /
+Tailscale notarization landscape would need to change (either
+Tailscale ships its extension with broader allowlisting for unsigned
+binaries, or Apple's notarization policy changes), and neither is
+actionable from this project. Operator can disable the gotcha by
+reconfiguring Tailscale to leave `192.168.50.0/24` un-intercepted,
+but the default install on macOS reproduces the failure mode.
+
+## Other hard caveats (operator must know)
 
 * **Federation outbound does not carry `x-api-key`** — `post_once()` in
   `src/federation/sync.rs` only forwards the body + `Idempotency-Key`.
