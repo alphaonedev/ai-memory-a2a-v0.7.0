@@ -1,0 +1,8 @@
+# Refuse to commit private TLS material. Plan D ships only the
+# generator (`gen-tls.sh`); CA + node certs + keys are regenerated
+# per cell instance.
+*.key
+*.pem
+*.csr
+*.srl
+allowlist.txt
