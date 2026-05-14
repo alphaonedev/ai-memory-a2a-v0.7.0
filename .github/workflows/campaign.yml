@@ -102,6 +102,17 @@ jobs:
           ls -la target/release/ai-memory
           target/release/ai-memory --version
 
+      # v0.7.0 SHIP CAMPAIGN Phase D Round 4b fix — Terraform is not
+      # pre-installed on ubuntu-24.04 runners, so `terraform init`
+      # below was hitting `command not found` (exit 127). The
+      # hashicorp/setup-terraform action installs a pinned version
+      # and exposes the binary on PATH for the rest of the job.
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+          terraform_wrapper: false
+
       - name: Terraform init + apply
         working-directory: terraform
         run: |
