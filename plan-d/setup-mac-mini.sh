@@ -107,22 +107,32 @@ for port in 9077 9078 9079 9080; do
 done
 
 # Step 6 — register IronClaw provider + MCP for every domain.
+# Writes go to the IronClaw DB (per-domain ic_<name> schema), not config.toml.
+# `ironclaw mcp add` REQUIRES the `--arg=value` form; the space form breaks
+# clap multi-value parsing for hyphenated values.
 for name in "${NAMES[@]}"; do
   HOME="${BASE}/${name}/home" \
   DATABASE_URL="postgres://${FED_PG_USER}:${FED_PG_PASSWORD}@${FED_PG_HOST}:${FED_PG_PORT}/${FED_PG_DB}?sslmode=disable&options=-csearch_path%3Dic_${name}%2Cpublic" \
     ~/.local/bin/ironclaw models set-provider openai_compatible --model grok-4.20-0309-reasoning >/dev/null
   HOME="${BASE}/${name}/home" \
   DATABASE_URL="postgres://${FED_PG_USER}:${FED_PG_PASSWORD}@${FED_PG_HOST}:${FED_PG_PORT}/${FED_PG_DB}?sslmode=disable&options=-csearch_path%3Dic_${name}%2Cpublic" \
-    ~/.local/bin/ironclaw mcp add memory --transport stdio \
+    ~/.local/bin/ironclaw mcp add --transport stdio \
       --command "${GRAND_SLAM}/target/release/ai-memory" \
+      --env "AI_MEMORY_AGENT_ID=ai:${name}" \
+      --env "HOME=${BASE}/${name}/home" \
+      --description "ai-memory v0.7.0 stdio (domain ${name})" \
       --arg=--db --arg="${BASE}/${name}/a2a.db" \
       --arg=mcp --arg=--tier --arg=autonomous \
-      --env "AI_MEMORY_AGENT_ID=ai:${name}" \
-      --env "HOME=${BASE}/${name}/home" >/dev/null || true
+      memory >/dev/null || true
 done
 
-# Step 7 — launch IronClaw quad (best-effort; v0.28.1 may need manual
-# session bootstrap depending on which channels are enabled).
+# Step 7 — launch IronClaw quad. The launcher (test-cell/launch-ironclaw.sh)
+# sets SECRETS_MASTER_KEY per-domain (mandatory for headless tmux on macOS;
+# see Phase B.8 RCA in test-cell/IRONCLAW-V028-NOTES.md). Without it,
+# IronClaw bootstrap blocks on macOS Keychain SecItemAdd → AuthorizationUI.
 bash "${BASE}/launch-ironclaw.sh"
 
 echo "[plan-d-mac] done."
+echo "[plan-d-mac] verify with: tmux ls | grep ic-"
+echo "[plan-d-mac]              tail /Users/fate/v07/test-cell/<name>/ironclaw.log"
+echo "[plan-d-mac]              expect 'ready in N.Ns' inside ~5s per domain."

@@ -137,3 +137,23 @@ but the default install on macOS reproduces the failure mode.
 * **ECDSA P-256 certs** — macOS `curl` (LibreSSL) cannot load ED25519
   client certs. The TLS gen script uses `prime256v1` so `curl` smoke
   tests work without rebuilding curl from source.
+
+* **IronClaw v0.28.1 needs `SECRETS_MASTER_KEY` for headless runs** —
+  v0.28's bootstrap calls `SecItemAdd` (macOS Keychain) when the secrets
+  master key is not supplied via env var. In a detached tmux there is no
+  GUI to surface the Authorization dialog, so the process blocks
+  silently on `mach_msg` to the Authorization XPC service — looks
+  identical to "MCP handshake hung" from outside. Setting
+  `SECRETS_MASTER_KEY` (32-byte hex) bypasses keychain entirely. The
+  Plan D `test-cell/launch-ironclaw.sh` sets a deterministic key per
+  domain. For production, source it from `~/.ironclaw/.env` instead of
+  committing keys to the launcher. Phase B.8 RCA + full surface diff
+  vs v0.27: `test-cell/IRONCLAW-V028-NOTES.md`.
+
+* **v0.27 → v0.28 `ironclaw run -m <mcp.json>` is GONE** — top-level
+  `-m` in v0.28 is `--message` (single-shot mode), not `--mcp-config`.
+  MCP servers are now registered once via `ironclaw mcp add ...`,
+  stored in the IronClaw DB, and consumed on every `ironclaw run`.
+  Provider+model are likewise DB-backed via `ironclaw models
+  set-provider`. The `setup-mac-mini.sh` Step 6 does the one-time
+  registration; `launch-ironclaw.sh` does the long-lived run.
