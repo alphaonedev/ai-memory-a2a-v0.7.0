@@ -35,15 +35,28 @@ echo "===> stage ai-memory binary on ${NODE_IP}"
 scp "${SSH_OPTS[@]}" "${AI_MEMORY_BINARY_PATH}" "root@${NODE_IP}:/usr/local/bin/ai-memory"
 
 echo "===> install runtime deps + openclaw on ${NODE_IP}"
-# v0.7.0 SHIP CAMPAIGN Phase D Round 4c fix — setup_node.sh requires
-# NODE_INDEX to be set (it gates per-node provisioning logic). Inject
-# `NODE_INDEX=1` for the openclaw droplet by prepending an assignment
-# to the bash heredoc piped through ssh stdin. The companion fix in
-# boot_hermes.sh sets NODE_INDEX=2.
+# v0.7.0 SHIP CAMPAIGN Phase D Round 4e fix — setup_node.sh requires
+# NODE_INDEX + PEER_URLS + ROLE + AGENT_TYPE + AGENT_ID env. Inject
+# them all by prepending assignments to the bash heredoc piped through
+# ssh stdin. PEER_URLS is the single hermes peer (2-node deployment
+# under workflow_dispatch; setup_node.sh's 4-node mode degrades to
+# W=2 quorum mode against the available peer list).
 ssh "${SSH_OPTS[@]}" "root@${NODE_IP}" bash -s -- \
     "${OPENCLAW_REPO}" "${OPENCLAW_REF}" \
     "${AI_MEMORY_AUDIT_DIR}" "${A2A_PORT}" "${AGENT_ID}" "${PEER_PRIV_IP}" \
-    < <(echo "NODE_INDEX=1"; cat "${SCRIPT_DIR}/setup_node.sh")
+    < <(
+        echo "NODE_INDEX=1"
+        echo "PEER_URLS=\"http://${PEER_PRIV_IP}:${A2A_PORT}\""
+        echo "ROLE=agent"
+        echo "AGENT_TYPE=openclaw"
+        echo "AGENT_ID=\"${AGENT_ID}\""
+        echo "AI_MEMORY_AUDIT_DIR=\"${AI_MEMORY_AUDIT_DIR}\""
+        echo "A2A_PORT=\"${A2A_PORT}\""
+        echo "TLS_MODE=\"${TLS_MODE:-mtls}\""
+        echo "XAI_API_KEY=\"${XAI_API_KEY:-}\""
+        echo "XAI_MODEL=\"${XAI_MODEL:-grok-4-0709}\""
+        cat "${SCRIPT_DIR}/setup_node.sh"
+    )
 
 echo "===> verify"
 ssh "${SSH_OPTS[@]}" "root@${NODE_IP}" "ai-memory --version && systemctl is-active ai-memory && ss -ltnp | grep -E ':(${A2A_PORT})\b' || true"
