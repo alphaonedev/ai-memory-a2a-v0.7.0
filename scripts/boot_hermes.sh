@@ -35,10 +35,15 @@ echo "===> stage ai-memory binary on ${NODE_IP}"
 scp "${SSH_OPTS[@]}" "${AI_MEMORY_BINARY_PATH}" "root@${NODE_IP}:/usr/local/bin/ai-memory"
 
 echo "===> install runtime deps + hermes on ${NODE_IP}"
+# v0.7.0 SHIP CAMPAIGN Phase D Round 4c fix — setup_node.sh requires
+# NODE_INDEX to be set (it gates per-node provisioning logic). Inject
+# `NODE_INDEX=2` for the hermes droplet by prepending an assignment to
+# the bash heredoc piped through ssh stdin. The companion fix in
+# boot_openclaw.sh sets NODE_INDEX=1.
 ssh "${SSH_OPTS[@]}" "root@${NODE_IP}" bash -s -- \
     "${HERMES_REPO}" "${HERMES_REF}" \
     "${AI_MEMORY_AUDIT_DIR}" "${A2A_PORT}" "${AGENT_ID}" "${PEER_PRIV_IP}" \
-    < "${SCRIPT_DIR}/setup_node.sh"
+    < <(echo "NODE_INDEX=2"; cat "${SCRIPT_DIR}/setup_node.sh")
 
 echo "===> verify"
 ssh "${SSH_OPTS[@]}" "root@${NODE_IP}" "ai-memory --version && systemctl is-active ai-memory && ss -ltnp | grep -E ':(${A2A_PORT})\b' || true"
