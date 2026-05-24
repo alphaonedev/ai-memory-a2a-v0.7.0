@@ -163,13 +163,22 @@ def main() -> None:
         )
 
     # -- Phase C: postgres SAL adapter contract sweep
-    log("phase C: bootstrap aimemory_sal72 + run cargo test --test sal_contract")
+    log("phase C: bootstrap aimemory_sal72 + invoke pre-built /opt/tests/sal_contract")
     _bootstrap_db(h, admin_url, TEST_DB)
+    # v0.7.0 slim-image (Option-4, 2026-05-11): test binary pre-built;
+    # invoked directly instead of `cargo test --test sal_contract`.
+    #
+    # Plan C R7 cert finding (2026-05-12): `--test-threads=2` races on the
+    # AGE label-table lazy-create path inside `sal_contract::postgres_*`.
+    # Two threads both trigger `create_graph('memory_graph')` against the
+    # disposable database; one wins, the other gets `relation "Memory"
+    # already exists` (AGE represents Cypher labels as quoted-name
+    # postgres tables; `Memory` is the canonical vertex label). The race
+    # is in the test setup, not the daemon. Serialise with --test-threads=1
+    # so each test owns its own AGE projection lifecycle.
     cargo_cmd = (
-        f"export PATH=/root/.cargo/bin:$PATH && cd {SRC_DIR} && "
         f"AI_MEMORY_TEST_POSTGRES_URL={shlex.quote(test_url)} "
-        "cargo test --features sal-postgres,sal "
-        "--test sal_contract -- --test-threads=2 2>&1"
+        "/opt/tests/sal_contract --test-threads=1 2>&1"
     )
     r = h.ssh_exec(h.node1_ip, cargo_cmd, timeout=270)
     out = (r.stdout or "")
